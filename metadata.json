@@ -1,0 +1,7 @@
+{
+  "name": "EchoListenultra",
+  "description": "An advanced audio learning application featuring intelligent slicing, ASR transcription, and immersive listening modes.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
