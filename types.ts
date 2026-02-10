@@ -56,7 +56,7 @@ export interface AudioSegment {
   endTime: number;
   text: string;
   speaker?: number;
-  words?: WordTiming[]; // Optional high-precision word timings
+  words?: WordTiming[];
 }
 
 export interface AudioSession {
@@ -80,6 +80,7 @@ export interface SavedWord {
   definition?: string;
   translation?: string;
   phonetic?: string;
+  example?: string; // New: Ensure example sentence is saved
 }
 
 export interface WordDefinition {

@@ -67,25 +67,21 @@ const AppContent: React.FC<{
 
   useEffect(() => {
     const html = document.documentElement;
-    const metaTheme = document.getElementById('theme-meta');
     if (apiConfig.theme === 'light') {
       html.classList.remove('dark');
       html.classList.add('light');
-      if (metaTheme) metaTheme.setAttribute('content', isOnline ? '#F1F5F9' : '#FCA5A5');
     } else {
       html.classList.remove('light');
       html.classList.add('dark');
-      if (metaTheme) metaTheme.setAttribute('content', isOnline ? '#181C21' : '#7F1D1D');
     }
-  }, [apiConfig.theme, isOnline]);
+  }, [apiConfig.theme]);
 
   return (
     <div className="flex flex-col h-full w-full max-w-md mx-auto overflow-hidden font-body relative bg-background-light dark:bg-background-dark text-slate-900 dark:text-white safe-pt shadow-2xl">
-      {/* Offline Alert Banner */}
       {!isOnline && (
-        <div className="bg-red-500 text-white text-[10px] font-black uppercase tracking-widest py-2 px-4 flex items-center justify-center gap-2 animate-pulse shrink-0">
+        <div className="bg-red-500 text-white text-[10px] font-black uppercase tracking-widest py-2 px-4 flex items-center justify-center gap-2 animate-pulse shrink-0 z-[1000]">
           <span className="material-symbols-outlined text-xs">cloud_off</span>
-          Offline Mode - AI Features Unavailable
+          Offline Mode - Using Local Dictionary
         </div>
       )}
       
@@ -156,7 +152,8 @@ const App: React.FC = () => {
         stage: 0,
         definition: def?.definition,
         translation: def?.translation,
-        phonetic: def?.phonetic
+        phonetic: def?.phonetic,
+        example: def?.example // Persist the context example
       };
       return [...prev, newWord];
     });
