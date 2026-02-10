@@ -117,7 +117,6 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
   const session = useMemo(() => sessions.find(s => s.id === id) || sessions[0], [sessions, id]);
   const segments = session.segments;
 
-  // IMPROVED: Group segments strictly by speaker turns to maintain visual/audio parity
   const groupedTurns = useMemo(() => {
     const turns: { speaker: number; segments: (AudioSegment & { originalIdx: number })[] }[] = [];
     segments.forEach((seg, idx) => {
@@ -125,8 +124,6 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
       const speaker = seg.speaker || 1;
       const segWithIdx = { ...seg, originalIdx: idx };
       
-      // We group consecutive segments ONLY if they have the same speaker
-      // This ensures that when slicing logic correctly separates turns, the UI reflects it.
       if (lastTurn && lastTurn.speaker === speaker) {
         lastTurn.segments.push(segWithIdx);
       } else {
@@ -307,12 +304,16 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
           
           let colorClass = '';
           if (isActive) {
-            colorClass = 'text-primary dark:text-accent font-black scale-105 z-10 transition-transform duration-75';
+            // High contrast for the currently active word
+            colorClass = 'text-slate-900 dark:text-accent font-black scale-105 z-10 transition-transform duration-75';
           } else if (isPast) {
-            colorClass = 'text-primary/40 dark:text-accent/40 font-bold';
+            // Deeper color for played text in light theme to ensure legibility
+            colorClass = 'text-slate-600 dark:text-accent/60 font-bold';
           } else if (isCurrent) {
-            colorClass = 'text-slate-900/10 dark:text-white/10 font-medium';
+            // Future words in the active segment
+            colorClass = 'text-slate-300 dark:text-white/10 font-medium';
           } else {
+            // Words in non-active segments
             colorClass = 'text-slate-400 dark:text-slate-500 hover:text-white/80';
           }
 
@@ -429,7 +430,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
                     {turn.segments.map((seg) => {
                       const isActive = activeIdx === seg.originalIdx;
                       return (
-                        <div key={seg.id} data-seg-idx={seg.originalIdx} onClick={() => jumpToSegment(seg.originalIdx)} className={`transition-all duration-500 py-4 px-5 relative rounded-[1.5rem] border-l-4 ${isActive ? 'border-accent bg-accent/5 opacity-100' : 'border-transparent opacity-40 hover:opacity-70'}`}>
+                        <div key={seg.id} data-seg-idx={seg.originalIdx} onClick={() => jumpToSegment(seg.originalIdx)} className={`transition-all duration-500 py-4 px-5 relative rounded-[1.5rem] border-l-4 ${isActive ? 'border-accent bg-[#FDFBF7] dark:bg-accent/5 opacity-100 shadow-sm' : 'border-transparent opacity-40 hover:opacity-70'}`}>
                           <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{Math.floor(seg.startTime/60)}:{(seg.startTime%60).toFixed(0).padStart(2,'0')}</span>
                           <div className="text-lg leading-relaxed tracking-tight mt-1">{renderWords(seg, isActive)}</div>
                         </div>
