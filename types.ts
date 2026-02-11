@@ -8,7 +8,7 @@ export enum PlayerMode {
 export enum PlaybackMode {
   LIST_LOOP = 'LIST_LOOP',
   SINGLE_LOOP = 'SINGLE_LOOP',
-  SHUFFLE = 'SHUFFLE'
+  NATURAL = 'NATURAL'
 }
 
 export enum SlicingMethod {

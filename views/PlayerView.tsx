@@ -7,7 +7,6 @@ const SEEK_STEP = 15;
 const DB_NAME = 'EchoListenStorage';
 const DB_VERSION = 3;
 
-// Database Helper
 const initDB = (): Promise<IDBDatabase> => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -123,63 +122,49 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
       const lastTurn = turns[turns.length - 1];
       const speaker = seg.speaker || 1;
       const segWithIdx = { ...seg, originalIdx: idx };
-      
-      if (lastTurn && lastTurn.speaker === speaker) {
-        lastTurn.segments.push(segWithIdx);
-      } else {
-        turns.push({ speaker, segments: [segWithIdx] });
-      }
+      if (lastTurn && lastTurn.speaker === speaker) lastTurn.segments.push(segWithIdx);
+      else turns.push({ speaker, segments: [segWithIdx] });
     });
     return turns;
   }, [segments]);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number>(0);
 
-  const stateRef = useRef({ activeIdx, currentTime, segments, playbackMode });
+  // CRITICAL: stateRef ensures background listeners always have access to the latest state
+  const stateRef = useRef({ activeIdx, playbackMode, segments, isPlaying });
   useEffect(() => {
-    stateRef.current = { activeIdx, currentTime, segments, playbackMode };
-  }, [activeIdx, currentTime, segments, playbackMode]);
+    stateRef.current = { activeIdx, playbackMode, segments, isPlaying };
+  }, [activeIdx, playbackMode, segments, isPlaying]);
 
   const activeTokenIdx = useMemo(() => {
     const segment = segments[activeIdx];
     if (!segment || !segment.text) return -1;
-    
     const tokens = segment.text.trim().split(/\s+/);
-    if (tokens.length === 0) return 0;
-    
     const segmentDuration = segment.endTime - segment.startTime;
     if (segmentDuration <= 0) return 0;
-
     const lookAheadOffset = 0.08 * speed; 
     const progress = Math.max(0, Math.min(1, (currentTime - segment.startTime + lookAheadOffset) / segmentDuration));
-    
     const charCounts = tokens.map(t => t.length + 1); 
     const totalChars = charCounts.reduce((a, b) => a + b, 0);
-    
     let currentWeight = 0;
     for (let i = 0; i < tokens.length; i++) {
       currentWeight += charCounts[i];
-      if (progress <= currentWeight / totalChars) {
-        return i;
-      }
+      if (progress <= currentWeight / totalChars) return i;
     }
-    
     return tokens.length - 1;
   }, [currentTime, activeIdx, segments, speed]);
 
   useEffect(() => {
     if (!scrollRef.current) return;
     const activeWordEl = scrollRef.current.querySelector('[data-active-word="true"]');
-    if (activeWordEl) {
-      activeWordEl.scrollIntoView({ behavior: isPlaying ? 'auto' : 'smooth', block: 'center' });
-    }
+    if (activeWordEl) activeWordEl.scrollIntoView({ behavior: isPlaying ? 'auto' : 'smooth', block: 'center' });
   }, [activeIdx, activeTokenIdx, isPlaying]);
 
   const jumpToSegment = (idx: number) => {
-    if (audioRef.current && isSourceReady) {
-      audioRef.current.currentTime = segments[idx].startTime;
+    const audio = audioRef.current;
+    if (audio && isSourceReady) {
+      audio.currentTime = segments[idx].startTime;
       setActiveIdx(idx);
       if (!isPlaying) setIsPlaying(true);
       if (showSegments) setShowSegments(false);
@@ -189,29 +174,60 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
   useEffect(() => {
     let url: string | null = null;
     const audio = new Audio();
+    
     const init = async () => {
       const blob = await getAudioFromDB(session.id);
       if (blob) {
         url = URL.createObjectURL(blob);
         audio.src = url;
         audioRef.current = audio;
+
         audio.oncanplay = () => setIsSourceReady(true);
+
+        // Native update handler - works in background
+        audio.ontimeupdate = () => {
+          const time = audio.currentTime;
+          setCurrentTime(time);
+
+          const { activeIdx, playbackMode, segments, isPlaying } = stateRef.current;
+          if (!isPlaying) return;
+
+          const currentSeg = segments[activeIdx];
+
+          // Logic for SINGLE_LOOP (Loop within current segment)
+          if (playbackMode === PlaybackMode.SINGLE_LOOP && currentSeg && time >= currentSeg.endTime) {
+            audio.currentTime = currentSeg.startTime;
+            return;
+          }
+
+          // Dynamic segment indexing for UI sync
+          if (time < segments[activeIdx]?.startTime || time >= segments[activeIdx]?.endTime) {
+            const newIdx = segments.findIndex(s => time >= s.startTime && time < s.endTime);
+            if (newIdx !== -1 && newIdx !== activeIdx) {
+              setActiveIdx(newIdx);
+            }
+          }
+        };
+
+        // File-level end handler
         audio.onended = () => {
-          const { activeIdx, playbackMode, segments } = stateRef.current;
-          if (playbackMode === PlaybackMode.LIST_LOOP && activeIdx < segments.length - 1) {
-            jumpToSegment(activeIdx + 1);
-          } else if (playbackMode === PlaybackMode.SINGLE_LOOP) {
-            audio.currentTime = segments[activeIdx].startTime;
+          const { playbackMode } = stateRef.current;
+          if (playbackMode === PlaybackMode.LIST_LOOP) {
+            audio.currentTime = 0;
             audio.play().catch(() => {});
           } else {
+            // NATURAL play stops at the end
             setIsPlaying(false);
           }
         };
       }
     };
+
     init();
     return () => {
       audio.pause();
+      audio.ontimeupdate = null;
+      audio.onended = null;
       if (url) URL.revokeObjectURL(url);
     };
   }, [session.id]);
@@ -225,48 +241,23 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
     }
   }, [isPlaying, isSourceReady, speed]);
 
-  useEffect(() => {
-    const sync = () => {
-      const audio = audioRef.current;
-      if (audio && isPlaying) {
-        const time = audio.currentTime;
-        setCurrentTime(time);
-        
-        const { segments, activeIdx } = stateRef.current;
-        if (time < segments[activeIdx]?.startTime || time >= segments[activeIdx]?.endTime) {
-          const newIdx = segments.findIndex(s => time >= s.startTime && time < s.endTime);
-          if (newIdx !== -1 && newIdx !== activeIdx) {
-            setActiveIdx(newIdx);
-          }
-        }
-      }
-      rafRef.current = requestAnimationFrame(sync);
-    };
-    rafRef.current = requestAnimationFrame(sync);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [isPlaying]);
-
   const handleWordClick = async (word: string, sentence: string) => {
     const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
     if (!cleanWord || isSearching) return;
-
     const saved = savedWords.find(w => w.word.toLowerCase() === cleanWord.toLowerCase());
     if (saved) {
       setSelectedWord({ ...saved as any, example: sentence, isOffline: true });
       speak(cleanWord);
       return;
     }
-
     const cached = await getDictionaryEntry(cleanWord);
     if (cached) {
       setSelectedWord({ ...cached, example: sentence, isOffline: true });
       speak(cleanWord);
       return;
     }
-
     setIsSearching(true);
     setSelectedWord({ word: cleanWord, phonetic: "...", definition: "Loading...", translation: "...", example: sentence });
-    
     const fast = await fetchFastDictionary(cleanWord);
     if (fast) {
       const data = { ...fast, example: sentence } as WordDefinition;
@@ -276,12 +267,11 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
       setIsSearching(false);
       return;
     }
-
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const res = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
-        contents: `Analyze word "${cleanWord}" in context: "${sentence}". Output ONLY JSON: { "word": string, "phonetic": string, "definition": string, "translation": string }.`,
+        contents: `Analyze "${cleanWord}" in context: "${sentence}". JSON only.`,
         config: { responseMimeType: "application/json" }
       });
       const data = JSON.parse(res.text);
@@ -290,7 +280,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
       saveDictionaryEntry(cleanWord, final);
       speak(cleanWord);
     } catch (e) {
-      setSelectedWord(p => p ? { ...p, definition: "Lookup failed." } : null);
+      setSelectedWord(p => p ? { ...p, definition: "Failed." } : null);
     } finally { setIsSearching(false); }
   };
 
@@ -301,35 +291,32 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
         {tokens.map((w, idx) => {
           const isActive = isCurrent && idx === activeTokenIdx;
           const isPast = isCurrent && idx < activeTokenIdx;
-          
-          let colorClass = '';
-          if (isActive) {
-            // High contrast for the currently active word
-            colorClass = 'text-slate-900 dark:text-accent font-black scale-105 z-10 transition-transform duration-75';
-          } else if (isPast) {
-            // Deeper color for played text in light theme to ensure legibility
-            colorClass = 'text-slate-600 dark:text-accent/60 font-bold';
-          } else if (isCurrent) {
-            // Future words in the active segment
-            colorClass = 'text-slate-300 dark:text-white/10 font-medium';
-          } else {
-            // Words in non-active segments
-            colorClass = 'text-slate-400 dark:text-slate-500 hover:text-white/80';
-          }
-
+          let colorClass = isActive ? 'text-slate-900 dark:text-accent font-black scale-105 z-10 transition-transform duration-75' 
+                         : isPast ? 'text-slate-600 dark:text-accent/60 font-bold' 
+                         : isCurrent ? 'text-slate-300 dark:text-white/10 font-medium' 
+                         : 'text-slate-400 dark:text-slate-500 hover:text-white/80';
           return (
-            <span 
-              key={idx} 
-              data-active-word={isActive ? "true" : undefined}
-              onClick={(ev) => { ev.stopPropagation(); handleWordClick(w, segment.text); }}
-              className={`inline-block px-0.5 rounded transition-all cursor-pointer ${colorClass}`}
-            >
+            <span key={idx} data-active-word={isActive ? "true" : undefined} onClick={(ev) => { ev.stopPropagation(); handleWordClick(w, segment.text); }} className={`inline-block px-0.5 rounded transition-all cursor-pointer ${colorClass}`}>
               {w}
             </span>
           );
         })}
       </div>
     );
+  };
+
+  const cyclePlaybackMode = () => {
+    setPlaybackMode(prev => {
+      if (prev === PlaybackMode.LIST_LOOP) return PlaybackMode.SINGLE_LOOP;
+      if (prev === PlaybackMode.SINGLE_LOOP) return PlaybackMode.NATURAL;
+      return PlaybackMode.LIST_LOOP;
+    });
+  };
+
+  const getPlaybackIcon = () => {
+    if (playbackMode === PlaybackMode.SINGLE_LOOP) return 'repeat_one';
+    if (playbackMode === PlaybackMode.NATURAL) return 'trending_flat';
+    return 'repeat';
   };
 
   return (
@@ -359,12 +346,8 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
                 <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{selectedWord.definition}</p>
               </div>
             </div>
-            <button 
-              onClick={() => { toggleWord(selectedWord.word, session.id, selectedWord); setSelectedWord(null); }} 
-              className={`w-full py-5 rounded-2xl font-black uppercase text-xs tracking-widest active:scale-95 transition-all ${isSearching ? 'opacity-50' : 'bg-slate-900 dark:bg-accent text-white dark:text-black shadow-lg'}`}
-              disabled={isSearching}
-            >
-              {isSearching ? 'ANALYZING...' : savedWords.some(w => w.word.toLowerCase() === selectedWord.word.toLowerCase()) ? 'Remove from Lexis' : 'Add to Lexis'}
+            <button onClick={() => { toggleWord(selectedWord.word, session.id, selectedWord); setSelectedWord(null); }} className={`w-full py-5 rounded-2xl font-black uppercase text-xs tracking-widest active:scale-95 transition-all ${isSearching ? 'opacity-50' : 'bg-slate-900 dark:bg-accent text-white dark:text-black shadow-lg'}`} disabled={isSearching}>
+              {isSearching ? 'ANALYZING...' : savedWords.some(w => w.word.toLowerCase() === selectedWord.word.toLowerCase()) ? 'Remove' : 'Save'}
             </button>
           </div>
         </div>
@@ -459,8 +442,8 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
            </div>
         </div>
         <div className="flex items-center justify-between">
-           <button onClick={() => setPlaybackMode(m => m === PlaybackMode.LIST_LOOP ? PlaybackMode.SINGLE_LOOP : PlaybackMode.LIST_LOOP)} className={`size-10 flex items-center justify-center transition-all ${playbackMode === PlaybackMode.SINGLE_LOOP ? 'text-accent' : 'text-slate-400'}`}>
-             <span className="material-symbols-outlined text-2xl">{playbackMode === PlaybackMode.SINGLE_LOOP ? 'repeat_one' : 'repeat'}</span>
+           <button onClick={cyclePlaybackMode} className={`size-10 flex items-center justify-center transition-all ${playbackMode !== PlaybackMode.NATURAL ? 'text-accent' : 'text-slate-400'}`}>
+             <span className="material-symbols-outlined text-2xl">{getPlaybackIcon()}</span>
            </button>
            <div className="flex items-center gap-6">
              <button onClick={() => { if(audioRef.current) audioRef.current.currentTime -= SEEK_STEP }} className="size-10 flex items-center justify-center text-slate-300 transition-all active:scale-90"><Replay15Icon /></button>
