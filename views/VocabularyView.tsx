@@ -105,7 +105,7 @@ const VocabularyView: React.FC<VocabularyViewProps> = ({ savedWords, sessions, o
     <div className="p-6 pb-32 animate-fade-in min-h-full bg-background-light dark:bg-background-dark">
       <header className="flex justify-between items-center mb-10 pt-4 px-2">
         <div>
-          <h2 className="text-[10px] font-black text-accent uppercase tracking-[0.4em] mb-1.5 opacity-80">Knowledge base</h2>
+          <h2 className="text-[10px] font-black text-accent uppercase tracking-[0.4em] mb-1.5 opacity-80">Your saved words</h2>
           <h1 className="font-display text-4xl font-black tracking-tighter text-slate-900 dark:text-white">Vocabulary</h1>
         </div>
         <div className="size-12 rounded-2xl bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/5 flex items-center justify-center shadow-sm">
@@ -193,9 +193,9 @@ const VocabularyView: React.FC<VocabularyViewProps> = ({ savedWords, sessions, o
             </div>
           ))
         ) : (
-          <div className="py-24 text-center opacity-30 flex flex-col items-center">
+          <div className="py-16 text-center flex flex-col items-center">
              <span className="material-symbols-outlined text-6xl mb-4 font-light text-slate-900 dark:text-white">auto_stories</span>
-             <p className="text-[10px] font-black uppercase tracking-[0.4em]">Lexis is Empty</p>
+             <h2 className="text-xl font-semibold">No saved words yet</h2><p className="mt-4 text-sm text-slate-400 max-w-sm leading-relaxed">Open a lesson with a transcript, click a word, and choose Save. Your words and their context will appear here.</p><button onClick={() => navigate('/player/sample-1')} className="button mt-6">Try the sample lesson</button>
           </div>
         )}
       </div>

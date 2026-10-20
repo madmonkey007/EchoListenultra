@@ -1,0 +1,45 @@
+{
+  "id": "sync-fixture",
+  "title": "Imported audio timing regression",
+  "subtitle": "Synthetic speech with known pauses",
+  "coverUrl": "",
+  "audioUrl": "/tests/fixtures/timing.wav",
+  "segments": [
+    {
+      "id": "first",
+      "startTime": 0,
+      "endTime": 2.8,
+      "text": "Listen carefully.",
+      "speaker": 1,
+      "words": [
+        {
+          "word": "Listen",
+          "start": 0.4,
+          "end": 1.009
+        },
+        {
+          "word": "carefully.",
+          "start": 2.009,
+          "end": 2.7899
+        }
+      ]
+    },
+    {
+      "id": "second",
+      "startTime": 3.38,
+      "endTime": 4.5637,
+      "text": "Again.",
+      "speaker": 2,
+      "words": [
+        {
+          "word": "Again.",
+          "start": 3.3899,
+          "end": 3.9637
+        }
+      ]
+    }
+  ],
+  "duration": 4.5637,
+  "lastPlayed": "",
+  "status": "ready"
+}

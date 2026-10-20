@@ -12,6 +12,7 @@ export enum PlaybackMode {
 }
 
 export enum SlicingMethod {
+  SENTENCE = 'SENTENCE',
   DURATION = 'DURATION',
   TURNS = 'TURNS',
   PARAGRAPH = 'PARAGRAPH'
@@ -35,6 +36,7 @@ export enum Type {
 
 export interface AIProviderConfig {
   provider: 'gemini' | 'custom' | 'deepgram';
+  geminiApiKey?: string;
   geminiModel: string;
   customEndpoint: string;
   customApiKey: string;

@@ -1,35 +1,26 @@
 
 import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
 import HomeView from './views/HomeView.tsx';
 import PlayerView from './views/PlayerView.tsx';
 import AddSessionView from './views/AddSessionView.tsx';
 import SettingsView from './views/SettingsView.tsx';
 import VocabularyView from './views/VocabularyView.tsx';
-import BottomNav from './components/BottomNav.tsx';
+import SiteHeader, { Brand } from './components/SiteHeader.tsx';
+import LandingView from './views/LandingView.tsx';
+import HelpView from './views/HelpView.tsx';
+import ContactView from './views/ContactView.tsx';
+import AboutView from './views/AboutView.tsx';
+import PrivacyView from './views/PrivacyView.tsx';
+import AccountView from './views/AccountView.tsx';
+import AuthView from './views/AuthView.tsx';
+import { routeMetadata, SITE_ORIGIN } from './lib/site-meta.ts';
+import { restoreSessions } from './data/sample.ts';
 import { AudioSession, AIProviderConfig, SavedWord } from './types.ts';
-
-const INITIAL_SESSIONS: AudioSession[] = [
-  {
-    id: 'sample-1',
-    title: 'The Future of AI Architecture',
-    subtitle: 'Technology • Podcast S01E04',
-    coverUrl: 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=400&h=400&auto=format&fit=crop',
-    segments: [
-      { id: 's1', startTime: 0, endTime: 6, text: "In today's session, we explore the paradigm shift from traditional neural networks to transformer-based architectures.", speaker: 1 },
-      { id: 's2', startTime: 6, endTime: 13, text: "The primary challenge remains the quadratic complexity of self-attention mechanisms as sequence length increases.", speaker: 1 },
-      { id: 's3', startTime: 13, endTime: 20, text: "Wait, isn't that exactly what the new linear attention variants are trying to solve in recent papers?", speaker: 2 },
-      { id: 's4', startTime: 20, endTime: 28, text: "Exactly. By approximating the kernel, we can achieve linear time complexity without sacrificing too much accuracy.", speaker: 1 },
-      { id: 's5', startTime: 28, endTime: 35, text: "This opens up possibilities for processing entire books or massive codebases in a single context window.", speaker: 2 }
-    ],
-    duration: 35,
-    lastPlayed: '1d ago',
-    status: 'ready'
-  }
-];
 
 const DEFAULT_CONFIG: AIProviderConfig = {
   provider: 'gemini',
+  geminiApiKey: '',
   geminiModel: 'gemini-3-flash-preview',
   customEndpoint: '',
   customApiKey: '',
@@ -76,34 +67,68 @@ const AppContent: React.FC<{
     }
   }, [apiConfig.theme]);
 
+  useEffect(() => {
+    const metadata = routeMetadata(location.pathname);
+    document.title = metadata.title;
+    const setMeta = (attribute: string, key: string, content: string) => {
+      let element = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`);
+      if (!element) { element = document.createElement('meta'); element.setAttribute(attribute, key); document.head.appendChild(element); }
+      element.content = content;
+    };
+    setMeta('name', 'description', metadata.description);
+    setMeta('name', 'robots', metadata.robots);
+    setMeta('property', 'og:title', metadata.title);
+    setMeta('property', 'og:description', metadata.description);
+    let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (metadata.robots.startsWith('index')) {
+      if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
+      canonical.href = SITE_ORIGIN + (location.pathname === '/' ? '/' : location.pathname);
+      setMeta('property', 'og:url', canonical.href);
+    } else { canonical?.remove(); setMeta('property', 'og:url', SITE_ORIGIN + '/'); }
+    if (!isPlayerView) window.scrollTo(0, 0);
+    const anchor = location.hash.slice(1);
+    if (anchor) requestAnimationFrame(() => document.getElementById(anchor)?.scrollIntoView());
+  }, [location.pathname, location.hash, isPlayerView]);
+
+  const isToolPage = ['/add', '/settings', '/vocabulary'].includes(location.pathname);
   return (
-    <div className="flex flex-col h-full w-full max-w-md mx-auto overflow-hidden font-body relative bg-background-light dark:bg-background-dark text-slate-900 dark:text-white safe-pt shadow-2xl">
-      {!isOnline && (
-        <div className="bg-red-500 text-white text-[10px] font-black uppercase tracking-widest py-2 px-4 flex items-center justify-center gap-2 animate-pulse shrink-0 z-[1000]">
-          <span className="material-symbols-outlined text-xs">cloud_off</span>
-          Offline Mode - Using Local Dictionary
-        </div>
-      )}
-      
-      <main className={`flex-1 overflow-y-auto no-scrollbar ${isPlayerView ? 'pb-0' : 'pb-24'}`}>
+    <div className={`website ${isPlayerView ? 'is-player' : ''}`}>
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      <SiteHeader />
+      {!isOnline && <div className="offline-notice" role="status">You’re offline. Saved audio and cached vocabulary are available; AI and new word lookups need a connection.</div>}
+      <main id="main-content" className={isToolPage ? 'tool-page' : isPlayerView ? 'player-page' : 'site-main'} tabIndex={-1}>
         <Routes>
-          <Route path="/" element={<HomeView sessions={sessions} />} />
-          <Route path="/player/:id" element={<PlayerView sessions={sessions} savedWords={savedWords} toggleWord={toggleWord} onUpdateSession={updateSession} />} />
+          <Route path="/" element={<LandingView />} />
+          <Route path="/library" element={<HomeView sessions={sessions} savedWordCount={savedWords.length} />} />
+          <Route path="/player/:id" element={<PlayerView sessions={sessions} savedWords={savedWords} toggleWord={toggleWord} onUpdateSession={updateSession} apiConfig={apiConfig} />} />
           <Route path="/add" element={<AddSessionView onAdd={addSession} apiConfig={apiConfig} isOnline={isOnline} />} />
           <Route path="/vocabulary" element={<VocabularyView savedWords={savedWords} sessions={sessions} onUpdateWord={updateWord} />} />
           <Route path="/settings" element={<SettingsView apiConfig={apiConfig} onConfigChange={setApiConfig} sessions={sessions} onDeleteCache={deleteSession} />} />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/help" element={<HelpView />} />
+          <Route path="/contact" element={<ContactView />} />
+          <Route path="/about" element={<AboutView />} />
+          <Route path="/privacy" element={<PrivacyView />} />
+          <Route path="/account" element={<AccountView />} />
+          <Route path="/login" element={<AuthView />} />
+          <Route path="/auth/callback" element={<AuthView />} />
+          <Route path="*" element={<div className="empty-state site-container"><h1>That page isn’t here.</h1><p>Your lessons are still in My audio.</p><Link className="button" to="/library">Go to My audio</Link></div>} />
         </Routes>
       </main>
-      {!isPlayerView && <BottomNav />}
+      {!isPlayerView && <footer className="site-footer site-container"><Brand /><p>Listen closely. Learn at your pace.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data & privacy</Link><Link to="/help">Help & guide</Link></footer>}
+      {!isPlayerView && !['/contact', '/account', '/login', '/auth/callback'].includes(location.pathname) && <Link to="/contact" className="feedback-fab" aria-label="Feedback and help"><span className="material-symbols-outlined" aria-hidden="true">chat_bubble_outline</span><span>Feedback</span></Link>}
     </div>
   );
 };
 
+// Preserve links shared by earlier hash-router versions.
+if (window.location.hash.startsWith('#/')) {
+  const legacyPath = window.location.hash.slice(1);
+  window.history.replaceState(null, '', legacyPath === '/' ? '/library' : legacyPath);
+}
+
 const App: React.FC = () => {
   const [sessions, setSessions] = useState<AudioSession[]>(() => {
-    const saved = localStorage.getItem('echo_sessions');
-    return saved ? JSON.parse(saved) : INITIAL_SESSIONS;
+    return restoreSessions(localStorage.getItem('echo_sessions'));
   });
   
   const [savedWords, setSavedWords] = useState<SavedWord[]>(() => {

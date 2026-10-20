@@ -54,13 +54,14 @@ const SettingsView: React.FC<SettingsViewProps> = ({ sessions = [], apiConfig, o
     <div className="p-6 space-y-8 animate-fade-in pb-32 min-h-full bg-background-light dark:bg-background-dark">
       <header className="flex justify-between items-center mb-6 pt-4">
         <div className="flex items-center gap-4">
-           <button onClick={() => navigate('/')} className="size-10 flex items-center justify-center rounded-xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 active:scale-90 transition-transform shadow-sm dark:shadow-none">
+           <button aria-label="Back to library" onClick={() => navigate('/library')} className="size-10 flex items-center justify-center rounded-xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 active:scale-90 transition-transform shadow-sm dark:shadow-none">
              <span className="material-symbols-outlined text-slate-500 dark:text-gray-400">arrow_back</span>
            </button>
            <h1 className="font-display text-3xl font-black tracking-tight text-slate-900 dark:text-white">Settings</h1>
         </div>
 
         <button 
+          aria-label="Switch color theme"
           onClick={() => updateConfig({ theme: localConfig.theme === 'dark' ? 'light' : 'dark' })}
           className="size-10 rounded-xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 flex items-center justify-center text-slate-500 dark:text-accent shadow-sm active:scale-95 transition-all"
         >
@@ -70,6 +71,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ sessions = [], apiConfig, o
         </button>
       </header>
 
+      <p className="text-sm text-slate-500 dark:text-gray-400 leading-relaxed">Transcription is optional. Without a key, you can import audio and loop time segments locally. Your API keys stay in this browser and are sent directly to the selected provider; never enter a shared or unrestricted production key. Transcription uploads your audio to that provider and may incur charges. Clearing browser data removes these settings.</p>
       {/* Provider Selection */}
       <section className="space-y-4">
         <div className="flex items-center gap-3 px-2">
@@ -81,7 +83,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ sessions = [], apiConfig, o
             onClick={() => updateConfig({ provider: 'gemini' })}
             className={`py-3 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all ${localConfig.provider === 'gemini' ? 'bg-slate-900 dark:bg-primary text-white shadow-md' : 'text-slate-400 dark:text-gray-500'}`}
           >
-            Built-in Engine
+            Google Gemini
           </button>
           <button 
             onClick={() => updateConfig({ provider: 'deepgram' })}
@@ -97,6 +99,10 @@ const SettingsView: React.FC<SettingsViewProps> = ({ sessions = [], apiConfig, o
         
         {localConfig.provider === 'gemini' ? (
           <div className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="gemini-key" className="text-sm font-bold">Your Gemini API key (optional)</label>
+              <input id="gemini-key" type="password" autoComplete="off" value={localConfig.geminiApiKey || ''} onChange={event => updateConfig({ geminiApiKey: event.target.value })} placeholder="Enter your Gemini API key" className="w-full bg-slate-100 dark:bg-background-dark border border-slate-200 dark:border-white/5 rounded-xl py-4 px-5 text-sm" />
+            </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest ml-1">Gemini Intelligence Model</label>
               <div className="relative">
@@ -131,7 +137,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ sessions = [], apiConfig, o
                 {hasDeepgramKey ? 'verified_user' : 'error'}
               </span>
               <p className={`text-[9px] font-black uppercase tracking-widest ${hasDeepgramKey ? 'text-green-500' : 'text-amber-500/80'}`}>
-                {hasDeepgramKey ? 'ASR Engine Ready' : 'API Key Input Required'}
+                {hasDeepgramKey ? 'Key entered (not verified)' : 'Optional: enter your own API key'}
               </p>
             </div>
           </div>
@@ -168,7 +174,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ sessions = [], apiConfig, o
         {saveFeedback ? (
           <>
             <span className="material-symbols-outlined">check_circle</span>
-            <span>Settings Synchronized</span>
+            <span>Settings saved on this device</span>
           </>
         ) : (
           <span>Save Preferences</span>
@@ -176,7 +182,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ sessions = [], apiConfig, o
       </button>
 
       <div className="pt-4 text-center">
-        <p className="text-[9px] font-black text-slate-400 dark:text-gray-600 uppercase tracking-[0.3em]">EchoListen v1.3.4 Production</p>
+        <p className="text-[9px] font-black text-slate-400 dark:text-gray-600 uppercase tracking-[0.3em]">EchoListen · saved on this device</p>
       </div>
     </div>
   );

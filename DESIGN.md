@@ -1,0 +1,3 @@
+# Website extension
+
+Preserve EchoListen's dark navy identity and existing display/body fonts. Extend to a full-width website with a 1200px content measure. Mint is reserved for actions and active audio, near-white for primary text, slate for secondary text. Flat surfaces, 1px separators, 12px controls; avoid decorative statistics and nested panels. Landing page demonstrates an actual audio/transcript interaction. Learning surfaces prioritize controls and readability. At 900px, player gains segment sidebar; on mobile use a single reading column and visible menu. Respect reduced motion and keyboard focus.
