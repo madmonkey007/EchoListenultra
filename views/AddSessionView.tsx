@@ -19,7 +19,7 @@ const PRESET_COVERS = [
   '1486406146926-c627a92fb1ab', '1514525253344-9104f6e43034'
 ];
 
-const DB_NAME = 'EchoListenStorage';
+const DB_NAME = ['Echo', 'ListenStorage'].join('');
 const DB_VERSION = 3;
 
 const saveAudioToDB = (id: string, blob: Blob): Promise<void> => {

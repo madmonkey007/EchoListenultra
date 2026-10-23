@@ -22,7 +22,7 @@ test('diagnostics never copy full user-agent, file, transcript or key fields',()
 test('unknown categories cannot alter mail headers',()=>{
  const {buildSupportDraft}=require('../lib/support.ts');
  const draft=buildSupportDraft({category:'bug\r\nBcc:attacker@example.com',message:'Test issue'});
- assert.equal(new URL(draft.mailto).searchParams.get('subject'),'EchoListen feedback — Question');
+ assert.equal(new URL(draft.mailto).searchParams.get('subject'),'ReelTranscript feedback — Question');
  assert.equal(new URL(draft.mailto).searchParams.has('bcc'),false);
 });
 test('contact page provides email fallback and explains draft handoff without a fake sent state',()=>{

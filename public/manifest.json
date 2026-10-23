@@ -1,7 +1,7 @@
 {
-  "name": "EchoListen Smart Audio",
-  "short_name": "EchoListen",
-  "description": "Import audio, create listening segments, and practice at your own pace.",
+  "name": "ReelTranscript",
+  "short_name": "ReelTranscript",
+  "description": "Transcribe public Instagram Reels and download timestamped SRT subtitles.",
   "start_url": "/library",
   "scope": "/",
   "display": "standalone",

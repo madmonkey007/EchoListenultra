@@ -1,4 +1,4 @@
-# EchoListen
+# ReelTranscript
 
 ## Platform
 Web. Desktop and mobile browsers.

@@ -29,3 +29,10 @@ dist-ssr
 # Python worker artifacts
 __pycache__/
 *.pyc
+
+# Local probe evidence and machine-specific audio indexes (never published).
+/work/
+/scripts/transcribe-probe/samples.json
+/scripts/verify-qc/manifests/
+/scripts/verify-qc/video-input-smoke.json
+/scripts/verify-qc/INDEX.md

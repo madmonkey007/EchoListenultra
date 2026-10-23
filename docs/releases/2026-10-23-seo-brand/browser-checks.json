@@ -1,0 +1,55 @@
+{
+  "h1_count": 1,
+  "copy_matches_cue_text": true,
+  "console_errors": [],
+  "real_reel": "https://www.instagram.com/reel/DeejOF4AfBe/",
+  "download_filename": "reel-transcript.srt",
+  "computed_elements_compared": 222,
+  "computed_properties": [
+    "color",
+    "backgroundColor",
+    "fontFamily",
+    "fontSize",
+    "fontWeight",
+    "lineHeight",
+    "padding",
+    "margin",
+    "borderRadius",
+    "display",
+    "gap",
+    "borderColor",
+    "boxShadow"
+  ],
+  "style_differences": [
+    {
+      "selector": ".site-nav",
+      "property": "margin-left (auto)",
+      "before_px": 322.859,
+      "after_px": 286.836,
+      "reason": "authorized longer brand text"
+    }
+  ],
+  "desktop_h1_height_before_after_px": [
+    118.875,
+    118.875
+  ],
+  "mobile_viewport_width": 390,
+  "mobile_document_scroll_width": 390,
+  "visual_score": 98,
+  "theme": "dark",
+  "successful_functional_check_deployment": "dpl_C5ugNXd9LDuKrvjpDQDYTjKgfToM",
+  "final_deployment_functional_check": {
+    "passed": false,
+    "attempts": 3,
+    "status_codes": [
+      502,
+      502,
+      502
+    ],
+    "sample_ids": [
+      "DeejOF4AfBe",
+      "DbgNy0XxMZH",
+      "DeejOF4AfBe"
+    ]
+  }
+}

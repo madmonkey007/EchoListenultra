@@ -1,0 +1,19 @@
+{
+  "canonical": "https://reelstranscript.com/",
+  "og_url": "https://reelstranscript.com/",
+  "h1": [
+    "Instagram Transcript from Any Reel"
+  ],
+  "title": "Instagram Transcript & SRT \u2014 ReelTranscript",
+  "title_length": 43,
+  "description": "Get an Instagram transcript from a public Reel link. Copy the text or download timestamped SRT subtitles. No Instagram login or account is required.",
+  "description_length": 148,
+  "sitemap_urls": [
+    "https://reelstranscript.com/",
+    "https://reelstranscript.com/about",
+    "https://reelstranscript.com/help",
+    "https://reelstranscript.com/privacy",
+    "https://reelstranscript.com/contact"
+  ],
+  "robots": "User-agent: *\nAllow: /\n\nSitemap: https://reelstranscript.com/sitemap.xml\n"
+}

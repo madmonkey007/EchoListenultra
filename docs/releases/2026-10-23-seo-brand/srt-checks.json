@@ -1,0 +1,10 @@
+{
+  "cue_count": 7,
+  "word_count": 58,
+  "max_cue_seconds": 5.5,
+  "max_line_characters": 39,
+  "zero_duration": 0,
+  "overlaps": 0,
+  "same_bytes_as_previous_release": true,
+  "sha256": "e65b92a7e2d64d308da3b1fedf6c95bc75add498c8a3e393c88b3fc05533cb4f"
+}

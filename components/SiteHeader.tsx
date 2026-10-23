@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../lib/auth.ts';
 
 export function Brand() {
-  return <Link to="/" className="brand" aria-label="EchoListen home"><svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M6 12v8m5-13v18m5-22v26m5-21v16m5-12v8" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg><span>EchoListen<span className="brand-dot">.</span></span></Link>;
+  return <Link to="/" className="brand" aria-label="ReelTranscript home"><svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M6 12v8m5-13v18m5-22v26m5-21v16m5-12v8" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg><span>ReelTranscript<span className="brand-dot">.</span></span></Link>;
 }
 
 export default function SiteHeader() {

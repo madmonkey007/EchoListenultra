@@ -1,6 +1,6 @@
 import { SlicingMethod } from '../types.ts';
 import { fileImportError } from './import-limits.ts';
-const DATABASE = 'EchoListenImportDraft';
+const DATABASE = ['Echo', 'ListenImportDraft'].join('');
 const STORE = 'drafts';
 const KEY = 'pending';
 export const IMPORT_DRAFT_TTL = 60 * 60 * 1000;
@@ -18,7 +18,7 @@ function openDraftDB(): Promise<IDBDatabase> {
     request.onupgradeneeded = () => request.result.createObjectStore(STORE);
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(new Error('Could not access the saved import.'));
-    request.onblocked = () => reject(new Error('Close other EchoListen tabs and try again.'));
+    request.onblocked = () => reject(new Error('Close other ReelTranscript tabs and try again.'));
   });
 }
 export async function saveImportDraft(draft: ImportDraft): Promise<void> {

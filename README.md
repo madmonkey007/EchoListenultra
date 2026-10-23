@@ -1,4 +1,4 @@
-# EchoListen
+# ReelTranscript
 
 A no-sign-up website for practicing English with your own audio. Includes a public introduction, a playable synthetic-voice example, a local audio library, section looping, playback speed controls and vocabulary review.
 

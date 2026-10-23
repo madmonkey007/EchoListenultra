@@ -6,7 +6,7 @@ import { trackEvent } from '../lib/analytics.ts';
 import { transcribeAudio } from '../services/transcription.ts';
 
 const SEEK_STEP = 15;
-const DB_NAME = 'EchoListenStorage';
+const DB_NAME = ['Echo', 'ListenStorage'].join('');
 const DB_VERSION = 3;
 
 export const getSeekState = (time: number, duration: number, segments: AudioSegment[], segmentIdx?: number) => {

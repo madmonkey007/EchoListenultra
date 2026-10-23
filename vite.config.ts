@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import events from './api/events';
 import quota from './api/quota';
 import videoImport from './api/video-import';
+import { staticSeo } from './lib/static-seo';
 
 export default defineConfig(({ mode }) => {
  const env = loadEnv(mode, process.cwd(), '');
@@ -14,7 +15,7 @@ export default defineConfig(({ mode }) => {
  return {
   define: { __ECHO_AUTH_CONFIG__: JSON.stringify({ url: env.VITE_SUPABASE_URL || '', key: env.VITE_SUPABASE_ANON_KEY || '' }) },
   server: { port: 3000, host: '0.0.0.0' },
-  plugins: [react(), {
+  plugins: [react(), staticSeo(), {
     name: 'local-events',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {

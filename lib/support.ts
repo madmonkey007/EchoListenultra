@@ -18,7 +18,7 @@ function browserFamily(userAgent = ''): string {
 export function buildSupportDraft(input: { category?: string; message: string; replyEmail?: string; includeDiagnostics?: boolean; userAgent?: string }) {
   const category = feedbackCategory(input.category);
   const titles = { bug: 'Bug report', transcription: 'Transcription or subtitles', question: 'Question', idea: 'Idea' };
-  const subject = `EchoListen feedback — ${titles[category]}`;
+  const subject = `ReelTranscript feedback — ${titles[category]}`;
   const lines = [`Category: ${FEEDBACK_CATEGORIES[category]}`, '', input.message.trim()];
   if (input.replyEmail?.trim()) lines.push('', `Reply email: ${input.replyEmail.trim()}`);
   if (input.includeDiagnostics) lines.push('', `Version: ${APP_VERSION}`, `Browser: ${browserFamily(input.userAgent)}`);

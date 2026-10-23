@@ -1,0 +1,8 @@
+{
+  "id": "dpl_9oJYAmHMAVj24MngAeoW5ZEDxXVP",
+  "target": "production",
+  "readyState": "READY",
+  "origin": "https://reelstranscript.com",
+  "project_settings_changed": false,
+  "runtime_values": "same three values as the previous successful production deployment"
+}

@@ -182,7 +182,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ sessions = [], apiConfig, o
       </button>
 
       <div className="pt-4 text-center">
-        <p className="text-[9px] font-black text-slate-400 dark:text-gray-600 uppercase tracking-[0.3em]">EchoListen · saved on this device</p>
+        <p className="text-[9px] font-black text-slate-400 dark:text-gray-600 uppercase tracking-[0.3em]">ReelTranscript · saved on this device</p>
       </div>
     </div>
   );
