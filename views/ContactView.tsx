@@ -18,7 +18,7 @@ export default function ContactView() {
     catch { setCopyStatus('Copy is unavailable. You can select the email address or the message below and copy it manually.'); }
   }
   return <div className="contact-page site-container">
-    <div className="page-heading"><h1>Help when you need it.</h1><p>Something not playing, a subtitle out of place, or an idea? Tell us.</p></div>
+    <div className="page-heading"><h1>Contact ReelTranscript</h1><p>Something not playing, a subtitle out of place, or an idea? Tell us.</p></div>
     <div className="contact-layout">
       <aside className="contact-details"><h2>Write to the maintainer</h2><a className="contact-email" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a><button type="button" className="text-link" onClick={() => copy(SUPPORT_EMAIL)}>Copy email address <span className="material-symbols-outlined" aria-hidden="true">content_copy</span></button><p>This is an email support channel, not live chat. Replies are handled by the individual maintaining ReelTranscript; there is no guaranteed response time.</p><p>For a quick answer, check the <Link to="/help">listening guide</Link>. Your audio and vocabulary stay in your browser.</p><p>Do not include API keys, private recordings or sensitive transcript text in your report.</p><Link to="/privacy" className="text-link">How feedback data is handled <span aria-hidden="true">→</span></Link></aside>
       <div className="feedback-form-area"><form className="feedback-form" onSubmit={event => { event.preventDefault(); setDraft(buildSupportDraft({category,message,replyEmail,includeDiagnostics:diagnostics,userAgent:navigator.userAgent})); }}>

@@ -1,0 +1,20 @@
+{
+  "homepage_source_unchanged": true,
+  "homepage_html_unchanged_except_javascript_bundle_filename": true,
+  "css_asset": "index-rBboKxPm.css",
+  "build": "passed",
+  "typecheck": "passed",
+  "tests_passed": 109,
+  "unknown_route_http_status": 404,
+  "raw_requests_execute_javascript": false,
+  "frozen_files": {
+    "index.html": "ec658040c1bfa82316848d894abdfcadcb6c8e47379f8028bd461c1e781e2b95",
+    "website.css": "c4195583935c31096abff03b60556e133729a5e86f6628684c1b03b96dfa8650",
+    "components/ReelTranscriber.tsx": "d35fe3ad60eb5a4b7d6794c138b8c4a62107576d326b01432e9696e88a51d3c5",
+    "server/transcription/turbo.py": "d7abfe1f83816ebafe0b46b32cbbc17af2b179a3de5ad95088b2d260ecd72bd8",
+    "server/transcription/chain_entry.py": "c5655637c6b0ddc781a7ed880583699f5cb5cc47c2cf46f2314852ffb5d6b508",
+    "server/transcription/reel_probe.py": "f0aa7025e8b33ce99ea5812b1a075f8ef4b6d3c53bc7f940b9a56def046733f7",
+    "api/reel-transcribe.py": "b6ec98a4107d83d8f2b3819ef552f2b6d4063e0967ae95a9ff9ce26707643af4",
+    "scripts/transcribe-probe/cue_postprocess.py": "55dfa24b868067a642120cdf51ae520deda7ceb56913e764bbce64fd39ed201b"
+  }
+}

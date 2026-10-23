@@ -1,22 +1,93 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api(?:/|$)|assets(?:/|$)|.*\\.[^/]+$).*)",
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/help",
+      "destination": "/help.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/tiktok-transcript",
+      "destination": "/tiktok-transcript.html"
+    },
+    {
+      "source": "/library",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/add",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/settings",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/vocabulary",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/account",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/auth/callback",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/player/:id",
       "destination": "/index.html"
     }
   ],
   "headers": [
     {
       "source": "/account",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        }
+      ]
     },
     {
       "source": "/login",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        }
+      ]
     },
     {
       "source": "/auth/:path*",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }, { "key": "Referrer-Policy", "value": "no-referrer" }, { "key": "Cache-Control", "value": "no-store" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
     },
     {
       "source": "/sw.js",

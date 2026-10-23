@@ -10,11 +10,12 @@ import SiteHeader, { Brand } from './components/SiteHeader.tsx';
 import LandingView from './views/LandingView.tsx';
 import HelpView from './views/HelpView.tsx';
 import ContactView from './views/ContactView.tsx';
+import TikTokTranscriptView from './views/TikTokTranscriptView.tsx';
 import AboutView from './views/AboutView.tsx';
 import PrivacyView from './views/PrivacyView.tsx';
 import AccountView from './views/AccountView.tsx';
 import AuthView from './views/AuthView.tsx';
-import { routeMetadata, SITE_ORIGIN } from './lib/site-meta.ts';
+import { routeMetadata, SITE_ORIGIN, publicMetadata } from './lib/site-meta.ts';
 import { restoreSessions } from './data/sample.ts';
 import { AudioSession, AIProviderConfig, SavedWord } from './types.ts';
 
@@ -80,7 +81,7 @@ const AppContent: React.FC<{
     setMeta('property', 'og:title', metadata.title);
     setMeta('property', 'og:description', metadata.description);
     let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (metadata.robots.startsWith('index')) {
+    if (Object.hasOwn(publicMetadata, location.pathname)) {
       if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
       canonical.href = SITE_ORIGIN + (location.pathname === '/' ? '/' : location.pathname);
       setMeta('property', 'og:url', canonical.href);
@@ -106,6 +107,7 @@ const AppContent: React.FC<{
           <Route path="/settings" element={<SettingsView apiConfig={apiConfig} onConfigChange={setApiConfig} sessions={sessions} onDeleteCache={deleteSession} />} />
           <Route path="/help" element={<HelpView />} />
           <Route path="/contact" element={<ContactView />} />
+          <Route path="/tiktok-transcript" element={<TikTokTranscriptView />} />
           <Route path="/about" element={<AboutView />} />
           <Route path="/privacy" element={<PrivacyView />} />
           <Route path="/account" element={<AccountView />} />

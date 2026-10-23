@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { Plugin } from 'vite';
+import { createServer, type Plugin } from 'vite';
 import siteConfig from './site-config.json';
 
 export function renderSeoTemplate(source: string): string {
@@ -24,10 +24,24 @@ export function staticSeo(): Plugin {
         res.end(renderSeoTemplate(fs.readFileSync(path.join(root, 'public', name), 'utf8')));
       });
     },
-    closeBundle() {
+    async closeBundle() {
       for (const name of assets) {
         fs.writeFileSync(path.resolve(root, output, name), renderSeoTemplate(fs.readFileSync(path.join(root, 'public', name), 'utf8')));
       }
+      // Load existing React pages only at build time; no server runtime or model call.
+      const renderer = await createServer({
+        configFile: false, root, appType: 'custom',
+        ssr: { resolve: { externalConditions: ['node', 'module-sync'] } },
+        optimizeDeps: { noDiscovery: true, include: [], entries: [] },
+        server: { middlewareMode: true }, esbuild: { jsx: 'automatic' },
+      });
+      try {
+        const { renderPublicHtml, prerenderPaths } = await renderer.ssrLoadModule('/lib/render-public-pages.tsx');
+        const home = fs.readFileSync(path.resolve(root, output, 'index.html'), 'utf8');
+        for (const pathname of prerenderPaths) {
+          fs.writeFileSync(path.resolve(root, output, pathname.slice(1) + '.html'), renderPublicHtml(home, pathname));
+        }
+      } finally { await renderer.close(); }
     },
   };
 }

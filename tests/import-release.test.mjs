@@ -21,9 +21,9 @@ test('service worker ignores external requests and registers only in production'
 });
 test('SPA routes do not swallow missing static assets', () => {
   const config = JSON.parse(read('vercel.json'));
-  const route = new RegExp('^' + config.rewrites[0].source + '$');
-  assert.ok(route.test('/library'));
-  for (const path of ['/api/events', '/api/unknown', '/assets/missing.js', '/sw.js', '/manifest.json', '/missing.png']) assert.equal(route.test(path), false);
+  const routes = config.rewrites.map(item => new RegExp('^' + item.source.replace(':id', '[^/]+') + '$'));
+  assert.ok(routes.some(route => route.test('/library')));
+  for (const path of ['/api/events', '/api/unknown', '/assets/missing.js', '/sw.js', '/manifest.json', '/missing.png', '/nonexistent-x9']) assert.equal(routes.some(route => route.test(path)), false);
 });
 
 test('worker never intercepts provider uploads or external GET requests', async () => {

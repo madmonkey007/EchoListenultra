@@ -1,0 +1,44 @@
+[
+  {
+    "path": "/",
+    "title": "Instagram Transcript & SRT \u2014 ReelTranscript",
+    "description": "Get an Instagram transcript from a public Reel link. Copy the text or download timestamped SRT subtitles. No Instagram login or account is required.",
+    "canonical": "https://reelstranscript.com/",
+    "h1": "Instagram Transcript from Any Reel"
+  },
+  {
+    "path": "/about",
+    "title": "About ReelTranscript",
+    "description": "Meet ReelTranscript, an independently maintained audio workspace for your own audio, with no account required.",
+    "canonical": "https://reelstranscript.com/about",
+    "h1": "About ReelTranscript"
+  },
+  {
+    "path": "/help",
+    "title": "Listening guide \u2014 ReelTranscript",
+    "description": "Learn to import audio, split listening sections, use optional transcription and keep your local library safe.",
+    "canonical": "https://reelstranscript.com/help",
+    "h1": "How to use ReelTranscript"
+  },
+  {
+    "path": "/privacy",
+    "title": "Data and privacy \u2014 ReelTranscript",
+    "description": "Understand local audio storage, optional transcription providers, feedback and basic usage events in ReelTranscript.",
+    "canonical": "https://reelstranscript.com/privacy",
+    "h1": "Privacy and your data"
+  },
+  {
+    "path": "/contact",
+    "title": "Contact and feedback \u2014 ReelTranscript",
+    "description": "Contact the ReelTranscript maintainer with a question, a problem or feedback about your listening practice.",
+    "canonical": "https://reelstranscript.com/contact",
+    "h1": "Contact ReelTranscript"
+  },
+  {
+    "path": "/tiktok-transcript",
+    "title": "TikTok Transcript \u2014 Coming Soon | ReelTranscript",
+    "description": "TikTok link transcription is not available on ReelTranscript yet. Read about the planned transcript page and use our existing Instagram Reel tool.",
+    "canonical": "https://reelstranscript.com/tiktok-transcript",
+    "h1": "TikTok transcript \u2014 coming soon"
+  }
+]
