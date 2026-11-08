@@ -35,3 +35,16 @@ export function getActiveWordIndex(words: WordTiming[], mediaTime: number): numb
 export function getActiveSegmentIndex(segments: Pick<AudioSegment, 'startTime' | 'endTime'>[], mediaTime: number): number {
   return segments.findIndex(segment => mediaTime >= segment.startTime && mediaTime < segment.endTime);
 }
+
+/** Keep the active word/caption visible inside its reading pane, without scrolling the page. */
+export function scrollActiveCaptionIntoView(container: HTMLElement | null, captionIndex: number): void {
+  if (!container) return;
+  const active = container.querySelector<HTMLElement>('[data-active-word="true"]')
+    || container.querySelector<HTMLElement>(`[data-seg-idx="${captionIndex}"]`);
+  if (!active) return;
+  const bounds = container.getBoundingClientRect();
+  const item = active.getBoundingClientRect();
+  if (item.top < bounds.top || item.bottom > bounds.bottom) {
+    container.scrollTop += item.top - bounds.top - Math.max(0, (bounds.height - item.height) / 2);
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "old": [
+    {
+      "background": "rgb(16, 23, 30)",
+      "border": "0px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "15px",
+      "padding": "0px",
+      "selector": ".site-header"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "55.04px",
+      "padding": "0px",
+      "selector": "#reel-title"
+    },
+    {
+      "background": "rgb(25, 36, 45)",
+      "border": "10px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "14px",
+      "padding": "15px 14px",
+      "selector": ".reel-form input"
+    },
+    {
+      "background": "rgb(156, 230, 196)",
+      "border": "8px",
+      "color": "rgb(16, 31, 25)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "14px",
+      "padding": "15px 23px",
+      "selector": ".reel-form button"
+    },
+    {
+      "background": "rgb(25, 36, 45)",
+      "border": "14px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "15px",
+      "padding": "26px",
+      "selector": ".reel-example"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "15px",
+      "padding": "28px 0px 80px",
+      "selector": ".site-footer"
+    }
+  ],
+  "new": [
+    {
+      "background": "rgb(16, 23, 30)",
+      "border": "0px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "15px",
+      "padding": "0px",
+      "selector": ".site-header"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "55.04px",
+      "padding": "0px",
+      "selector": "#reel-title"
+    },
+    {
+      "background": "rgb(25, 36, 45)",
+      "border": "10px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "14px",
+      "padding": "15px 14px",
+      "selector": ".reel-form input"
+    },
+    {
+      "background": "rgb(156, 230, 196)",
+      "border": "8px",
+      "color": "rgb(16, 31, 25)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "14px",
+      "padding": "15px 23px",
+      "selector": ".reel-form button"
+    },
+    {
+      "background": "rgb(25, 36, 45)",
+      "border": "14px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "15px",
+      "padding": "26px",
+      "selector": ".reel-example"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "color": "rgb(240, 244, 241)",
+      "font": "\"Plus Jakarta Sans\", sans-serif",
+      "fontSize": "15px",
+      "padding": "28px 0px 80px",
+      "selector": ".site-footer"
+    }
+  ],
+  "equal": true
+}

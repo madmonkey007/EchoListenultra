@@ -1,0 +1,225 @@
+{
+  "url": "https://audio-visualizer-spike-20261026.vercel.app",
+  "date": "2026-10-26T16:26:46.741Z",
+  "runs": [
+    {
+      "id": "bars",
+      "seconds": 12.896,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "bars",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 5728070,
+      "url": "blob:https://audio-visualizer-spike-20261026.vercel.app/f322063f-64fb-4232-b47e-97c72447ece3",
+      "video": "h264",
+      "audio": "aac"
+    },
+    {
+      "id": "circular",
+      "seconds": 12.3375,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "circular",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 7770195,
+      "url": "blob:https://audio-visualizer-spike-20261026.vercel.app/eb66cb4f-e9fd-4358-8a7e-ca72749cb19a",
+      "video": "h264",
+      "audio": "aac"
+    },
+    {
+      "id": "mirror",
+      "seconds": 10.2015,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "mirror",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 6973845,
+      "url": "blob:https://audio-visualizer-spike-20261026.vercel.app/3dd7e77d-dac1-4517-9154-0b80b4695353",
+      "video": "h264",
+      "audio": "aac"
+    },
+    {
+      "id": "ripple",
+      "seconds": 17.601,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "ripple",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 15474851,
+      "url": "blob:https://audio-visualizer-spike-20261026.vercel.app/1aa9ce0b-1d90-4cec-95f7-d02ebb269b4a",
+      "video": "h264",
+      "audio": "aac"
+    },
+    {
+      "id": "mountains",
+      "seconds": 21.895300000011922,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "mountains",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 13262422,
+      "url": "blob:https://audio-visualizer-spike-20261026.vercel.app/692ed506-c21b-4b52-900c-6d8c51af430b",
+      "video": "h264",
+      "audio": "aac"
+    },
+    {
+      "id": "orbit",
+      "seconds": 16.45389999997616,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "orbit",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 9933373,
+      "url": "blob:https://audio-visualizer-spike-20261026.vercel.app/eedc9c25-6e6d-4b91-8fd1-a33b28591538",
+      "video": "h264",
+      "audio": "aac"
+    },
+    {
+      "id": "rays",
+      "seconds": 16.983900000035764,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "rays",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 12957284,
+      "url": "blob:https://audio-visualizer-spike-20261026.vercel.app/ad7691a4-3111-47f7-8840-01c8bb068c47",
+      "video": "h264",
+      "audio": "aac"
+    },
+    {
+      "id": "grid",
+      "seconds": 13.836400000035763,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "grid",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 6151870,
+      "url": "blob:https://audio-visualizer-spike-20261026.vercel.app/c93b224d-53c9-446b-96de-18e3bbc7642f",
+      "video": "h264",
+      "audio": "aac"
+    }
+  ],
+  "errors": [],
+  "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+  "passed": true
+}

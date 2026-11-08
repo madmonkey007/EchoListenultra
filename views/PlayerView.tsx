@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AudioSession, PlayerMode, PlaybackMode, AudioSegment, WordDefinition, SavedWord, AIProviderConfig, SlicingMethod } from '../types.ts';
-import { getSynchronizedWords, getActiveWordIndex, getActiveSegmentIndex } from '../lib/subtitle-timing.ts';
+import { getSynchronizedWords, getActiveWordIndex, getActiveSegmentIndex, scrollActiveCaptionIntoView } from '../lib/subtitle-timing.ts';
 import { trackEvent } from '../lib/analytics.ts';
 import { transcribeAudio } from '../services/transcription.ts';
 
@@ -184,17 +184,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ sessions, savedWords, toggleWor
   const hasCompleteWordTiming = segments.length > 0 && timedSegments.every(Boolean);
 
   useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-    // Scroll only when the spoken word leaves the reading area; never scroll the whole page.
-    const active = container.querySelector<HTMLElement>('[data-active-word="true"]')
-      || container.querySelector<HTMLElement>(`[data-seg-idx="${currentCaptionIdx}"]`);
-    if (!active) return;
-    const bounds = container.getBoundingClientRect();
-    const item = active.getBoundingClientRect();
-    if (item.top < bounds.top || item.bottom > bounds.bottom) {
-      container.scrollTop += item.top - bounds.top - Math.max(0, (bounds.height - item.height) / 2);
-    }
+    scrollActiveCaptionIntoView(scrollRef.current, currentCaptionIdx);
   }, [currentCaptionIdx, activeTokenIdx, mode]);
 
   useEffect(() => {

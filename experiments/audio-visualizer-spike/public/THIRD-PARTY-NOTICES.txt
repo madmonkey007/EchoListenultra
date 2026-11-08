@@ -1,0 +1,9 @@
+Mediabunny 1.62.1 — Copyright (c) Vanilagy and contributors.
+License: Mozilla Public License 2.0 (MPL-2.0).
+Full license: /licenses/mediabunny-MPL-2.0.txt
+Unmodified corresponding package source (including src/):
+https://registry.npmjs.org/mediabunny/-/mediabunny-1.62.1.tgz
+Project: https://github.com/Vanilagy/mediabunny
+This spike uses the unmodified library. No Mediabunny covered source files were modified.
+Build, browser automation and local validation tools are documented in LICENSES.md,
+and are not imported into the browser application.

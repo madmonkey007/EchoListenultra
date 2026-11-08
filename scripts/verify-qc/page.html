@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>本地转录听审</title>
+<style>
+:root{font:15px/1.6 system-ui,sans-serif;color:#202a36;background:#f4f6f8}*{box-sizing:border-box}body{margin:0}header{background:#fff;padding:20px 26px;border-bottom:1px solid #d7dde5}h1{font-size:23px;margin:0}h2{font-size:18px;margin:0 0 12px}p{margin:6px 0}.muted{color:#596778;font-size:13px}.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:14px}button,input,select,textarea{font:inherit}button{background:white;border:1px solid #aeb9c6;border-radius:6px;padding:6px 11px;cursor:pointer}button:hover{background:#edf4ff}button.active{background:#195ab1;color:#fff;border-color:#195ab1}input[type=number]{width:85px}textarea{width:100%;min-height:75px;padding:8px;border:1px solid #aeb9c6;border-radius:5px}main{display:grid;grid-template-columns:minmax(380px,.85fr) minmax(460px,1.15fr);gap:20px;padding:20px 26px;align-items:start}aside{position:sticky;top:16px;background:white;border:1px solid #d7dde5;border-radius:9px;padding:20px;max-height:94vh;overflow:auto}.row{background:#fff;border:1px solid #d7dde5;border-radius:8px;padding:16px;margin-bottom:14px}.row.selected{border:2px solid #195ab1;padding:15px}.rowhead{display:flex;justify-content:space-between;gap:10px;align-items:center}.texts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:12px 0}.model{border-left:3px solid #d7dde5;padding-left:10px;white-space:pre-wrap;overflow-wrap:anywhere}.model strong{display:block;font-size:13px;color:#596778}mark{background:#ffe09b;color:inherit;border-radius:2px}.tags{font-size:12px;color:#855715}.judgments{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}.truthlabel{display:block;font-size:13px;margin-top:10px}.warning{color:#8b310b;background:#fff0e6;padding:10px;border-radius:5px;display:none}audio{width:100%;margin:12px 0}table{border-collapse:collapse;width:100%;font-size:12px;margin-top:10px}td,th{border-bottom:1px solid #ddd;text-align:left;padding:5px;overflow-wrap:anywhere}.metrics{overflow:auto}label{cursor:pointer}.empty{padding:24px;color:#596778}.flaglist{max-height:180px;overflow:auto;font-size:12px}details{margin-top:15px}summary{cursor:pointer}@media(max-width:900px){main{grid-template-columns:1fr;padding:12px}aside{position:static;grid-row:1;max-height:none}header{padding:16px}.texts{grid-template-columns:1fr}}
+.context-model{margin:18px 0}.context-text{max-height:270px;overflow:auto;line-height:2;padding:8px;border:1px solid #d7dde5;border-radius:6px}.context-chunk{display:inline;border:2px solid transparent;border-radius:4px;padding:2px 4px;margin:1px;background:transparent;line-height:1.9;text-align:left;color:inherit}.context-chunk:hover{background:#edf4ff}.context-chunk.target-chunk{border-color:#195ab1;background:#e5efff}.context-chunk.playing-chunk{text-decoration:underline;text-decoration-color:#168458;text-decoration-thickness:3px}.range-track{height:16px;background:#e4e8ef;position:relative;border-radius:4px;margin-top:12px;overflow:hidden}#target-range{position:absolute;height:100%;background:#91b9ef;display:none}#playhead{position:absolute;height:100%;width:3px;background:#142d48;left:0}#seek-full{width:100%;margin:8px 0}aside h3{font-size:15px;margin:10px 0}.context-note{color:#195ab1;font-size:13px}</style></head><body>
+<header><h1>本地转录听审</h1><p id="dataset" class="muted"></p><p class="muted">蓝框为当前核对条目，黄色为模型分歧，绿色下划线为正在播放的文字。原音输入只填写当前条目对应内容。</p><details><summary>输入文件路径</summary><pre id="sources" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px"></pre></details><div id="storage-warning" class="warning" role="alert"></div><div class="toolbar"><label>选择文件 <select id="sample-select" aria-label="选择音频或视频文件"></select></label><label>判定模型 <select id="model"></select></label><label><input id="conflicts-only" type="checkbox" checked> 仅分歧</label><label>排序 <select id="sort"><option value="suspicion">可疑程度</option><option value="time">时间顺序</option></select></label><label>恢复 JSON <input id="import-json" type="file" accept=".json,application/json" style="max-width:180px"></label><button id="export-json">导出当前 JSON</button><button id="export-csv">导出当前 CSV</button><span id="save-state" class="muted" role="status"></span></div></header>
+<main><section id="rows" aria-label="转录条目"></section><aside><h2>完整音频与转录上下文</h2><h3 id="current-title">选择一条定位</h3><p id="current-detail" class="muted"></p><audio id="audio" controls preload="metadata"></audio><p id="playback-note" class="muted"></p><div class="range-track" aria-hidden="true"><div id="target-range"></div><div id="playhead"></div></div><input id="seek-full" type="range" min="0" max="0" step="0.01" value="0" aria-label="完整音频播放位置"><p id="play-position" class="muted"></p><div class="toolbar"><button id="play-start">从头播放</button><button id="seek-target" disabled>回到当前目标</button></div><div class="toolbar"><label>A <input id="a" type="number" min="0" step="0.01" value="0"></label><label>B <input id="b" type="number" min="0" step="0.01" value="0"></label><label><input id="loop" type="checkbox"> A–B 循环</label></div><p id="loop-note" class="muted"></p><section id="context" aria-label="完整转录上下文"></section><p id="audio-error" class="warning" role="alert"></p><h2 style="margin-top:22px">已填原音的 WER</h2><p class="muted">忽略大小写及标点，按词计算。S＝替换，D＝删除，I＝插入；WER 可超过 100%。空参考仅统计插入，WER 为 N/A。重叠条目可能重复计词。</p><div id="metrics" class="metrics"></div><details><summary>自动标记（不代表错误）</summary><div id="flags" class="flaglist"></div></details></aside></main>
+<script id="qc-data" type="application/json">__QC_DATA__</script>
+<script>
+'use strict';
+// Pure helpers are also exercised by test_page.cjs.
+function tokenize(text){return (text.normalize('NFKC').replaceAll('’', "'").toLowerCase().match(/\d+(?:[.,]\d+)*|[\p{L}]+(?:'[\p{L}]+)*|[%$€£]/gu)||[]);}
+function wordError(reference,hypothesis){const r=tokenize(reference),h=tokenize(hypothesis);let prev=Array.from({length:h.length+1},(_,j)=>({cost:j,s:0,d:0,i:j}));for(let a=1;a<=r.length;a++){const cur=[{cost:a,s:0,d:a,i:0}];for(let b=1;b<=h.length;b++){const same=r[a-1]===h[b-1];const diag={...prev[b-1],cost:prev[b-1].cost+(same?0:1),s:prev[b-1].s+(same?0:1)};const del={...prev[b],cost:prev[b].cost+1,d:prev[b].d+1};const ins={...cur[b-1],cost:cur[b-1].cost+1,i:cur[b-1].i+1};cur.push([diag,del,ins].reduce((x,y)=>y.cost<x.cost?y:x));}prev=cur;}const out=prev[h.length];return {substitutions:out.s,deletions:out.d,insertions:out.i,reference_words:r.length,hypothesis_words:h.length,wer:r.length?out.cost/r.length:null};}
+function csvCell(value){let s=String(value??'');if(/^[\s\u0000-\u001f]*[=+@-]/u.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';}
+function timeLabel(value){return Number(value).toFixed(3);}
+function hasTruth(review){return !!review&&(review.truth_provided===true);}
+const DATA=JSON.parse(document.getElementById('qc-data').textContent);
+const DATASETS=Array.isArray(DATA.datasets)?DATA.datasets:[DATA];
+let currentData=DATASETS[0],storeKey='';const sessionReviews=new Map();
+const el=id=>document.getElementById(id);let reviews={},selected=null,storageOK=true,contextNodes=[],pendingSeek=null;
+function warnStorage(){storageOK=false;el('storage-warning').style.display='block';el('storage-warning').textContent='浏览器不允许保存本地文件的 localStorage。当前判定仅保留在此页面内存中，请导出 JSON 备份，刷新或关闭后可能丢失。';}
+
+function save(){try{localStorage.setItem(storeKey,JSON.stringify({version:1,dataset_id:currentData.dataset_id,reviews}));el('save-state').textContent='已保存到此浏览器';}catch(error){warnStorage();el('save-state').textContent='未持久保存，请导出备份';}renderMetrics();}
+function rowReview(row){const key=String(row.segment_index);if(!reviews[key])reviews[key]={truth:'',truth_provided:false,confirm_empty:false,models:{}};if(!reviews[key].models)reviews[key].models={};return reviews[key];}
+function node(tag,text,className){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;}
+
+function renderRows(){const parent=el('rows');parent.replaceChildren();let rows=currentData.rows.filter(r=>!el('conflicts-only').checked||r.conflict);rows=[...rows].sort(el('sort').value==='time'?(a,b)=>a.start-b.start:(a,b)=>(b.suspicion_score||0)-(a.suspicion_score||0)||a.start-b.start);if(!rows.length)parent.append(node('p','没有符合筛选条件的条目。','empty'));rows.forEach(row=>{const review=rowReview(row),card=node('article',undefined,'row'+(selected===row.segment_index?' selected':''));card.dataset.index=String(row.segment_index);const head=node('div',undefined,'rowhead');head.append(node('strong','#'+row.segment_index+' · '+timeLabel(row.start)+'–'+timeLabel(row.end)+' 秒'));const play=node('button',currentData.full_audio?'定位并播放':'播放片段');play.onclick=()=>selectRow(row);head.append(play);card.append(head);card.append(node('div',(row.reasons||[]).concat(row.flags||[]).join(' · '),'tags'));const texts=node('div',undefined,'texts');currentData.models.forEach(model=>{const box=node('div',undefined,'model');box.append(node('strong',model));const tokens=row.tokens&&row.tokens[model];if(tokens&&tokens.length)tokens.forEach(t=>box.append(node(t.diff?'mark':'span',t.text)));else box.append(node('span',row.texts[model]||'（空）'));texts.append(box);});card.append(texts);const statuses=node('div',undefined,'judgments'),model=el('model').value;['对','错','漏句','听不清'].forEach(status=>{const b=node('button',status,review.models[model]?.status===status?'active':'');b.setAttribute('aria-pressed',String(review.models[model]?.status===status));b.onclick=()=>{review.models[model]={status:review.models[model]?.status===status?'':status};save();renderRows();};statuses.append(b);});card.append(node('div','上述判定应用于：'+model,'muted'),statuses);const label=node('label','原音实际说的是什么','truthlabel'),truth=node('textarea');truth.value=review.truth;truth.placeholder='尚未填写；不参与 WER';truth.setAttribute('aria-label','#'+row.segment_index+' 原音实际说的是什么');truth.oninput=()=>{review.truth=truth.value;review.truth_provided=truth.value.trim().length>0||review.confirm_empty;if(truth.value.trim())review.confirm_empty=false;empty.checked=review.confirm_empty;save();};label.append(truth);card.append(label);const emptyLabel=node('label'),empty=node('input');empty.type='checkbox';empty.checked=review.confirm_empty;empty.onchange=()=>{if(empty.checked&&review.truth.trim()){empty.checked=false;return;}review.confirm_empty=empty.checked;review.truth_provided=empty.checked||review.truth.trim().length>0;save();};emptyLabel.append(empty,document.createTextNode(' 我已听过，确认此条原音没有文字（空参考）'));card.append(emptyLabel);parent.append(card);});}
+function audioLength(){return currentData.full_audio?.duration||Math.max(0,...currentData.rows.map(r=>r.end));}
+function seekAudio(seconds,play=true){const audio=el('audio');pendingSeek=Math.max(0,seconds);try{audio.currentTime=pendingSeek;pendingSeek=null;}catch(error){}if(play)audio.play().catch(()=>{});updateTimeline();}
+function updateTimeline(){
+ const audio=el('audio'),origin=currentData.full_audio?0:(currentData.rows.find(r=>r.segment_index===selected)?.audio.start||0),time=(audio.currentTime||0)+origin,duration=audioLength();
+ el('seek-full').value=String(time);el('play-position').textContent=timeLabel(time)+' / '+timeLabel(duration)+' 秒';el('playhead').style.left=(duration?100*time/duration:0)+'%';
+ contextNodes.forEach(({element,chunk})=>{const target=chunk.segment_index===selected,playing=time>=chunk.start&&time<chunk.end;element.className='context-chunk'+(target?' target-chunk':'')+(playing?' playing-chunk':'');});
+}
+function renderContext(){
+ const holder=el('context');holder.replaceChildren();contextNodes=[];
+ currentData.models.forEach(model=>{
+  const section=node('section',undefined,'context-model');section.append(node('h3',model+' · 完整转录'));
+  const chunks=currentData.full_transcripts?.[model]||[...currentData.rows].sort((a,b)=>a.start-b.start).map(r=>({segment_index:r.segment_index,start:r.start,end:r.end,text:r.texts[model],tokens:r.tokens?.[model]}));
+  const target=chunks.find(c=>c.segment_index===selected);if(target&&!target.text.trim())section.append(node('p','当前目标：此模型在该条没有输出文字','context-note'));
+  const text=node('div',undefined,'context-text');
+  if(!chunks.some(c=>c.text.trim()))text.append(node('p','该模型未输出文字','muted'));
+  chunks.forEach(chunk=>{if(!chunk.text.trim())return;const button=node('button',undefined,'context-chunk');button.dataset.index=String(chunk.segment_index);button.title='#'+chunk.segment_index+' · '+timeLabel(chunk.start)+'–'+timeLabel(chunk.end)+' 秒';
+   if(chunk.tokens?.length)chunk.tokens.forEach(t=>button.append(node(t.diff?'mark':'span',t.text)));else button.append(node('span',chunk.text));
+   button.onclick=()=>{const row=currentData.rows.find(r=>r.segment_index===chunk.segment_index);if(row)selectRow(row);};text.append(button,document.createTextNode(' '));contextNodes.push({element:button,chunk});
+  });section.append(text);holder.append(section);
+ });updateTimeline();contextNodes.filter(x=>x.chunk.segment_index===selected).forEach(x=>x.element.scrollIntoView?.({block:'nearest'}));
+}
+function selectRow(row){
+ selected=row.segment_index;el('current-title').textContent='当前目标 #'+row.segment_index+' · '+timeLabel(row.start)+'–'+timeLabel(row.end)+' 秒';
+ el('loop').checked=false;el('audio-error').style.display='none';el('seek-target').disabled=false;
+ const audio=el('audio');
+ if(currentData.full_audio){
+  el('current-detail').textContent='蓝框对应本条文字；从目标前 1.5 秒开始，继续播放可听完整上下文。';
+  el('a').value=row.start.toFixed(3);el('b').value=Math.min(audioLength(),row.end).toFixed(3);seekAudio(Math.max(0,row.start-1.5));
+ }else{
+  el('current-detail').textContent='片段原音范围 '+timeLabel(row.audio.start)+'–'+timeLabel(row.audio.end)+' 秒';audio.src=row.audio.src;audio.load();el('a').value=Math.max(0,row.start-row.audio.start).toFixed(3);el('b').value=Math.min(row.audio.end-row.audio.start,row.end-row.audio.start).toFixed(3);seekAudio(0);
+ }
+ const duration=audioLength();el('target-range').style.display='block';el('target-range').style.left=(duration?100*row.start/duration:0)+'%';el('target-range').style.width=(duration?100*(Math.min(duration,row.end)-row.start)/duration:0)+'%';
+ renderRows();renderContext();
+}
+el('play-start').onclick=()=>seekAudio(0);
+el('seek-target').onclick=()=>{const row=currentData.rows.find(r=>r.segment_index===selected);if(row)selectRow(row);};
+el('seek-full').oninput=()=>{if(currentData.full_audio)seekAudio(Number(el('seek-full').value),false);};
+el('audio').addEventListener('loadedmetadata',()=>{if(pendingSeek!==null){el('audio').currentTime=pendingSeek;pendingSeek=null;}updateTimeline();});
+
+function loopRange(){const a=Number(el('a').value),b=Number(el('b').value),duration=el('audio').duration;if(!Number.isFinite(a)||!Number.isFinite(b)||a<0||b<=a||!Number.isFinite(duration)||b>duration+0.02){el('audio-error').textContent='循环范围须满足 0 ≤ A < B ≤ 音频时长。';el('audio-error').style.display='block';return null;}el('audio-error').style.display='none';return {a,b:Math.min(b,duration)};}
+el('loop').onchange=()=>{if(el('loop').checked){const range=loopRange();if(!range){el('loop').checked=false;return;}el('audio').currentTime=range.a;el('audio').play().catch(()=>{});}};
+['a','b'].forEach(id=>el(id).onchange=()=>{if(el('loop').checked&&!loopRange())el('loop').checked=false;});
+el('audio').addEventListener('timeupdate',()=>{updateTimeline();if(!el('loop').checked)return;const range=loopRange();if(range&&(el('audio').currentTime>=range.b||el('audio').currentTime<range.a))el('audio').currentTime=range.a;});
+el('audio').addEventListener('ended',()=>{if(el('loop').checked){const range=loopRange();if(range){el('audio').currentTime=range.a;el('audio').play().catch(()=>{});}}});
+el('audio').addEventListener('error',()=>{el('audio-error').textContent='音频无法播放，请检查导出的音频数据。';el('audio-error').style.display='block';});
+function scoredRows(){const out=[];currentData.rows.forEach(row=>{const r=rowReview(row);currentData.models.forEach(model=>out.push({segment_index:row.segment_index,start:row.start,end:row.end,model,status:r.models[model]?.status||'',truth:r.truth,confirm_empty:r.confirm_empty,truth_provided:r.truth_provided,hypothesis:row.texts[model]||'',...(hasTruth(r)?wordError(r.truth,row.texts[model]||''):{substitutions:null,deletions:null,insertions:null,reference_words:null,hypothesis_words:null,wer:null})}));});return out;}
+function renderMetrics(){const holder=el('metrics');holder.replaceChildren();const table=node('table'),thead=node('tr');['模型','已填条目','S / D / I','参考词','WER'].forEach(s=>thead.append(node('th',s)));table.append(thead);const scores=scoredRows();currentData.models.forEach(model=>{const entries=scores.filter(s=>s.model===model&&s.reference_words!==null);const sum=k=>entries.reduce((n,s)=>n+s[k],0),ref=sum('reference_words'),errors=sum('substitutions')+sum('deletions')+sum('insertions'),tr=node('tr');[model,entries.length,sum('substitutions')+' / '+sum('deletions')+' / '+sum('insertions'),ref,ref?(100*errors/ref).toFixed(1)+'%':'N/A'].forEach(s=>tr.append(node('td',s)));table.append(tr);});holder.append(table);}
+function download(name,text,type){const url=URL.createObjectURL(new Blob([text],{type})),a=node('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+el('import-json').onchange=async()=>{const file=el('import-json').files[0];if(!file)return;try{const imported=JSON.parse(await file.text());if(imported.dataset_id!==currentData.dataset_id||!imported.reviews||typeof imported.reviews!=='object')throw new Error('数据集不匹配或 JSON 格式不正确');const restored={};for(const row of currentData.rows){const r=imported.reviews[String(row.segment_index)];if(!r)continue;if(typeof r.truth!=='string'||typeof r.truth_provided!=='boolean'||!r.models||typeof r.models!=='object')throw new Error('判定字段格式不正确');const models={};for(const model of currentData.models){const status=r.models[model]?.status||'';if(!['','对','错','漏句','听不清'].includes(status))throw new Error('未知判定');models[model]={status};}restored[String(row.segment_index)]={truth:r.truth,truth_provided:r.truth_provided,confirm_empty:r.truth_provided&&!r.truth.trim(),models};}reviews=restored;save();renderRows();}catch(error){alert('无法恢复：'+error.message);}el('import-json').value='';};
+el('export-json').onclick=()=>download(currentData.sample_id+'-reviews.json',JSON.stringify({version:1,dataset_id:currentData.dataset_id,sample_id:currentData.sample_id,exported_at:new Date().toISOString(),normalization:'NFKC lowercase Unicode letters, decimal numbers, currency/percent symbols; curly apostrophe normalized',source:currentData.source,reviews,scores:scoredRows()},null,2),'application/json');
+el('export-csv').onclick=()=>{const keys=['segment_index','start','end','model','status','truth','confirm_empty','truth_provided','hypothesis','substitutions','deletions','insertions','reference_words','hypothesis_words','wer'];download(currentData.sample_id+'-reviews.csv','\uFEFF'+[keys.map(csvCell).join(','),...scoredRows().map(row=>keys.map(k=>csvCell(row[k])).join(','))].join('\r\n'),'text/csv;charset=utf-8');};
+el('model').onchange=renderRows;el('conflicts-only').onchange=renderRows;el('sort').onchange=renderRows;
+function switchDataset(id){
+ const next=DATASETS.find(d=>d.dataset_id===id);if(!next)return;
+ if(storeKey)sessionReviews.set(currentData.dataset_id,reviews);
+ const previousModel=el('model').value;
+ const audio=el('audio');audio.pause();audio.removeAttribute('src');audio.load();
+ el('loop').checked=false;el('a').value='0';el('b').value='0';selected=null;
+ el('current-title').textContent='选择一条定位';el('current-detail').textContent='';el('audio-error').style.display='none';
+ currentData=next;storeKey='verify-qc:v1:'+currentData.dataset_id;reviews={};storageOK=true;
+ pendingSeek=null;el('seek-target').disabled=true;el('target-range').style.display='none';
+ el('seek-full').max=String(audioLength());el('seek-full').disabled=!currentData.full_audio;el('seek-full').value='0';
+ el('playback-note').textContent=currentData.full_audio?'当前为完整音频。蓝色区间表示选中目标，拖动进度可听前后文；默认不会在目标末尾停止。':'当前数据为片段音频；完整转录上下文仍显示在下方。';
+ el('loop-note').textContent=currentData.full_audio?'A/B 使用完整音频的绝对秒数，勾选后只循环目标区间。':'A/B 使用当前片段内的相对秒数。';
+ if(currentData.full_audio){audio.src=currentData.full_audio.src;audio.load();}
+
+ el('storage-warning').style.display='none';el('save-state').textContent='';
+ if(sessionReviews.has(currentData.dataset_id))reviews=sessionReviews.get(currentData.dataset_id);
+ else try{const saved=JSON.parse(localStorage.getItem(storeKey)||'null');if(saved&&saved.dataset_id===currentData.dataset_id&&saved.reviews)reviews=saved.reviews;}catch(error){warnStorage();}
+ // Probe reads even for in-memory cached samples, so storage denial remains visible.
+ if(sessionReviews.has(currentData.dataset_id))try{localStorage.getItem(storeKey);}catch(error){warnStorage();}
+ el('sample-select').value=currentData.dataset_id;
+ const conflictCount=currentData.rows.filter(r=>r.conflict).length;
+ if(!conflictCount)el('conflicts-only').checked=false;
+ el('dataset').textContent='样本 '+currentData.sample_id+' · '+currentData.models.join(' / ')+' · '+currentData.rows.length+' 条 / '+conflictCount+' 条分歧 · 数据集 '+currentData.dataset_id;
+ el('sources').textContent=JSON.stringify(currentData.source,null,2);
+ el('model').replaceChildren();el('model').value='';
+ currentData.models.forEach(m=>{const o=node('option',m);o.value=m;el('model').append(o);});
+ if(currentData.models.includes(previousModel))el('model').value=previousModel;
+ el('flags').replaceChildren();(currentData.flags||[]).forEach(f=>el('flags').append(node('p',(f.model||'')+' #'+f.cue_index+' '+timeLabel(f.start)+'–'+timeLabel(f.end)+' '+f.kind+' '+(typeof f.details==='string'?f.details:JSON.stringify(f.details)))));
+ renderRows();renderContext();renderMetrics();if(storageOK)el('save-state').textContent='此文件的判定自动保存到此浏览器';
+}
+DATASETS.forEach(d=>{const label=(d.label||d.sample_id)+(d.meta?.duration?' · '+Number(d.meta.duration).toFixed(2)+' 秒':'');const o=node('option',label);o.value=d.dataset_id;el('sample-select').append(o);});
+el('sample-select').disabled=DATASETS.length<2;
+el('sample-select').onchange=()=>switchDataset(el('sample-select').value);
+switchDataset(DATASETS[0].dataset_id);
+</script></body></html>

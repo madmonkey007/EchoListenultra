@@ -1,0 +1,127 @@
+{
+  "faq": [
+    "Which links are supported?Use a publicly accessible Instagram Reel link. Private posts and other video platforms are not supported by this tool.",
+    "Do I need to sign up?No account or Instagram login is required to submit a public Reel.",
+    "Does it work on my computer and phone?Yes, use a modern browser with an internet connection. Copy the result or download the SRT before leaving the page.",
+    "How long can the Reel be?Up to 60 seconds."
+  ],
+  "h1": [
+    "Instagram Transcript\nfrom Any Reel"
+  ],
+  "h2": [
+    "A real transcript, at a glance.",
+    "From a Reel.\nTo readable text.",
+    "Your result stays on this page.",
+    "Before you paste a link.",
+    "Your next Reel,\nready to read."
+  ],
+  "h3": [
+    "Keep the words.\nKeep the timing.",
+    "Paste the link",
+    "Generate the transcript",
+    "Save your result"
+  ],
+  "input": {
+    "bottom": 415.265625,
+    "height": 60,
+    "left": 130,
+    "right": 1114.90625,
+    "top": 355.265625,
+    "width": 984.90625,
+    "x": 130,
+    "y": 355.265625
+  },
+  "overflow": false,
+  "removed": [
+    {
+      "count": 0,
+      "text": "every word on the first listen"
+    },
+    {
+      "count": 0,
+      "text": "Synthetic voice"
+    },
+    {
+      "count": 0,
+      "text": "An audio preview"
+    },
+    {
+      "count": 0,
+      "text": "Hear it for yourself"
+    },
+    {
+      "count": 0,
+      "text": "YOUR REEL"
+    },
+    {
+      "count": 0,
+      "text": "Transcribe a Reel"
+    }
+  ],
+  "sections": [
+    {
+      "buttons": [
+        "Paste",
+        "Get transcriptarrow_forward"
+      ],
+      "class": "reel-tool site-container",
+      "h2": 1,
+      "h3": 0,
+      "textLinks": [],
+      "title": "Instagram Transcript\nfrom Any Reel"
+    },
+    {
+      "buttons": [],
+      "class": "workflow site-container",
+      "h2": 1,
+      "h3": 4,
+      "textLinks": [
+        "Read the quick guide →"
+      ],
+      "title": "From a Reel.\nTo readable text."
+    },
+    {
+      "buttons": [],
+      "class": "privacy-strip site-container",
+      "h2": 1,
+      "h3": 0,
+      "textLinks": [
+        "About your data →"
+      ],
+      "title": "Your result stays on this page."
+    },
+    {
+      "buttons": [],
+      "class": "faq-section site-container",
+      "h2": 1,
+      "h3": 0,
+      "textLinks": [],
+      "title": "Before you paste a link."
+    },
+    {
+      "buttons": [
+        "Get transcript ↗"
+      ],
+      "class": "closing site-container",
+      "h2": 1,
+      "h3": 0,
+      "textLinks": [],
+      "title": "Your next Reel,\nready to read."
+    }
+  ],
+  "submit": {
+    "bottom": 415.265625,
+    "height": 60,
+    "left": 1122.90625,
+    "right": 1310,
+    "top": 355.265625,
+    "width": 187.09375,
+    "x": 1122.90625,
+    "y": 355.265625
+  },
+  "subtitle": "Paste a public Reel link. Get a transcript you can copy and timed subtitles you can download.",
+  "viewport": [
+    1440,
+    900
+  ]
+}

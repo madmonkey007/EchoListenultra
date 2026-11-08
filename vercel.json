@@ -21,36 +21,8 @@
       "destination": "/tiktok-transcript.html"
     },
     {
-      "source": "/library",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/add",
-      "destination": "/index.html"
-    },
-    {
       "source": "/settings",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/vocabulary",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/account",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/login",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/auth/callback",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/player/:id",
-      "destination": "/index.html"
+      "destination": "/settings.html"
     }
   ],
   "headers": [
@@ -146,6 +118,19 @@
           "value": "noindex, follow"
         }
       ]
+    }
+  ],
+  "functions": {
+    "api/reel-transcribe.py": {
+      "maxDuration": 300,
+      "includeFiles": "{server/transcription/*.py,scripts/transcribe-probe/cue_postprocess.py,lib/transcription-config.json}"
+    }
+  },
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
     }
   ]
 }

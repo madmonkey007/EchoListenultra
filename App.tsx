@@ -95,28 +95,21 @@ const AppContent: React.FC<{
   return (
     <div className={`website ${isPlayerView ? 'is-player' : ''}`}>
       <a href="#main-content" className="skip-link">Skip to content</a>
-      <SiteHeader />
-      {!isOnline && <div className="offline-notice" role="status">You’re offline. Saved audio and cached vocabulary are available; AI and new word lookups need a connection.</div>}
+      <SiteHeader theme={apiConfig.theme} onThemeChange={theme => setApiConfig(current => ({ ...current, theme }))} />
+      {!isOnline && <div className="offline-notice" role="status">You’re offline. Connect to the internet to transcribe a public Reel.</div>}
       <main id="main-content" className={isToolPage ? 'tool-page' : isPlayerView ? 'player-page' : 'site-main'} tabIndex={-1}>
         <Routes>
           <Route path="/" element={<LandingView />} />
-          <Route path="/library" element={<HomeView sessions={sessions} savedWordCount={savedWords.length} />} />
-          <Route path="/player/:id" element={<PlayerView sessions={sessions} savedWords={savedWords} toggleWord={toggleWord} onUpdateSession={updateSession} apiConfig={apiConfig} />} />
-          <Route path="/add" element={<AddSessionView onAdd={addSession} apiConfig={apiConfig} isOnline={isOnline} />} />
-          <Route path="/vocabulary" element={<VocabularyView savedWords={savedWords} sessions={sessions} onUpdateWord={updateWord} />} />
           <Route path="/settings" element={<SettingsView apiConfig={apiConfig} onConfigChange={setApiConfig} sessions={sessions} onDeleteCache={deleteSession} />} />
           <Route path="/help" element={<HelpView />} />
           <Route path="/contact" element={<ContactView />} />
           <Route path="/tiktok-transcript" element={<TikTokTranscriptView />} />
           <Route path="/about" element={<AboutView />} />
           <Route path="/privacy" element={<PrivacyView />} />
-          <Route path="/account" element={<AccountView />} />
-          <Route path="/login" element={<AuthView />} />
-          <Route path="/auth/callback" element={<AuthView />} />
-          <Route path="*" element={<div className="empty-state site-container"><h1>That page isn’t here.</h1><p>Your lessons are still in My audio.</p><Link className="button" to="/library">Go to My audio</Link></div>} />
+          <Route path="*" element={<div className="empty-state site-container"><h1>That page isn’t here.</h1><p>Return to the Reel transcription tool.</p><Link className="button" to="/">Go to Home</Link></div>} />
         </Routes>
       </main>
-      {!isPlayerView && <footer className="site-footer site-container"><Brand /><p>Listen closely. Learn at your pace.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data & privacy</Link><Link to="/help">Help & guide</Link></footer>}
+      {!isPlayerView && <footer className="site-footer site-container"><Brand /><p>Public Reels. Readable transcripts. Timed subtitles.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data & privacy</Link><Link to="/help">How it works</Link><Link to="/settings">Settings</Link></footer>}
       {!isPlayerView && !['/contact', '/account', '/login', '/auth/callback'].includes(location.pathname) && <Link to="/contact" className="feedback-fab" aria-label="Feedback and help"><span className="material-symbols-outlined" aria-hidden="true">chat_bubble_outline</span><span>Feedback</span></Link>}
     </div>
   );
@@ -125,7 +118,7 @@ const AppContent: React.FC<{
 // Preserve links shared by earlier hash-router versions.
 if (window.location.hash.startsWith('#/')) {
   const legacyPath = window.location.hash.slice(1);
-  window.history.replaceState(null, '', legacyPath === '/' ? '/library' : legacyPath);
+  window.history.replaceState(null, '', legacyPath);
 }
 
 const App: React.FC = () => {

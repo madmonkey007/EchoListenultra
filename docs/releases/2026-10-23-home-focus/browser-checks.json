@@ -1,0 +1,53 @@
+{
+  "button": {
+    "bottom": 415.265625,
+    "height": 60,
+    "left": 1122.90625,
+    "right": 1310,
+    "top": 355.265625,
+    "width": 187.09375,
+    "x": 1122.90625,
+    "y": 355.265625
+  },
+  "h1": "Instagram Transcript\nfrom Any Reel",
+  "h1Count": 1,
+  "input": {
+    "bottom": 415.265625,
+    "height": 60,
+    "left": 130,
+    "right": 1114.90625,
+    "top": 355.265625,
+    "width": 984.90625,
+    "x": 130,
+    "y": 355.265625
+  },
+  "overflow": false,
+  "primaryLinks": 0,
+  "removed": [
+    {
+      "count": 0,
+      "text": "every word on the first listen"
+    },
+    {
+      "count": 0,
+      "text": "Synthetic voice"
+    },
+    {
+      "count": 0,
+      "text": "An audio preview"
+    },
+    {
+      "count": 0,
+      "text": "Hear it for yourself"
+    },
+    {
+      "count": 0,
+      "text": "Transcribe a Reel"
+    }
+  ],
+  "subtitle": "Paste a public Reel link. Get a transcript you can copy and timed subtitles you can download.",
+  "viewport": [
+    1440,
+    900
+  ]
+}

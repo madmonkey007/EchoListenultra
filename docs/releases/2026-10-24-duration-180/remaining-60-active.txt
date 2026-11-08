@@ -1,0 +1,40 @@
+./lib/auth.ts:60:  if (session.expires_at > Date.now() / 1000 + 60) return session.access_token;
+./lib/auth.ts:68:      if (latest.expires_at > Date.now() / 1000 + 60) return latest;
+./lib/auth.ts:111:    if (!flow || flow.state !== callback.searchParams.get('state') || typeof flow.verifier !== 'string' || !Number.isFinite(flow.createdAt) || Date.now() - flow.createdAt > 10 * 60_000 || Date.now() < flow.createdAt) throw new Error('This sign-in attempt expired or was opened in another tab. Please try again.');
+./views/AccountView.tsx:35:        {quota && (!quota.configured || !quota.platformEnabled) ? <p role="status" className="account-notice">Platform-funded processing is not available on this deployment. Signing in does not enable video-link imports or free transcription yet.</p> : quota && <><dl className="allowance-values"><div><dt>Requests left</dt><dd>{quota.remainingRequests}</dd></div><div><dt>Minutes left</dt><dd>{Math.floor(quota.remainingSeconds / 60)}</dd></div></dl><p>Up to {quota.maxSeconds / 60} minutes per request.{quota.resetAt ? ` Resets at ${new Date(quota.resetAt).toLocaleString()}.` : ' Anonymous trials do not reset.'}</p>{quota.remainingRequests === 0 && <p role="status">{session ? 'Your daily allowance is used up. Return after the reset or use your own provider key.' : 'Your trial allowance is used up. Sign in with Google for the daily allowance.'}</p>}</>}
+./lib/reels/index.ts:38:  // Probe's 60-second deadline expired: fetching failed, not media too long.
+./lib/import-draft.ts:6:export const IMPORT_DRAFT_TTL = 60 * 60 * 1000;
+./lib/import-limits.ts:2:export const MAX_IMPORT_SECONDS = 2 * 60 * 60;
+./lib/server/quota.ts:5:export const QUOTA_LIMITS = { anonymous: { requests: 2, seconds: 600, maxSeconds: 300 }, authenticated: { requests: 3, seconds: 1200, maxSeconds: 600 } } as const;
+./lib/server/quota.ts:11:  const globalSeconds = Number(env.QUOTA_DAILY_SECONDS || 3600);
+./lib/server/quota.ts:29:    res.setHeader('Set-Cookie', `echo_trial=${encodeAnonymous(id, Date.now() + 365 * 86400000, config.secret)}; Path=/api; Max-Age=31536000; HttpOnly; SameSite=Lax${secure ? '; Secure' : ''}`);
+./views/VocabularyView.tsx:47:    const nextInterval = REVIEW_INTERVALS[newStage] * 24 * 60 * 60 * 1000;
+./views/VocabularyView.tsx:96:               <button onClick={() => handleReviewAction(true)} className="bg-green-500/10 text-green-600 py-6 rounded-3xl font-black uppercase tracking-widest border border-green-500/20">Knew it</button>
+./views/VocabularyView.tsx:118:          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDetailWord(null)}></div>
+./views/VocabularyView.tsx:136:                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium mb-4">{detailWord.definition || "No definition stored."}</p>
+./components/ReelTranscriber.tsx:23:const timestamp = (seconds: number) => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toFixed(3).padStart(6, '0')}`;
+./lib/import-outcome.ts:6:  return method === 'DURATION' ? value * 60 : 30;
+./views/HomeView.tsx:13:    {filtered.length ? <div className="lesson-grid">{filtered.map(session => <Link className={`lesson ${session.id === 'sample-1' ? 'sample-lesson' : ''}`} to={`/player/${session.id}`} key={session.id}><div className="lesson-art"><span className="material-symbols-outlined" aria-hidden="true">{session.id === 'sample-1' ? 'graphic_eq' : 'headphones'}</span><span>{session.id === 'sample-1' ? 'TRY A SAMPLE' : 'YOUR AUDIO'}</span></div><div className="lesson-info"><span className="lesson-meta">{Math.floor(session.duration / 60)}:{Math.floor(session.duration % 60).toString().padStart(2,'0')} · {session.segments.length} sections</span><h3>{session.title}</h3><p>{session.id === 'sample-1' ? 'A guided example with a synthetic voice and transcript.' : session.subtitle}</p><span className="lesson-open">{session.id === 'sample-1' ? 'Explore the player' : 'Open lesson'} <span aria-hidden="true">→</span></span></div></Link>)}</div> : <div className="empty-state"><span className="material-symbols-outlined" aria-hidden="true">headphones</span><h2>{query ? 'No matching lessons' : 'No audio yet'}</h2><p>{query ? 'Try another title or clear your search.' : 'Import your first audio file to start practicing.'}</p>{query ? <button className="button button-secondary" onClick={() => setQuery('')}>Clear search</button> : <Link to="/add" className="button">Import audio</Link>}</div>}
+./views/AddSessionView.tsx:13:  '1518133910546-b6c2fb7d79e3', '1518770660439-4636190af475', '1507413245164-6160d8298b31',
+./views/AddSessionView.tsx:15:  '1536640712-4d4c36ff0e4e', '1511632765486-a01980e01a18', '1520694478145-d14946084531',
+./views/AddSessionView.tsx:16:  '1511671782779-c97d3d27a1d4', '1507838596018-b9468b4961f6', '1519999482648-25049ddd37b1',
+./views/AddSessionView.tsx:18:  '1517245386807-bb43f82c33c4', '1441974231531-6227db76b6e', '1547826039-adc3a421f163',
+./views/AddSessionView.tsx:200:          setProgress(60);
+./views/AddSessionView.tsx:223:            text: `[Audio Section: ${Math.floor(t/60)}m ${Math.floor(t%60)}s]`,
+./views/AddSessionView.tsx:241:        coverUrl: `https://images.unsplash.com/photo-${randomCoverId}?auto=format&fit=crop&w=400&h=400&q=60`,
+./views/AddSessionView.tsx:313:      {error && <p role="alert" className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
+./views/PlayerView.tsx:109:    <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C9.51472 3 7.26472 4.00736 5.63604 5.63604L3 8.27208" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+./views/PlayerView.tsx:117:    <path d="M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.4853 3 16.7353 4.00736 18.364 5.63604L21 8.27208" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+./views/PlayerView.tsx:406:    if (isTimeSection(segment.text)) return <p className="text-slate-600 dark:text-slate-300">{segment.text}</p>;
+./views/PlayerView.tsx:415:                         : isPast ? 'text-slate-600 dark:text-accent/60 font-bold'
+./views/PlayerView.tsx:448:          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSelectedWord(null)}></div>
+./views/PlayerView.tsx:468:                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{selectedWord.definition}</p>
+./views/PlayerView.tsx:479:        <div className="absolute inset-0 z-[600] flex items-end">
+./views/PlayerView.tsx:494:                           <span className="text-[10px] tabular-nums text-slate-400 font-bold">{Math.floor(seg.startTime/60)}:{(seg.startTime%60).toFixed(0).padStart(2,'0')}</span>
+./views/PlayerView.tsx:531:        {segments.map((seg, idx) => <button key={seg.id} disabled={!isSourceReady} aria-current={activeIdx === idx ? 'true' : undefined} onClick={() => jumpToSegment(idx)} className={`w-full text-left rounded-xl p-4 mb-2 border ${activeIdx === idx ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-950' : 'border-transparent'}`}><span className="block text-xs text-slate-500 mb-2">{idx + 1} · {Math.floor(seg.startTime / 60)}:{String(Math.floor(seg.startTime % 60)).padStart(2, '0')}</span><span className="text-sm line-clamp-3">{seg.text}</span></button>)}
+./views/PlayerView.tsx:556:                          <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{Math.floor(seg.startTime/60)}:{(seg.startTime%60).toFixed(0).padStart(2,'0')}</span>
+./views/PlayerView.tsx:572:          <span>{Math.floor(currentTime/60)}:{(currentTime%60).toFixed(0).padStart(2,'0')}</span>
+./views/PlayerView.tsx:573:          <span>{Math.floor(session.duration/60)}:{(session.duration%60).toFixed(0).padStart(2,'0')}</span>
+./lib/reel-client.ts:9:      ? `${Math.floor(seconds / 60)}:${Math.floor(seconds % 60).toString().padStart(2, '0')}` : null;
+./lib/transcription-limit.ts:3:export const limitMinutes = (seconds = MAX_AUDIO_SECONDS) => seconds / 60;
+./lib/video-client.ts:12:  const bounded = AbortSignal.any([signal, AbortSignal.timeout(30 * 60_000)]);

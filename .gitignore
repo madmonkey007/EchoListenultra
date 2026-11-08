@@ -36,3 +36,25 @@ __pycache__/
 /scripts/verify-qc/manifests/
 /scripts/verify-qc/video-input-smoke.json
 /scripts/verify-qc/INDEX.md
+
+# Probe tooling heavy artifacts + real-audio/transcript evidence (PUBLIC repo: never publish people's audio or speech).
+**/.venv/
+.impeccable/
+scripts/transcribe-probe/models/
+scripts/*/runs/
+scripts/ig-probe/tmp/
+scripts/ig-probe/logs/
+scripts/verify-qc/review.html
+scripts/verify-qc/clips-index.json
+scripts/transcribe-probe/caption-supplement.json
+scripts/transcribe-probe/small-range.test
+scripts/**/*.wav
+scripts/**/*.mp4
+scripts/**/*.m4a
+experiments/**/*.wav
+experiments/**/*.mp4
+experiments/**/*.mp3
+experiments/**/evidence/
+docs/releases/**/*-body.json
+docs/releases/**/downloaded.*
+docs/releases/**/copied*.txt

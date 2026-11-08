@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Audio Visualizer 技术 Spike</title>
+<style>body{font:16px system-ui;background:#10151e;color:#ecf2f8;margin:24px}main{max-width:1000px;margin:auto;display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap}section{max-width:480px}label{display:block;margin:18px 0}button,select{font:inherit;padding:10px;margin:4px}canvas{width:min(360px,85vw);height:auto;background:#080e18}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px monospace}a{color:#7fe9cf}button:disabled{opacity:.5}</style>
+<main><section><h1>Audio Visualizer Spike</h1><p>纯浏览器 · 720 × 1280 · 9:16 · 30fps</p>
+<label>本地 MP3 / WAV <input id="audio" type="file" accept="audio/mpeg,audio/wav,.mp3,.wav"></label>
+<button id="demo">载入自制 30 秒测试音乐</button>
+<label>背景图片 <input id="image" type="file" accept="image/*"></label>
+<label>视觉效果 <select id="mode"></select></label><p id="template-description"></p>
+<button id="play" disabled>播放 / 暂停</button><button id="export" disabled>导出 H.264/AAC MP4</button>
+<p>导出前 30 秒；较短音频按原长度导出。导出无需播放，期间请保持页面开启。音乐仅在本地处理。</p><p id="status" role="status">请选择音频</p><a id="download" hidden>下载 MP4</a><pre id="diagnostics"></pre></section>
+<canvas id="preview" width="720" height="1280" aria-label="音频频谱预览"></canvas></main>
+<script type="module" src="/src/main.ts"></script></html>

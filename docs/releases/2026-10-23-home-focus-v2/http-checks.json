@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/about",
+    "status": 200,
+    "unchanged_except_asset_names": true
+  },
+  {
+    "path": "/help",
+    "status": 200,
+    "unchanged_except_asset_names": true
+  },
+  {
+    "path": "/privacy",
+    "status": 200,
+    "unchanged_except_asset_names": true
+  },
+  {
+    "path": "/contact",
+    "status": 200,
+    "unchanged_except_asset_names": true
+  },
+  {
+    "path": "/settings",
+    "status": 200,
+    "unchanged_except_asset_names": true
+  },
+  {
+    "path": "/tiktok-transcript",
+    "status": 200,
+    "unchanged_except_asset_names": true
+  }
+]

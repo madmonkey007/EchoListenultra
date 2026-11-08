@@ -1,0 +1,11 @@
+{
+  "score": 96,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Navigation labels and count intentionally changed; settings now contains only the requested theme controls.",
+    "Page copy length changes natural line wrapping."
+  ],
+  "suggestions": [],
+  "reasoning": "The same initial homepage state retains the existing typography, colors, input/button styling and example card. Computed font, font size, color, background, radius and padding match at six representative selectors; no full-page pixel identity is claimed."
+}

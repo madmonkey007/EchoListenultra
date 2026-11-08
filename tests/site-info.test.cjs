@@ -26,13 +26,14 @@ test('only public information pages are indexable and in the sitemap', () => {
 test('personal workspace and unknown routes are not indexable', () => {
   for (const path of ['/library', '/add', '/player/private-lesson', '/player/sample-1', '/vocabulary', '/settings', '/account', '/login', '/auth/callback', '/unknown']) assert.equal(routeMetadata(path).robots, 'noindex, follow');
 });
-test('privacy describes local loss, external processing and limited event payloads', () => {
+test('privacy describes current online processing and transient results', () => {
   const html = render(require('../views/PrivacyView.tsx').default);
-  for (const text of [/IndexedDB/, /localStorage/, /no cloud backup or cross-device sync/, /Google/, /Supabase/, /HttpOnly/, /one hour/, /Gmail messages/, /Gemini or Deepgram/, /only action names and the app version/, /ordinary request logs/, /not attached automatically/, /clear storage/, /mailto:dihou008@gmail.com/]) assert.match(html, text);
-  for (const id of ['local-data', 'transcription', 'external-services', 'usage', 'feedback', 'data-controls']) assert.match(html, new RegExp(`id="${id}"`));
+  for (const text of [/Cloudflare Workers AI/, /after a refresh/, /Copy text/, /Download SRT/, /theme preference/, /action names and the app version/, /not attached automatically/]) assert.match(html, text);
+  assert.doesNotMatch(html, /Gemini|Deepgram|Vocabulary|listening|Supabase|IndexedDB/i);
 });
-test('about offers truthful product context and practical next steps', () => {
+test('about describes the Reel product with relevant next steps', () => {
   const html = render(require('../views/AboutView.tsx').default);
-  assert.match(html, /individually maintained/);
-  for (const path of ['/add', '/help', '/contact', '/privacy']) assert.match(html, new RegExp(`href="${path}"`));
+  assert.match(html, /independently maintained/);
+  for (const path of ['/', '/help', '/contact', '/privacy']) assert.match(html, new RegExp(`href="${path}"`));
+  assert.doesNotMatch(html, /listening|Gemini|Deepgram|Vocabulary|provider key/i);
 });

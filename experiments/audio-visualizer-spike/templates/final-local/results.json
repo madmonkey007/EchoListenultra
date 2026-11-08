@@ -1,0 +1,63 @@
+{
+  "url": "http://127.0.0.1:5183",
+  "date": "2026-10-26T16:26:01.191Z",
+  "runs": [
+    {
+      "id": "rays",
+      "seconds": 15.287399999976158,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "rays",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 12957284,
+      "url": "blob:http://127.0.0.1:5183/c447da17-90ac-4a13-b34c-ae3a2068ba00",
+      "video": "h264",
+      "audio": "aac"
+    },
+    {
+      "id": "grid",
+      "seconds": 12.713900000035762,
+      "frames": 900,
+      "duration": 30,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "mode": "grid",
+      "aacDelayCorrection": {
+        "samples": 2112,
+        "correlation": 0.8840057526361691
+      },
+      "supported": {
+        "secureContext": true,
+        "videoEncoder": true,
+        "audioEncoder": true,
+        "audioDecoder": true,
+        "h264": true,
+        "aac": true,
+        "recorderMP4": true
+      },
+      "bytes": 6151870,
+      "url": "blob:http://127.0.0.1:5183/52cf0c56-d6f3-4a0a-a1b6-f85c862e5163",
+      "video": "h264",
+      "audio": "aac"
+    }
+  ],
+  "errors": [],
+  "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+  "passed": true
+}

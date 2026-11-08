@@ -2,7 +2,7 @@
   "name": "ReelTranscript",
   "short_name": "ReelTranscript",
   "description": "Transcribe public Instagram Reels and download timestamped SRT subtitles.",
-  "start_url": "/library",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "theme_color": "#0F172A",

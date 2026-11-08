@@ -9,11 +9,11 @@ test('Reel client sends URL only and preserves returned SRT and cue timestamps',
 test('empty audio is a distinct result and oversized errors are actionable',async()=>{
  const {requestReelTranscript}=require('../lib/reel-client.ts');
  const result=await requestReelTranscript('url',undefined,async()=>({ok:true,json:async()=>({status:'no_speech_detected',text:'',srt:'',cues:[]})}));assert.equal(result.status,'no_speech_detected');
- await assert.rejects(requestReelTranscript('url',undefined,async()=>({ok:false,status:413,json:async()=>({error:'payload_too_large'})})),/may exceed the duration limit/i);
+ await assert.rejects(requestReelTranscript('url',undefined,async()=>({ok:false,status:413,json:async()=>({error:'payload_too_large'})})),/problem on our side, not with your link/i);
 });
 test('missing output fails without creating replacement SRT or timestamps',async()=>{
  const {requestReelTranscript}=require('../lib/reel-client.ts');
- await assert.rejects(requestReelTranscript('url',undefined,async()=>({ok:true,json:async()=>({status:'transcribed',text:'hello',cues:[]})})),/incomplete/i);
+ await assert.rejects(requestReelTranscript('url',undefined,async()=>({ok:true,json:async()=>({status:'transcribed',text:'hello',cues:[]})})),/problem on our side/i);
 });
 test('initial HTML contains the real timestamped example without JavaScript',()=>{
  const html=fs.readFileSync('index.html','utf8');assert.match(html,/00:00\.000/);assert.match(html,/Thomas Skipper/);assert.match(html,/DbQzbzrAJ-V/);

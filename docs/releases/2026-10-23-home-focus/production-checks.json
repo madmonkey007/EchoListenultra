@@ -1,0 +1,50 @@
+{
+  "routes": [
+    {
+      "path": "/about",
+      "http": "200",
+      "unchanged_except_asset_names": true
+    },
+    {
+      "path": "/help",
+      "http": "200",
+      "unchanged_except_asset_names": true
+    },
+    {
+      "path": "/privacy",
+      "http": "200",
+      "unchanged_except_asset_names": true
+    },
+    {
+      "path": "/contact",
+      "http": "200",
+      "unchanged_except_asset_names": true
+    },
+    {
+      "path": "/settings",
+      "http": "200",
+      "unchanged_except_asset_names": true
+    },
+    {
+      "path": "/tiktok-transcript",
+      "http": "200",
+      "unchanged_except_asset_names": true
+    }
+  ],
+  "protected_fields": {
+    "title": "identical",
+    "description": "identical",
+    "canonical": "identical",
+    "og:title": "identical",
+    "og:description": "identical",
+    "H1": "identical",
+    "subtitle": "identical",
+    "example": "identical",
+    "noscript": "identical"
+  },
+  "static_bytes": [
+    2897,
+    2897
+  ],
+  "sitemap_robots_manifest": "byte-identical"
+}

@@ -1,0 +1,162 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "status": 200,
+      "title": "Instagram Transcript & SRT \u2014 ReelTranscript",
+      "description": "Get an Instagram transcript from a public Reel link. Copy the text or download timestamped SRT subtitles. No Instagram login or account is required.",
+      "canonical": "https://reelstranscript.com/",
+      "robots": "index, follow",
+      "h1": [
+        "Instagram Transcript from Any Reel"
+      ]
+    },
+    {
+      "path": "/about",
+      "status": 200,
+      "title": "About ReelTranscript",
+      "description": "Learn about ReelTranscript, an independent tool that turns public Instagram Reel links into text and timestamped SRT subtitles without a login.",
+      "canonical": "https://reelstranscript.com/about",
+      "robots": "index, follow",
+      "h1": [
+        "About ReelTranscript"
+      ]
+    },
+    {
+      "path": "/help",
+      "status": 200,
+      "title": "How ReelTranscript Works \u2014 ReelTranscript",
+      "description": "Learn how to submit a public Instagram Reel link, copy its transcript, download timestamped SRT subtitles and resolve common errors.",
+      "canonical": "https://reelstranscript.com/help",
+      "robots": "index, follow",
+      "h1": [
+        "How to use ReelTranscript"
+      ]
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "title": "Data and privacy \u2014 ReelTranscript",
+      "description": "Read how ReelTranscript processes submitted Reel links and generated transcripts, plus information about feedback and usage data.",
+      "canonical": "https://reelstranscript.com/privacy",
+      "robots": "index, follow",
+      "h1": [
+        "Privacy and your data"
+      ]
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "title": "Contact and feedback \u2014 ReelTranscript",
+      "description": "Contact the ReelTranscript maintainer with questions, transcription problems, subtitle issues or product feedback.",
+      "canonical": "https://reelstranscript.com/contact",
+      "robots": "index, follow",
+      "h1": [
+        "Contact ReelTranscript"
+      ]
+    },
+    {
+      "path": "/tiktok-transcript",
+      "status": 200,
+      "title": "TikTok Transcript \u2014 Coming Soon | ReelTranscript",
+      "description": "TikTok link transcription is not available on ReelTranscript yet. Read about the planned transcript page and use our existing Instagram Reel tool.",
+      "canonical": "https://reelstranscript.com/tiktok-transcript",
+      "robots": "noindex, follow",
+      "h1": [
+        "TikTok transcript \u2014 coming soon"
+      ]
+    },
+    {
+      "path": "/settings",
+      "status": 200,
+      "title": "Appearance settings \u2014 ReelTranscript",
+      "description": "Choose the appearance of ReelTranscript on this device.",
+      "canonical": "https://reelstranscript.com/settings",
+      "robots": "noindex, follow",
+      "h1": [
+        "Settings"
+      ]
+    },
+    {
+      "path": "/library",
+      "status": 404,
+      "title": "",
+      "description": "",
+      "canonical": "",
+      "robots": "",
+      "h1": []
+    },
+    {
+      "path": "/vocabulary",
+      "status": 404,
+      "title": "",
+      "description": "",
+      "canonical": "",
+      "robots": "",
+      "h1": []
+    },
+    {
+      "path": "/account",
+      "status": 404,
+      "title": "",
+      "description": "",
+      "canonical": "",
+      "robots": "",
+      "h1": []
+    },
+    {
+      "path": "/add",
+      "status": 404,
+      "title": "",
+      "description": "",
+      "canonical": "",
+      "robots": "",
+      "h1": []
+    },
+    {
+      "path": "/login",
+      "status": 404,
+      "title": "",
+      "description": "",
+      "canonical": "",
+      "robots": "",
+      "h1": []
+    },
+    {
+      "path": "/auth/callback",
+      "status": 404,
+      "title": "",
+      "description": "",
+      "canonical": "",
+      "robots": "",
+      "h1": []
+    },
+    {
+      "path": "/player/sample-1",
+      "status": 404,
+      "title": "",
+      "description": "",
+      "canonical": "",
+      "robots": "",
+      "h1": []
+    },
+    {
+      "path": "/nonexistent-x9",
+      "status": 404,
+      "title": "",
+      "description": "",
+      "canonical": "",
+      "robots": "",
+      "h1": []
+    }
+  ],
+  "homepage_frozen_fields_equal": true,
+  "static_example_equal": true,
+  "sitemap": [
+    "https://reelstranscript.com/",
+    "https://reelstranscript.com/about",
+    "https://reelstranscript.com/help",
+    "https://reelstranscript.com/privacy",
+    "https://reelstranscript.com/contact"
+  ]
+}

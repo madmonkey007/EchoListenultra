@@ -11,20 +11,32 @@ const { renderToStaticMarkup } = require('react-dom/server');
 const { MemoryRouter } = require('react-router-dom');
 function render(Component, props = {}) { return renderToStaticMarkup(React.createElement(MemoryRouter, null, React.createElement(Component, props))); }
 
-test('public homepage offers import, real demo and explanatory help without sign-in', () => {
+test('public homepage offers Reel transcription, real example and explanatory help', () => {
   const Landing = require('../views/LandingView.tsx').default;
   const html = render(Landing);
-  assert.match(html, /href="\/add"/);
-  assert.match(html, /href="\/player\/sample-1"/);
-  assert.match(html, /No sign-up/);
+  assert.match(html, /href="\/help"/);
+  assert.match(html, /No Instagram sign-in/);
   assert.match(html, /<h1/);
-  assert.match(html, /\/demo\/sample.wav/);
+  assert.doesNotMatch(html, /An audio preview|Synthetic voice|Hear it for yourself|every word on the first listen|Transcribe a Reel|<audio/);
+  assert.equal((html.match(/<h1\b/g) || []).length, 1);
+  assert.doesNotMatch(html, /class="reel-paste"/);
+  assert.match(html, /reel-entry/);
+  assert.match(html, /From a Reel/);
+  assert.doesNotMatch(html, /YOUR REEL|class="principles/);
+  assert.match(html, /<h3 class="workflow-subtitle">Keep the words/);
+  assert.equal((html.match(/<h2\b/g) || []).length, 4);
+  assert.equal((html.match(/<h3\b/g) || []).length, 4);
+  assert.equal((html.match(/<details>/g) || []).length, 4);
+  assert.match(html, /How long can the Reel be\?<\/summary><p>Up to 3 minutes\./);
+  assert.doesNotMatch(html, /class="closing site-container"|Your next Reel/);
 });
-test('help states local data limits and provider upload before using AI', () => {
+test('help explains public Reel input and saving transient transcript results', () => {
   const html = render(require('../views/HelpView.tsx').default);
-  assert.match(html, /clearing.*browser/i);
-  assert.match(html, /sent.*provider/i);
-  assert.match(html, /without.*key/i);
+  assert.match(html, /not retained.*refresh/i);
+  assert.match(html, /Copy text/);
+  assert.match(html, /Download SRT/);
+  assert.match(html, /No sign-in/i);
+  assert.doesNotMatch(html, /listening|Gemini|Deepgram|Vocabulary|provider key/i);
 });
 test('library reflects real sessions and provides an import empty state', () => {
   const html = render(require('../views/HomeView.tsx').default, { sessions: [], savedWordCount: 0 });

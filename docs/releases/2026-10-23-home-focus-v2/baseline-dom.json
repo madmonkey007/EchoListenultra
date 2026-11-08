@@ -1,0 +1,50 @@
+{
+  "h1": [
+    "Instagram Transcript\nfrom Any Reel"
+  ],
+  "h2": [
+    "A real transcript, at a glance.",
+    "From a Reel.\nTo readable text.",
+    "Keep the words.\nKeep the timing.",
+    "Your result stays on this page.",
+    "Before you paste a link."
+  ],
+  "h3": [
+    "Paste the link",
+    "Generate the transcript",
+    "Save your result"
+  ],
+  "sections": [
+    {
+      "class": "reel-tool site-container",
+      "h2": 1,
+      "h3": 0
+    },
+    {
+      "class": "hero site-container listening-legacy",
+      "h2": 1,
+      "h3": 0
+    },
+    {
+      "class": "principles site-container",
+      "h2": 0,
+      "h3": 0
+    },
+    {
+      "class": "workflow site-container",
+      "h2": 1,
+      "h3": 3
+    },
+    {
+      "class": "privacy-strip site-container",
+      "h2": 1,
+      "h3": 0
+    },
+    {
+      "class": "faq-section site-container",
+      "h2": 1,
+      "h3": 0
+    }
+  ],
+  "subtitle": "Paste a public Reel link. Get a transcript you can copy and timed subtitles you can download."
+}

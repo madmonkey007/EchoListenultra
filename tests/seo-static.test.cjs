@@ -24,5 +24,5 @@ test('one production origin renders every static URL independently of deployment
   assert.ok(rendered.includes(origin));
  }
  const manifest=JSON.parse(fs.readFileSync('public/manifest.json','utf8'));
- assert.equal(manifest.start_url,'/library');assert.equal(manifest.scope,'/');
+ assert.equal(manifest.start_url,'/');assert.equal(manifest.scope,'/');
 });

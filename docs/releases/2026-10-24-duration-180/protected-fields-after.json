@@ -1,0 +1,26 @@
+{
+  "title": [
+    "<title>Instagram Transcript &amp; SRT — ReelTranscript</title>"
+  ],
+  "all_meta": [
+    "<meta charset=\"UTF-8\" />",
+    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, viewport-fit=cover\" />",
+    "<meta name=\"theme-color\" content=\"#10171e\" />",
+    "<meta name=\"description\" content=\"Get an Instagram transcript from a public Reel link. Copy the text or download timestamped SRT subtitles. No Instagram login or account is required.\" />",
+    "<meta property=\"og:title\" content=\"Instagram Transcript &amp; SRT — ReelTranscript\" />",
+    "<meta property=\"og:description\" content=\"Paste a public Instagram Reel link for a readable transcript and timed SRT subtitles. Explore a real transcript example.\" />",
+    "<meta name=\"robots\" content=\"index, follow\" />",
+    "<meta property=\"og:url\" content=\"https://reelstranscript.com/\" />",
+    "<meta property=\"og:type\" content=\"website\" />",
+    "<meta name=\"twitter:card\" content=\"summary\" />"
+  ],
+  "canonical": [
+    "<link rel=\"canonical\" href=\"https://reelstranscript.com/\" />"
+  ],
+  "h1": [
+    "<h1>Instagram Transcript from Any Reel</h1>"
+  ],
+  "noscript": [
+    "<noscript><p><strong>ReelTranscript</strong></p><p>Enable JavaScript to paste a public Instagram Reel link and generate a transcript with timestamped SRT subtitles.</p></noscript>"
+  ]
+}

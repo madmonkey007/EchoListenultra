@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 const read = p => readFileSync(new URL('../' + p, import.meta.url), 'utf8');
 test('release assets are copied by Vite', () => {
   assert.ok(existsSync(new URL('../public/sw.js', import.meta.url)));
-  assert.equal(JSON.parse(read('public/manifest.json')).start_url, '/library');
+  assert.equal(JSON.parse(read('public/manifest.json')).start_url, '/');
 });
 test('provider keys are supplied by users, never injected by the build', () => {
   assert.doesNotMatch(read('vite.config.ts'), /GEMINI_API_KEY|define:\s*\{\s*['"]process\.env/);
@@ -22,7 +22,8 @@ test('service worker ignores external requests and registers only in production'
 test('SPA routes do not swallow missing static assets', () => {
   const config = JSON.parse(read('vercel.json'));
   const routes = config.rewrites.map(item => new RegExp('^' + item.source.replace(':id', '[^/]+') + '$'));
-  assert.ok(routes.some(route => route.test('/library')));
+  assert.equal(routes.some(route => route.test('/library')), false);
+  assert.ok(routes.some(route => route.test('/settings')));
   for (const path of ['/api/events', '/api/unknown', '/assets/missing.js', '/sw.js', '/manifest.json', '/missing.png', '/nonexistent-x9']) assert.equal(routes.some(route => route.test(path)), false);
 });
 

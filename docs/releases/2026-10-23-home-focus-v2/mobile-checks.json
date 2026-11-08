@@ -1,0 +1,29 @@
+{
+  "feedbackDisplay": "none",
+  "input": {
+    "bottom": 405.6796875,
+    "height": 60,
+    "left": 28,
+    "right": 248.4921875,
+    "top": 345.6796875,
+    "width": 220.4921875,
+    "x": 28,
+    "y": 345.6796875
+  },
+  "overflow": false,
+  "scrollY": 0,
+  "submit": {
+    "bottom": 405.6796875,
+    "height": 60,
+    "left": 254.4921875,
+    "right": 362,
+    "top": 345.6796875,
+    "width": 107.5078125,
+    "x": 254.4921875,
+    "y": 345.6796875
+  },
+  "viewport": [
+    390,
+    844
+  ]
+}

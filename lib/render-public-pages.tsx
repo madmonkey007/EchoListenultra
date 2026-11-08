@@ -6,12 +6,16 @@ import AboutView from '../views/AboutView';
 import HelpView from '../views/HelpView';
 import PrivacyView from '../views/PrivacyView';
 import ContactView from '../views/ContactView';
+import SettingsView from '../views/SettingsView';
+import type { AIProviderConfig } from '../types';
 import TikTokTranscriptView from '../views/TikTokTranscriptView';
 import { routeMetadata, SITE_ORIGIN } from './site-meta';
 
+const AppearancePage = () => <SettingsView apiConfig={{ theme: 'dark' } as AIProviderConfig} onConfigChange={() => {}} />;
+
 const pages: Record<string, React.ComponentType> = {
   '/about': AboutView, '/help': HelpView, '/privacy': PrivacyView,
-  '/contact': ContactView, '/tiktok-transcript': TikTokTranscriptView,
+  '/contact': ContactView, '/tiktok-transcript': TikTokTranscriptView, '/settings': AppearancePage,
 };
 export const prerenderPaths = Object.keys(pages);
 const escape = (value: string) => value.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
@@ -26,8 +30,8 @@ export function renderPublicHtml(homeHtml: string, pathname: string): string | n
   const body = renderToStaticMarkup(<MemoryRouter initialEntries={[pathname]}>
     <div className="website">
       <a href="#main-content" className="skip-link">Skip to content</a><SiteHeader />
-      <main id="main-content" className="site-main" tabIndex={-1}><View /></main>
-      <footer className="site-footer site-container"><Brand /><p>Listen closely. Learn at your pace.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data &amp; privacy</Link><Link to="/help">Help &amp; guide</Link></footer>
+      <main id="main-content" className={pathname === '/settings' ? 'tool-page' : 'site-main'} tabIndex={-1}><View /></main>
+      <footer className="site-footer site-container"><Brand /><p>Public Reels. Readable transcripts. Timed subtitles.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data &amp; privacy</Link><Link to="/help">How it works</Link><Link to="/settings">Settings</Link></footer>
     </div>
   </MemoryRouter>);
   return homeHtml

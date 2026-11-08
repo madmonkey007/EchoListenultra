@@ -1,0 +1,14 @@
+{
+  "score": 96,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "保留已验收的输入区，不重复改造",
+    "删除特性横条，说明与三步合并为单一区块",
+    "FAQ 新增时长项，收尾恢复 Get transcript",
+    "手机首页 Feedback 隐藏"
+  ],
+  "suggestions": [],
+  "reasoning": "生产桌面 1440×900 与手机 390×844 均通过首屏检查；输入区保持不变，移动端 Feedback 隐藏，合并区块与标题层级符合新版清单。",
+  "next_actions": []
+}

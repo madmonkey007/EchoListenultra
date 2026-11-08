@@ -1,0 +1,6 @@
+private/
+.env
+.env.*
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
