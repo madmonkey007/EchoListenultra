@@ -9,7 +9,7 @@ const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
 const { MemoryRouter } = require('react-router-dom');
 const { routeMetadata, SITE_ORIGIN } = require('../lib/site-meta.ts');
-const publicPaths = ['/', '/about', '/help', '/privacy', '/contact'];
+const publicPaths = ['/', '/about', '/help', '/privacy', '/contact', '/instagram-reel-transcript', '/reels-transcript', '/instagram-reel-transcript-generator', '/instagram-video-transcript'];
 const render = component => renderToStaticMarkup(React.createElement(MemoryRouter, null, React.createElement(component)));
 
 test('only public information pages are indexable and in the sitemap', () => {

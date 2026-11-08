@@ -13,6 +13,10 @@ import ContactView from './views/ContactView.tsx';
 import TikTokTranscriptView from './views/TikTokTranscriptView.tsx';
 import AboutView from './views/AboutView.tsx';
 import PrivacyView from './views/PrivacyView.tsx';
+import InstagramReelTranscriptView from './views/InstagramReelTranscriptView.tsx';
+import ReelsTranscriptView from './views/ReelsTranscriptView.tsx';
+import InstagramReelTranscriptGeneratorView from './views/InstagramReelTranscriptGeneratorView.tsx';
+import InstagramVideoTranscriptView from './views/InstagramVideoTranscriptView.tsx';
 import AccountView from './views/AccountView.tsx';
 import AuthView from './views/AuthView.tsx';
 import { routeMetadata, SITE_ORIGIN, publicMetadata } from './lib/site-meta.ts';
@@ -106,10 +110,14 @@ const AppContent: React.FC<{
           <Route path="/tiktok-transcript" element={<TikTokTranscriptView />} />
           <Route path="/about" element={<AboutView />} />
           <Route path="/privacy" element={<PrivacyView />} />
+          <Route path="/instagram-reel-transcript" element={<InstagramReelTranscriptView />} />
+          <Route path="/reels-transcript" element={<ReelsTranscriptView />} />
+          <Route path="/instagram-reel-transcript-generator" element={<InstagramReelTranscriptGeneratorView />} />
+          <Route path="/instagram-video-transcript" element={<InstagramVideoTranscriptView />} />
           <Route path="*" element={<div className="empty-state site-container"><h1>That page isn’t here.</h1><p>Return to the Reel transcription tool.</p><Link className="button" to="/">Go to Home</Link></div>} />
         </Routes>
       </main>
-      {!isPlayerView && <footer className="site-footer site-container"><Brand /><p>Public Reels. Readable transcripts. Timed subtitles.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data & privacy</Link><Link to="/help">How it works</Link><Link to="/settings">Settings</Link></footer>}
+      {!isPlayerView && <footer className="site-footer site-container"><Brand /><p>Public Reels. Readable transcripts. Timed subtitles.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data & privacy</Link><Link to="/help">How it works</Link><Link to="/settings">Settings</Link><nav className="footer-content-links" aria-label="Transcript guides"><Link to="/instagram-reel-transcript">Instagram reel transcript</Link><Link to="/reels-transcript">Reels transcript</Link><Link to="/instagram-reel-transcript-generator">Instagram reel transcript generator</Link><Link to="/instagram-video-transcript">Instagram video transcript</Link></nav></footer>}
       {!isPlayerView && !['/contact', '/account', '/login', '/auth/callback'].includes(location.pathname) && <Link to="/contact" className="feedback-fab" aria-label="Feedback and help"><span className="material-symbols-outlined" aria-hidden="true">chat_bubble_outline</span><span>Feedback</span></Link>}
     </div>
   );

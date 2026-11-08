@@ -1,0 +1,11 @@
+scripts/**/.venv
+scripts/transcribe-probe/models
+scripts/*/runs
+scripts/ig-probe/tmp
+scripts/ig-probe/logs
+scripts/verify-qc/review.html
+experiments
+.impeccable
+docs
+node_modules
+dist

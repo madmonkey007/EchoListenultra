@@ -58,3 +58,5 @@ experiments/**/evidence/
 docs/releases/**/*-body.json
 docs/releases/**/downloaded.*
 docs/releases/**/copied*.txt
+.vercel
+.env*

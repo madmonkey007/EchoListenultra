@@ -25,7 +25,8 @@ const EXAMPLE = [
   ['00:05.220 – 00:09.580', "And where are you from? I'm from a small town in South Carolina called Marion."],
   ['00:09.980 – 00:14.100', "It's near Myrtle Beach. What do you do in life? I'm also a college baseball player."],
 ];
-export default function ReelTranscriber() {
+// Content pages embed the same tool without its homepage heading and example panel.
+export default function ReelTranscriber({ showIntro = true, showExample = true }: { showIntro?: boolean; showExample?: boolean }) {
   const [url, setUrl] = useState('');
   const [limit, setLimit] = useState(MAX_AUDIO_SECONDS);
   const [pending, setPending] = useState(false);
@@ -59,7 +60,7 @@ export default function ReelTranscriber() {
       normalized = new URL(url.trim());
       if (normalized.protocol !== 'https:' || normalized.username || normalized.password || normalized.port
           || !['instagram.com', 'www.instagram.com', 'm.instagram.com'].includes(normalized.hostname)
-          || !/^\/reels?\/[A-Za-z0-9_-]+\/?$/.test(normalized.pathname)) throw new Error();
+          || !/^\/(?:reels?|p)\/[A-Za-z0-9_-]+\/?$/.test(normalized.pathname)) throw new Error();
     } catch { setError(reelErrorMessage({ error: 'invalid_url' })); return; }
     normalized.hostname = 'www.instagram.com'; normalized.pathname = normalized.pathname.replace(/^\/reels\//, '/reel/'); normalized.search = ''; normalized.hash = '';
     if (!normalized.pathname.endsWith('/')) normalized.pathname += '/';
@@ -81,10 +82,10 @@ export default function ReelTranscriber() {
     try { await navigator.clipboard.writeText(result?.text || ''); setNotice('Transcript copied.'); }
     catch { setNotice('Copy was unavailable. Select the transcript text to copy it.'); }
   }
-  return <section className="reel-tool site-container" aria-labelledby="reel-title">
+  return <section className="reel-tool site-container" aria-labelledby={showIntro ? 'reel-title' : undefined} aria-label={showIntro ? undefined : 'Instagram transcript tool'}>
     <div className="reel-intro">
-      <h1 id="reel-title">Instagram Transcript<br /><em>from Any Reel</em></h1>
-      <p>Paste a public Reel link. Get a transcript you can copy and timed subtitles you can download.</p>
+      {showIntro && <><h1 id="reel-title">Instagram Transcript<br /><em>from Any Reel</em></h1>
+      <p>Paste a public Reel link. Get a transcript you can copy and timed subtitles you can download.</p></>}
       <form onSubmit={submit} className="reel-form" aria-busy={pending}>
         <label htmlFor="reel-url">Instagram Reel URL</label>
         <div className="reel-entry"><div className="reel-input-wrap"><input id="reel-url" type="url" inputMode="url" autoComplete="off" required placeholder="https://www.instagram.com/reel/…/" value={url} onChange={e => setUrl(e.target.value)} disabled={pending} aria-describedby="reel-hint" /></div>
@@ -95,12 +96,12 @@ export default function ReelTranscriber() {
       {pending && <div ref={waitArea}><TranscriptionWait elapsed={elapsed} progress={progress} /></div>}
       {error && <ReelErrorMessage message={error} />}
     </div>
-    <aside className="reel-example" aria-labelledby="reel-example-title">
+    {showExample && <aside className="reel-example" aria-labelledby="reel-example-title">
       <div className="reel-example-heading"><h2 id="reel-example-title">A real transcript, at a glance.</h2><span>Interview excerpt</span></div>
       <ol>{EXAMPLE.map(([time, text]) => <li key={time}><time>{time}</time><p>{text}</p></li>)}</ol>
       <a href="https://www.instagram.com/reel/DbQzbzrAJ-V/" target="_blank" rel="noopener noreferrer">View the source Reel <span aria-hidden="true">↗</span></a>
       <p className="reel-example-note">An excerpt from a real transcription. Automatic transcripts can contain errors.</p>
-    </aside>
+    </aside>}
     {result && <ReelResult result={result} notice={notice} onCopy={copy} headingRef={resultHeading} />}
   </section>;
 }

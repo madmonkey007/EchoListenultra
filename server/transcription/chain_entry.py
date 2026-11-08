@@ -33,7 +33,7 @@ class handler(BaseHTTPRequestHandler):
             length=int(self.headers.get('Content-Length',0))
             if not 0<length<=4096:raise ValueError('Invalid body length')
             url=json.loads(self.rfile.read(length)).get('url')
-            if not isinstance(url,str) or not re.fullmatch(r'https://www\.instagram\.com/reel/[A-Za-z0-9_-]+/',url):raise ValueError('Invalid Reel URL')
+            if not isinstance(url,str) or not re.fullmatch(r'https://www\.instagram\.com/(?:reel|p)/[A-Za-z0-9_-]+/',url):raise ValueError('Invalid Reel URL')
             state['url']=url
             self.report_progress('fetching_audio',0)
             t=time.perf_counter()

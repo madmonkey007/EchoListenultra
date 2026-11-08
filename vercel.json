@@ -21,6 +21,22 @@
       "destination": "/tiktok-transcript.html"
     },
     {
+      "source": "/instagram-reel-transcript",
+      "destination": "/instagram-reel-transcript.html"
+    },
+    {
+      "source": "/reels-transcript",
+      "destination": "/reels-transcript.html"
+    },
+    {
+      "source": "/instagram-reel-transcript-generator",
+      "destination": "/instagram-reel-transcript-generator.html"
+    },
+    {
+      "source": "/instagram-video-transcript",
+      "destination": "/instagram-video-transcript.html"
+    },
+    {
       "source": "/settings",
       "destination": "/settings.html"
     }

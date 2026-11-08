@@ -5,4 +5,8 @@
   <url><loc>%SITE_ORIGIN%/help</loc></url>
   <url><loc>%SITE_ORIGIN%/privacy</loc></url>
   <url><loc>%SITE_ORIGIN%/contact</loc></url>
+  <url><loc>%SITE_ORIGIN%/instagram-reel-transcript</loc></url>
+  <url><loc>%SITE_ORIGIN%/reels-transcript</loc></url>
+  <url><loc>%SITE_ORIGIN%/instagram-reel-transcript-generator</loc></url>
+  <url><loc>%SITE_ORIGIN%/instagram-video-transcript</loc></url>
 </urlset>
