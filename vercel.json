@@ -147,6 +147,56 @@
       "source": "/index.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/about/",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/help/",
+      "destination": "/help",
+      "permanent": true
+    },
+    {
+      "source": "/privacy/",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/contact/",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/tiktok-transcript/",
+      "destination": "/tiktok-transcript",
+      "permanent": true
+    },
+    {
+      "source": "/instagram-reel-transcript/",
+      "destination": "/instagram-reel-transcript",
+      "permanent": true
+    },
+    {
+      "source": "/reels-transcript/",
+      "destination": "/reels-transcript",
+      "permanent": true
+    },
+    {
+      "source": "/instagram-reel-transcript-generator/",
+      "destination": "/instagram-reel-transcript-generator",
+      "permanent": true
+    },
+    {
+      "source": "/instagram-video-transcript/",
+      "destination": "/instagram-video-transcript",
+      "permanent": true
+    },
+    {
+      "source": "/settings/",
+      "destination": "/settings",
+      "permanent": true
     }
   ]
 }
