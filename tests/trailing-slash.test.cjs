@@ -9,7 +9,9 @@ test('every sitemap page permanently redirects its trailing-slash variant to the
  for(const p of paths){
   const hit=redirects.find(r=>r.source===p+'/'&&r.destination===p);
   assert.ok(hit,p+' redirect present');
-  assert.equal(hit.permanent,true,p+' is a permanent 301');
+  // Literal 301 via statusCode: Vercel's permanent:true emits 308, not 301.
+  assert.equal(hit.statusCode,301,p+' is a permanent 301');
+  assert.equal(hit.permanent,undefined,p+' must not rely on the 308-emitting permanent flag');
  }
 });
 
@@ -30,5 +32,5 @@ test('each redirect target is still served by the existing rewrite (redirect run
   assert.ok(rewriteSources.has(p),p+' rewrite still present');
  }
  // The noindex utility page is redirected too even though it stays out of the sitemap.
- assert.ok(redirects.some(r=>r.source==='/settings/'&&r.destination==='/settings'&&r.permanent===true),'/settings/ covered');
+ assert.ok(redirects.some(r=>r.source==='/settings/'&&r.destination==='/settings'&&r.statusCode===301),'/settings/ covered');
 });

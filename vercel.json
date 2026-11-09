@@ -151,52 +151,52 @@
     {
       "source": "/about/",
       "destination": "/about",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "source": "/help/",
       "destination": "/help",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "source": "/privacy/",
       "destination": "/privacy",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "source": "/contact/",
       "destination": "/contact",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "source": "/tiktok-transcript/",
       "destination": "/tiktok-transcript",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "source": "/instagram-reel-transcript/",
       "destination": "/instagram-reel-transcript",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "source": "/reels-transcript/",
       "destination": "/reels-transcript",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "source": "/instagram-reel-transcript-generator/",
       "destination": "/instagram-reel-transcript-generator",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "source": "/instagram-video-transcript/",
       "destination": "/instagram-video-transcript",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "source": "/settings/",
       "destination": "/settings",
-      "permanent": true
+      "statusCode": 301
     }
   ]
 }
