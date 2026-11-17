@@ -16,5 +16,5 @@ test('missing output fails without creating replacement SRT or timestamps',async
  await assert.rejects(requestReelTranscript('url',undefined,async()=>({ok:true,json:async()=>({status:'transcribed',text:'hello',cues:[]})})),/problem on our side/i);
 });
 test('initial HTML contains the real timestamped example without JavaScript',()=>{
- const html=fs.readFileSync('index.html','utf8');assert.match(html,/00:00\.000/);assert.match(html,/Thomas Skipper/);assert.match(html,/DbQzbzrAJ-V/);
+ const html=fs.readFileSync('index.html','utf8');assert.match(html,/00:00 – 00:05/);assert.match(html,/Thomas Skipper/);assert.match(html,/DbQzbzrAJ-V/);
 });

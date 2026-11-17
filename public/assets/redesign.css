@@ -1,0 +1,2359 @@
+/* ==========================================================================
+   Visual layer — paper and ink
+   Loaded after the original compiled stylesheet. It changes appearance only:
+   colour, type scale, spacing, radius, control shape, responsive behaviour.
+   No copy, no markup structure, no routes, no metadata are touched.
+   ========================================================================== */
+
+/* --- 1. A second family, and only a second one ---------------------------
+   The interface keeps Plus Jakarta Sans (self-hosted, declared below under the
+   "Reel Sans" alias so the older rules keep resolving). The only addition is
+   one serif with a real italic — used for the display line, section headings
+   and the transcript itself, i.e. the things a visitor reads rather than
+   operates. Two families, four files, no third-party font host.
+
+   The serif is Newsreader, not the Garamond the reference page sets its
+   headline in: that pairing was the one thing still recognisably borrowed
+   from it. Newsreader is drawn for reading on a screen — taller x-height,
+   sharper terminals, a wider body — so at the 18px the transcript actually
+   runs at it holds up better than a book face, and the italic is a true cut
+   rather than a slanted roman. The pair is unchanged; only the second voice
+   is ours. (The previous face sits in src/font-alternates/ if it ever needs
+   to come back: point these two src rules at it and nothing else moves.)
+   ------------------------------------------------------------------------ */
+@font-face {
+  font-family: "Paper Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/newsreader-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Paper Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/newsreader-latin-400-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Reel Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/assets/fonts/plus-jakarta-sans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Reel Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/assets/fonts/plus-jakarta-sans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* --- 2. Warm paper, warm ink, one rubric --------------------------------
+   The plane is an oat-white paper rather than a cool white sheet: a printed
+   page ages warm, and the warmth is what separates this from every other
+   transcript tool, which all sit on the same blue-white.
+
+   The single accent is an iron-gall red — the colour rubricators used to mark
+   the one line on a manuscript that must be read first. It appears on exactly
+   three things: the primary pill (and the skip link, which is that pill placed
+   off-canvas), the bar that fills while a request runs, and the margin rule on
+   the line being read. Nothing else borrows it: links stay ink, numbers stay
+   muted, the spoken word stays a block of ink.
+   The pill and the field keep their shapes; only the fill changes.
+   ------------------------------------------------------------------------ */
+:root,
+html.light {
+  color-scheme: light;
+  --bg: #f6f1e6;          /* paper */
+  --surface: #f6f1e6;
+  --field: #ece4d4;       /* the only filled surface */
+  --ink: #1b1712;
+  --ink-2: #4b443a;
+  --muted: #6b6355;
+  --line: rgba(27, 23, 18, 0.12);
+  --line-2: rgba(27, 23, 18, 0.24);
+  --accent: #5e2416;
+  --accent-ink: #fdf9f0;
+  --accent-hover: #4a1b10;
+  --ring: rgba(27, 23, 18, 0.18);
+  --shadow-pop: 0 10px 30px -18px rgba(27, 23, 18, 0.45);
+  --font: "Reel Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Paper Serif", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-display: var(--serif);
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg: #12100d;
+  --surface: #1a1712;
+  --field: #221e18;
+  --ink: #f3eee2;
+  --ink-2: #b3a996;
+  --muted: #958b7c;
+  --line: rgba(243, 238, 226, 0.12);
+  --line-2: rgba(243, 238, 226, 0.24);
+  --accent: #94513a;
+  --accent-ink: #fdf9f0;
+  --accent-hover: #a35c41;
+  --ring: rgba(243, 238, 226, 0.24);
+  --shadow-pop: 0 12px 32px -20px rgba(0, 0, 0, 0.9);
+}
+
+/* --- 3. Base type -------------------------------------------------------- */
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* --- 4. Column ---------------------------------------------------------- */
+.site-container {
+  /* 1040 was wider than the page's own display type: the headline sat in 880
+     while every section below ran out to 1040, so the eye had to re-find the
+     column at each section boundary and the wider blocks left a visible dead
+     tail on the right. One column, set to the headline's own width, so the
+     display type and the body are finally the same object. */
+  width: min(880px, calc(100% - 80px));
+  margin-inline: auto;
+}
+
+.site-main {
+  padding-bottom: 0;
+}
+
+/* --- 5. Header: one hairline, nothing else ------------------------------ */
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  position: relative;
+  z-index: 60;
+}
+
+.header-inner {
+  /* Was 1180: the masthead sat 70px wider than the column it heads, so the
+     logo hung left of every heading below it and the nav overhung the footer
+     links by the same amount. Header, column and footer now share one edge. */
+  width: min(880px, calc(100% - 80px));
+  min-height: 70px;
+  gap: 28px;
+}
+
+.brand {
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  gap: 9px;
+}
+
+.brand svg {
+  width: 22px;
+  height: 22px;
+  color: var(--ink);
+}
+
+.brand-dot {
+  color: var(--ink);
+}
+
+.site-nav {
+  gap: 26px;
+}
+
+.site-nav a {
+  font-size: 13.5px;
+  color: var(--muted);
+  padding-block: 8px;
+  letter-spacing: 0;
+}
+
+.site-nav a:hover,
+.site-nav a.active {
+  color: var(--ink);
+}
+
+.site-nav a.active:not(.settings-link) {
+  text-decoration: none;
+}
+
+.header-feedback {
+  color: var(--muted);
+}
+
+.header-feedback:hover {
+  color: var(--ink);
+}
+
+/* On the home page this mark is an inline SVG; on the four article pages the
+   same mark comes from the icon font, which defaults to the filled instance at
+   22px. Left alone, the same control would be a solid 22px envelope on one page
+   and an 18px outline on the next. One size, one weight, both pages. */
+.header-feedback .material-symbols-outlined {
+  font-size: 18px;
+  font-variation-settings: "FILL" 0;
+}
+
+/* Same 22-versus-18 mismatch on the theme and menu controls. The half-disc
+   keeps its fill; only the box is brought down to the weight the header is set
+   in. */
+.header-theme summary .material-symbols-outlined,
+.header-theme-link .material-symbols-outlined,
+.menu-toggle .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.header-theme summary,
+.header-theme-link {
+  gap: 6px;
+  color: var(--muted);
+  min-width: 34px;
+  min-height: 34px;
+}
+
+.header-theme summary:hover {
+  color: var(--ink);
+}
+
+.header-theme-label {
+  font-size: 12.5px;
+}
+
+.theme-options {
+  top: calc(100% + 10px);
+  min-width: 184px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow-pop);
+}
+
+/* "Theme mode" named the menu the trigger already names, above two options
+   that carry a sun and a moon. Same call as the specimen kicker: a label that
+   repeats its neighbours is not a label. The node stays in the markup and is
+   never shown. */
+.theme-options p {
+  display: none;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 4px 6px 8px;
+}
+
+.theme-options button {
+  font-size: 13px;
+  border-radius: 999px;
+  min-height: 40px;
+  padding: 8px 12px;
+  color: var(--ink-2);
+}
+
+.theme-options button[aria-pressed="true"] {
+  background: var(--field);
+  color: var(--ink);
+}
+
+.theme-options button:hover {
+  background: var(--field);
+  color: var(--ink);
+}
+
+/* --- 6. Controls: pills, and only pills --------------------------------- */
+.button {
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.button:hover {
+  background: var(--accent-hover);
+}
+
+.button:disabled {
+  opacity: 0.45;
+}
+
+.button-secondary {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-2);
+}
+
+.button-secondary:hover {
+  background: transparent;
+  border-color: var(--ink);
+}
+
+.button-small {
+  min-height: 38px;
+  padding: 0 18px;
+  font-size: 13px;
+}
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  background: none;
+  /* The link is a flex row, and a text underline stops at every item boundary:
+     on "About your data →" that drew two strokes with a 6px hole where the gap
+     is, and left the arrow riding a stub half its width. A border under the box
+     is one continuous hairline from the first letter to the arrow's tip. It
+     replaces the old `border: 0` reset below, so the rule carries both jobs. */
+  text-decoration: none;
+  border: 0;
+  border-bottom: 1px solid var(--line-2);
+  padding: 0 0 2px;
+  cursor: pointer;
+}
+
+.text-link:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+/* --- 7. Hero: a centred masthead ----------------------------------------
+   The headline sits on the page's centre line and the one field sits under it
+   on the same axis: the page sells a single action, so the composition is a
+   column, not a spread. What separates this from the reference page is no
+   longer the axis but what stands in it — a reading serif rather than a book
+   Garamond, and, one screen below, a player the other page does not have.
+   The widths step down as the text matters less: 820 for the block, 54ch for
+   the sentence, 640 for the field, 600 for the note. Every line lands near
+   the same optical width without a hard break anywhere.
+   ------------------------------------------------------------------------ */
+.reel-tool {
+  display: block;
+  padding-block: 88px 0;
+}
+
+.reel-intro {
+  text-align: center;
+  /* 880 rather than 820: the headline now runs as one line and measures
+     14.27em, so at the top of the clamp (58px) it needs 828px. Anything
+     narrower and the hidden <br> comes back as a natural wrap. */
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+.reel-intro h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  /* Newsreader carries a taller x-height and a wider body than the Garamond
+     it replaces, so the same 62px would have read a size larger and pushed
+     the line past the column. 58px at the top of the clamp is the optical
+     match, and the tracking opens slightly with the smaller cap height. */
+  font-size: clamp(38px, 4.7vw, 58px);
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  /* Full ink. The display line used to sit a step lighter so the field below
+     stayed the darkest thing on the page; on warm paper that reads as faded
+     print, and the action is now carried by the one red mark, not by weight. */
+  color: var(--ink);
+  margin: 0;
+}
+
+.reel-intro h1 {
+  /* If a phone is too narrow for the whole line, the fallback break should be
+     the one the sentence wants — after "Transcript" — not wherever the width
+     happens to land. One line everywhere it physically fits. */
+  text-wrap: balance;
+}
+
+.reel-intro h1 em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+/* One line. The bundle marks the italic phrase with a <br>, which is what made
+   this a two-line masthead — the reference page's exact shape. The break is
+   turned off rather than the text rewritten, so the sentence runs whole and
+   the italic tail (the half the eye lands on last) still separates the two
+   voices. Nothing to re-word, nothing to re-flow: with the break gone the line
+   is sized to fit at every width below. */
+.reel-intro h1 br {
+  display: none;
+}
+
+/* One measure for everything under the headline. The three blocks used to be
+   613 / 640 / 600 — near enough that the eye can see they do not line up, far
+   enough that it cannot read them as deliberate. 700 is the width at which the
+   deck still sets on a single line (it measures 665px) so the column reads as
+   headline, deck, field, note instead of a funnel. */
+.reel-intro > p {
+  max-width: 700px;
+  margin: 22px auto 0;
+  /* One sentence. It fits on one line at this measure; below ~700px viewport
+     balancing keeps the break in the middle rather than stranding a word. */
+  text-wrap: balance;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.reel-form {
+  max-width: 700px;
+  margin: 44px auto 0;
+  text-align: center;
+}
+
+/* The headline is sized in vw, the deck is not: below ~1000px the deck's one
+   line (668px) grows wider than the headline above it. Rather than let the
+   smaller line overhang the larger, the deck takes a narrower measure and
+   breaks into two balanced lines while it is still the narrower block. */
+@media (max-width: 1000px) {
+  .reel-intro > p {
+    max-width: 560px;
+  }
+
+  /* The 700px field only works when the column has room either side of it; at
+     tablet widths it went almost edge to edge under a 38px headline. */
+  .reel-form {
+    max-width: 640px;
+  }
+}
+
+.reel-form label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.reel-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.reel-input-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The base layer shadows the whole row on focus-within, which draws a hard
+   rectangle around the field and the button. The field owns the focus cue. */
+.reel-entry:focus-within {
+  box-shadow: none;
+}
+
+.reel-form input {
+  width: 100%;
+  height: 56px;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 14.5px;
+  caret-color: var(--ink);
+  box-shadow: none;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.reel-form input::placeholder {
+  color: var(--muted);
+}
+
+.reel-form input:hover {
+  border-color: var(--line-2);
+}
+
+.reel-form input:focus,
+.reel-form input:focus-visible {
+  outline: none;
+  /* One stroke. It used to be two — the edge hairline held its colour while a
+     halo drew a second ink line 2px outside it, which read as a printed double
+     rule around the pill. Now the hairline steps aside and a single 2px ink
+     edge takes over: the same weight as the focus outline the rest of the site
+     uses, sitting flush so the field reads as inked rather than boxed. */
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.reel-entry .button {
+  height: 56px;
+  min-height: 56px;
+  padding: 0 26px;
+  white-space: nowrap;
+}
+
+.reel-entry .button:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+
+.reel-form .text-link {
+  /* inline-block, not block: the link's underline is a border now, and a block
+     box would draw it the full 700px of the form. */
+  display: inline-block;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.reel-hint {
+  margin: 14px auto 0;
+  max-width: 700px;
+  text-align: center;
+  text-wrap: balance;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.reel-hint a {
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 2px;
+}
+
+.reel-hint a:hover {
+  color: var(--ink);
+}
+
+/* Failure: a note in the margin of the form, not a red box. */
+.reel-intro .reel-error,
+.help-page .reel-error {
+  width: 100%;
+  max-width: 780px;
+  margin: 20px auto 0;
+  padding: 2px 0 2px 16px;
+  border-left: 2px solid var(--ink);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink);
+  text-align: left;
+}
+
+/* On the home page the block is centred with the field, so the note hangs on
+   the same axis; its own text stays flush left — a sentence set centred at
+   14px with a rule down its side reads as a label, not as a message. */
+.reel-intro .reel-error {
+  max-width: 700px;
+  margin-inline: auto;
+}
+
+/* --- 8. Progress: a rule that fills ------------------------------------- */
+.reel-intro .reel-wait {
+  width: 100%;
+  max-width: 700px;
+  margin: 26px auto 0;
+  text-align: center;
+}
+
+.reel-wait strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.reel-wait p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.reel-progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 22px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.reel-progress-label strong {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.reel-progress {
+  height: 2px;
+  margin: 10px 0 8px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.reel-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.reel-step-count,
+.reel-wait [role="timer"] {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.reel-wait [role="timer"] {
+  margin-left: 10px;
+}
+
+/* --- 9. The excerpt: a specimen, set in the reading face ---------------- */
+.reel-example {
+  margin-top: 84px;
+  padding: 34px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.reel-example-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.reel-example h2 {
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* The specimen heading carried a kicker in the corner — "INTERVIEW EXCERPT".
+   It named the same thing twice: the caption three lines below already reads
+   "An excerpt from a real transcription", and the link under it points at the
+   source Reel. It was also the only heading on the site with a second voice in
+   the top right, so every other section looked like it was missing one.
+   The node stays in the markup because the client renders it again after
+   hydration and the pre-hydration shell has to agree with it; it is simply
+   never shown. */
+.reel-example-heading > span,
+.reel-static h2 + p {
+  display: none;
+}
+
+/* The specimen row runs the page's full measure: 84 for the time column, 26
+   of gutter, and the rest for the words. It used to stop at 754 — a 600px text
+   column, i.e. the reading measure used inside the transcript itself — which
+   left "INTERVIEW EXCERPT" stranded far to the right of the rows and broke
+   sentences that had room to finish, so the block looked like it was missing a
+   column. A specimen is scanned, not read: the reading measure belongs on the
+   surface where the transcript is actually read, and there it stays. */
+.reel-example ol {
+  display: block;
+  list-style: none;
+  max-width: none;
+  margin: 26px 0 0;
+  padding: 0;
+}
+
+.reel-example li {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 26px;
+  margin: 0;
+  padding: 11px 0;
+  border: 0;
+}
+
+.reel-example li + li {
+  border-top: 0;
+  padding-top: 11px;
+  margin-top: 0;
+}
+
+.reel-example time,
+.reel-cues time {
+  display: block;
+  padding-top: 4px;
+  font-family: var(--font);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.reel-example li p {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.reel-example > a {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 4px;
+}
+
+.reel-example > a:hover {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
+}
+
+.reel-example-note {
+  margin: 12px 0 0;
+  max-width: 58ch;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* --- 10. Result ---------------------------------------------------------- */
+.reel-result {
+  margin-top: 64px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+.reel-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.reel-result-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px 24px;
+  margin-top: 14px;
+}
+
+.reel-result h2 {
+  font-family: var(--serif);
+  font-size: clamp(26px, 3vw, 32px);
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.reel-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.reel-export {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reel-export select {
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 13px;
+}
+
+.reel-result-actions .button {
+  padding: 0 20px;
+}
+
+/* This line is the only place on the page that explains what the audio is
+   for, so it is set at reading size in the second ink rather than left as
+   a caption grey. It is not decoration — it is the instruction. */
+.reel-reading-hint {
+  max-width: 750px;
+  margin: 16px 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* 750 = 84 time column + 26 gutter + 640 of text. The time column is sized to
+   the widest string the formatter can print — "10:59 – 11:04", 76.3px at this
+   size — because it used to be 128 for "00:00.000 – 00:04.740" (126.9px), and
+   the 50px that stopped being needed had to go somewhere. It comes off the
+   block, not the words: 640 rather than 600 because at 18px this face sets
+   about 81 characters to the line, still inside the ~85-character point where
+   the eye starts losing its place on the return, and it buys the transcript
+   two more words per line instead of folding a sentence for the sake of 12px. */
+.reel-cues {
+  list-style: none;
+  max-width: 750px;
+  margin: 26px 0 0;
+  padding: 0;
+}
+
+.reel-cues li {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.reel-cues li + li {
+  border-top: 0;
+}
+
+.reel-cue-play {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 26px;
+  width: 100%;
+  padding: 15px 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  text-align: left;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.reel-cue-play span {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.reel-cue-play:disabled {
+  cursor: default;
+}
+
+.reel-cue-play:not(:disabled):hover time {
+  color: var(--ink);
+}
+
+.reel-cue-play:not(:disabled):hover span {
+  color: var(--ink);
+}
+
+/* --- 10b. Playback ------------------------------------------------------
+   Everything here rides on hooks the app already emits: `li.is-active` on
+   the passage being spoken and `mark.reel-word.is-spoken` on the word. No
+   new class, no new state. The baseline drew the active passage as a
+   translucent rounded block, which in this paper-and-ink page reads like a
+   sticker slapped on a manuscript. A 2px rule in the margin says the same
+   thing and stays quiet. The active passage keeps full ink; the rest step
+   back to the second ink — readable (7.5:1) but visibly behind.
+   ------------------------------------------------------------------------ */
+.reel-audio {
+  max-width: 750px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.reel-audio label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The transport is a native control and cannot be rebuilt here, but its
+   chrome can be taken off: the grey rounded enclosure is what made it look
+   like a browser widget dropped onto the paper. Strip the shell, keep the
+   play button, and it reads as a line of equipment. */
+.reel-audio audio {
+  display: block;
+  width: 100%;
+  height: 40px;
+  border-radius: 0;
+  accent-color: var(--ink);
+}
+
+.reel-audio audio::-webkit-media-controls-enclosure,
+.reel-audio audio::-webkit-media-controls-panel {
+  background: transparent;
+  border-radius: 0;
+}
+
+.reel-audio audio::-webkit-media-controls-overflow-button,
+.reel-audio audio::-internal-media-controls-overflow-button {
+  display: none;
+}
+
+/* No filter trick here: `color-scheme: dark` already flips the native
+   control's own glyphs to white. Inverting on top of that would black them
+   out against the dark plane and erase the play button. */
+
+/* A scroll container clips at its padding box, so the margin rule cannot
+   sit outside the list — it would be cut off. The list moves 14px left and
+   takes 14px of padding back, which keeps every line where it was and
+   leaves the rule a strip of its own to live in. */
+.reel-cues.reel-playback-cues {
+  max-width: 764px;
+  margin-left: -14px;
+  padding-left: 14px;
+}
+
+.reel-playback-cues li {
+  position: relative;
+}
+
+.reel-playback-cues li.is-active {
+  background: none;
+  border-radius: 0;
+}
+
+/* Shorter than the row on purpose: a rule that runs the full height of a
+   two-line passage reads as a bracket, while one that starts and stops
+   inside the text reads as a bookmark. */
+.reel-playback-cues li.is-active::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 18px;
+  bottom: 18px;
+  width: 2px;
+  background: var(--accent);
+}
+
+.reel-playback-cues li.is-active time {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.reel-playback-cues:has(li.is-active) li:not(.is-active) .reel-cue-play span {
+  color: var(--ink-2);
+}
+
+/* The inner scroll is what makes following possible; it must not add an
+   inset of its own or every line ends 8px short of the heading above. */
+.reel-playback-cues {
+  max-height: min(62vh, 720px);
+  padding-right: 0;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+/* One pixel of same-colour edge instead of the baseline's 2px spread, which
+   nudged the word spacing on every spoken word. The fill stays ink: the
+   accent is spent on the syllable-sized rule in the margin, not on a block
+   that sweeps across a paragraph. */
+.reel-word.is-spoken {
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.reel-copy-notice,
+.copy-status {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+/* --- 11. How it works ---------------------------------------------------- */
+.workflow,
+.landing .workflow {
+  padding-block: 118px 0;
+  display: block;
+  border: 0;
+  border-top: 0;
+  border-bottom: 0;
+}
+
+.section-intro h2 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.2vw, 38px);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.section-intro h2 em {
+  font-style: italic;
+}
+
+/* Three sentences in this section arrive already split by a <br>. On a 1040
+   column that leaves 242px of text in a 1040px box and the break points at
+   empty space, which reads as a mistake next to every other one-line heading
+   on the page. The break goes. It could not go on its own: the joint carried
+   no space ("From a Reel." + "To …"), so the bundle gets one character added
+   at each joint (see the COPY table in build.js) and the sentence runs on.
+   `balance` only matters below ~640px, where the line genuinely has to fold —
+   there it keeps the fold where the old <br> had it. */
+.section-intro h2 br,
+.section-intro > p br,
+.workflow-subtitle br {
+  display: none;
+}
+
+.section-intro h2,
+.workflow-subtitle,
+.section-intro > p {
+  text-wrap: balance;
+}
+
+.section-intro h2 em {
+  font-style: italic;
+}
+
+.section-intro > p {
+  margin: 18px 0 0;
+  max-width: 52ch;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+/* The base layer colours this one link with the accent token. A red hyperlink
+   in the middle of prose is how a default link looks, not how a rubricated
+   mark looks — so it stays ink, underlined, like every other link here. */
+.section-intro .text-link {
+  margin-top: 14px;
+  color: var(--ink);
+}
+
+.quiet-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 22px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink-2);
+  flex: none;
+}
+
+.workflow-subtitle {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--ink-2);
+  margin: 52px 0 0;
+}
+
+.steps {
+  list-style: none;
+  margin: 26px 0 0;
+  padding: 0;
+  max-width: 760px;
+  display: grid;
+  gap: 26px;
+}
+
+.steps li,
+.steps li:last-child {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.step-number {
+  font-family: var(--font);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.9;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.steps h3 {
+  font-family: var(--font);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.steps p {
+  margin: 3px 0 0;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+/* --- 12. Privacy: a ruled line, not a card ------------------------------ */
+/* The strip used to be three columns — mark, text, link — so the link was
+   flung to the far right of the band, level with the heading. On a ruled band
+   that is 880 wide the eye reads it as a corner ornament rather than as the
+   next thing to do, and it sits 760px away from the paragraph it belongs to.
+   It now closes the block, one step under the sentence it follows: the reading
+   order is heading → sentence → the action, all on one left edge. */
+.privacy-strip {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  column-gap: 22px;
+  row-gap: 0;
+  align-items: start;
+  margin-top: 118px;
+  padding: 40px 0;
+  background: transparent;
+  border-radius: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.privacy-strip > .material-symbols-outlined {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.privacy-strip h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.privacy-strip p {
+  margin: 8px 0 0;
+  max-width: 62ch;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+.privacy-strip .text-link {
+  grid-column: 2;
+  justify-self: start;
+  /* The base layer pushes this link right with `margin-left: auto`, and an auto
+     margin beats `justify-self` — without this reset it stays in the corner
+     even after the column is gone. */
+  margin-left: 0;
+  margin-top: 16px;
+  white-space: nowrap;
+}
+
+/* --- 13. FAQ: ruled rows ------------------------------------------------- */
+.faq-section {
+  display: block;
+  padding-block: 96px 0;
+}
+
+.faq-section h2 {
+  font-family: var(--serif);
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* The rows run the full column, like the specimen rows above: a ruled row that
+   stops 260px short of the page edge leaves the "+" floating in the middle of
+   the section and reads as a cropped table. The 780px cap belonged to the old
+   two-column FAQ, where the list was the right-hand column. Answers keep their
+   measure (66ch on the paragraph itself), so nothing gets wider to read. */
+.faq-list {
+  max-width: none;
+  margin-top: 26px;
+  border-top: 1px solid var(--line);
+}
+
+.faq-list details {
+  padding: 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-list summary {
+  position: relative;
+  border-bottom: 0;
+  padding-bottom: 18px;
+  display: block;
+  padding: 18px 34px 18px 0;
+  font-family: var(--font);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-list summary::after {
+  content: "+";
+  position: absolute;
+  top: 16px;
+  right: 6px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.faq-list details[open] summary::after {
+  content: "\2212";
+}
+
+.faq-list summary:hover {
+  color: var(--ink);
+}
+
+.faq-list details p {
+  margin: 0 0 20px;
+  max-width: 66ch;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+.faq-plain {
+  max-width: 720px;
+}
+
+/* The rows used to be <details>: four questions with the answers folded away,
+   which meant the version of this block that ships in the HTML held a heading
+   and no answers at all. Each row is now an <h3> over its <p> — same ruled
+   rhythm and same type, with the "+" gone, because a marker in the margin
+   promises a click that no longer does anything. */
+.faq-item {
+  padding: 18px 0 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-item h3 {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.faq-item p {
+  margin: 7px 0 0;
+  max-width: 66ch;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+/* The pre-hydration copy of the same block. `.reel-static h2` (0,1,1) outranks
+   `.faq-section h2`, so without this the heading would mount 6px larger than it
+   shipped — the one measurement in this section that the swap would move. */
+.reel-static .faq-section h2 {
+  font-size: clamp(26px, 3vw, 34px);
+}
+
+/* --- 14. Footer ---------------------------------------------------------- */
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+  margin-top: 104px;
+  padding-block: 34px 44px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.site-footer .brand {
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.site-footer .brand svg {
+  width: 18px;
+  height: 18px;
+}
+
+.site-footer p {
+  flex: 1;
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.site-footer > a:not(.brand) {
+  font-size: 12.5px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.site-footer > a:not(.brand):hover {
+  color: var(--ink);
+}
+
+.footer-content-links {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.footer-content-links a {
+  font-size: 12px;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.footer-content-links a:hover {
+  color: var(--ink);
+}
+
+/* In the pre-hydration markup the guide links are the whole footer. */
+.site-footer > .footer-content-links:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* The fixed pill in the corner is a slip of paper on the page, not a chat
+   widget: it carries the same envelope the header uses for the same job, the
+   type sits at the second ink rather than full black, and hover darkens the
+   words instead of flushing the border with the accent — the one red mark is
+   spent on the action the page is selling, not on a corner utility. */
+.feedback-fab {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink-2);
+  box-shadow: var(--shadow-pop);
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  /* It used to hang in the outer margin 24px from the window edge, outside the
+     column everything else is set to. Now its right edge sits on the column's
+     right edge — the same line the FAQ marks and the footer links end on — so
+     the corner reads as part of the page rather than pasted onto the window.
+     50% resolves against the viewport minus the scrollbar, which is where the
+     centred 880 column lands; below the cap the gutters take over. */
+  right: max(40px, calc(50% - 440px));
+}
+
+@media (max-width: 1100px) {
+  .feedback-fab {
+    right: max(32px, calc(50% - 440px));
+  }
+}
+
+@media (max-width: 420px) {
+  .feedback-fab {
+    right: 20px;
+  }
+}
+
+.feedback-fab:hover {
+  border-color: var(--line-2);
+  color: var(--ink);
+}
+
+.feedback-fab .material-symbols-outlined svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* --- 15. Inner pages ----------------------------------------------------- */
+/* One measure, one left edge. The article column, the paste band and the
+   related links all begin at the same x; the band is marked off by hairlines
+   instead of being centred and floated, because on a page whose only job is
+   reading, a centred block would read as an ad. */
+.page-heading {
+  padding-block: 76px 6px;
+  max-width: 780px;
+}
+
+.page-heading h1 {
+  font-family: var(--serif);
+  font-size: clamp(34px, 4.1vw, 48px);
+  font-weight: 400;
+  line-height: 1.07;
+  letter-spacing: -0.012em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.page-heading p {
+  margin: 20px 0 0;
+  max-width: 680px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* 680px at 18px lands near 76 characters a line. The old 620 measured a
+   textbook 70, but in an 880 column it left a 260px tail of empty paper on
+   every paragraph and rule — the block read as a ribbon pinned to the left
+   edge. 76 is still inside the reading range, and the tail is down to 200. */
+.help-content {
+  max-width: 680px;
+  margin-bottom: 0;
+  padding-top: 18px;
+  font-size: 18px;
+}
+
+.help-content h2 {
+  font-family: var(--serif);
+  font-size: clamp(24px, 2.3vw, 29px);
+  font-weight: 400;
+  line-height: 1.24;
+  letter-spacing: -0.004em;
+  margin: 52px 0 14px;
+  text-wrap: pretty;
+}
+
+.help-content h3 {
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0;
+  margin: 32px 0 8px;
+  color: var(--ink);
+}
+
+.help-content p,
+.help-content li {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.help-content p {
+  margin: 0 0 15px;
+  text-wrap: pretty;
+}
+
+.help-content li {
+  margin: 0;
+  padding-left: 2px;
+}
+
+.help-content li::marker {
+  color: var(--muted);
+}
+
+.help-content section + section {
+  margin-top: 58px;
+  padding-top: 38px;
+  border-top: 1px solid var(--line);
+}
+
+.help-content section > :first-child {
+  margin-top: 0;
+}
+
+.help-content ul,
+.help-content ol {
+  margin: 4px 0 20px;
+  padding-left: 24px;
+  display: grid;
+  gap: 8px;
+}
+
+.help-content strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.help-content a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 3px;
+}
+
+.help-content a:hover {
+  text-decoration-color: var(--ink);
+}
+
+.help-page .reel-tool {
+  width: 100%;
+  max-width: 680px;
+  margin: 60px 0 0;
+  padding: 34px 0 38px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.help-page .reel-form {
+  margin: 0;
+  max-width: 100%;
+  text-align: left;
+}
+
+/* The field stays a control, not prose, but it has to hold its own against
+   18px body text on the article pages. */
+.help-page .reel-form input {
+  font-size: 15.5px;
+}
+
+.help-page .reel-hint {
+  text-align: left;
+  margin-left: 0;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.help-page .reel-error {
+  margin-left: 0;
+  max-width: 100%;
+}
+
+.help-page .reel-result {
+  margin-top: 40px;
+}
+
+/* The FAQ is a second article block: the band above it already drew the rule. */
+.help-page .reel-tool + .help-content {
+  padding-top: 46px;
+}
+
+.related-pages {
+  margin-top: 64px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+  max-width: 680px;
+}
+
+.related-pages h2 {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 400;
+  margin: 0 0 14px;
+}
+
+/* Each entry is a two-column row: the link is the label, the sentence after
+   the dash is the gloss. The markup keeps them in one text flow, so the gloss
+   is an anonymous grid item rather than a nested element. */
+.related-pages ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 9px;
+}
+
+.related-pages li {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.related-pages a {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.related-pages a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.help-index {
+  margin-top: 28px;
+}
+
+/* --- 16. Contact --------------------------------------------------------- */
+.contact-page .page-heading {
+  max-width: 720px;
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 64px;
+  padding-top: 24px;
+}
+
+.contact-details h2 {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 400;
+  margin: 0 0 10px;
+}
+
+.contact-email {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 4px;
+}
+
+.contact-details p {
+  margin: 14px 0 0;
+  max-width: 46ch;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+.contact-details .text-link {
+  margin-top: 12px;
+}
+
+.feedback-form {
+  display: grid;
+  gap: 18px;
+}
+
+.feedback-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.feedback-form select,
+.feedback-form textarea,
+.feedback-form input[type="email"],
+.feedback-form input:not([type="checkbox"]) {
+  width: 100%;
+  padding: 13px 18px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 14px;
+}
+
+.feedback-form textarea {
+  min-height: 172px;
+  line-height: 1.7;
+  /* The UA grip is drawn in OS grey with its own corner diagonal and cannot be
+     recoloured; on warm paper it reads as a stray mark. The field is tall
+     enough for a full report and still scrolls, so the grip goes. */
+  resize: none;
+}
+
+/* One stroke, matching the field on the home page: the hairline steps aside
+   and a single 2px ink edge takes over, instead of an ink border wrapped in a
+   second grey ring. The checkbox is excluded — it draws its own ring, and a
+   flush 2px shadow on a filled box is invisible. */
+.feedback-form select:focus,
+.feedback-form input:not([type="checkbox"]):focus,
+.feedback-form textarea:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.feedback-form .feedback-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 2px 0 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+/* The browser control ignores border-radius, so the declarations below used
+   to do nothing: what rendered was a 16px hard square in the OS grey, the one
+   piece of chrome on the page that was not cut from the same paper. Drawn
+   instead of borrowed — a 17px inked square with the check cut into it. */
+.feedback-form .feedback-checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 17px;
+  height: 17px;
+  flex: none;
+  margin: 2px 0 0;
+  padding: 0;
+  border: 1px solid var(--line-2);
+  border-radius: 5px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 11px 11px;
+  cursor: pointer;
+  transition: background-color 0.14s ease, border-color 0.14s ease;
+}
+
+.feedback-form .feedback-checkbox:hover input[type="checkbox"] {
+  border-color: var(--ink-2);
+}
+
+.feedback-form .feedback-checkbox input[type="checkbox"]:checked {
+  border-color: var(--ink);
+  background-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.3 6.4 4.8 8.9 9.8 3.4' fill='none' stroke='%23f6f1e6' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+html.dark .feedback-form .feedback-checkbox input[type="checkbox"]:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.3 6.4 4.8 8.9 9.8 3.4' fill='none' stroke='%2312100d' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Keyboard focus keeps the site's ring — set off the box rather than flush
+   against it, so it stays visible on the filled state. */
+.feedback-form .feedback-checkbox input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.feedback-form .feedback-checkbox span {
+  flex: 1;
+}
+
+.feedback-form .button {
+  width: auto;
+  justify-self: start;
+  margin-top: 8px;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* --- 17. Settings: same paper, same pills -------------------------------- */
+.tool-page .max-w-2xl {
+  max-width: 680px;
+  padding: 72px 24px 88px;
+}
+
+.tool-page h1 {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.tool-page section,
+html.dark .tool-page section,
+html.light .tool-page section {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 26px 0;
+  box-shadow: none;
+}
+
+.tool-page section h2 {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.tool-page section p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.tool-page .grid.grid-cols-2 {
+  background: var(--field);
+  border: 0;
+  border-radius: 999px;
+  padding: 4px;
+  box-shadow: none;
+  gap: 4px;
+}
+
+.tool-page .grid.grid-cols-2 button {
+  border-radius: 999px;
+  padding: 11px 0;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+  background: transparent;
+  box-shadow: none;
+}
+
+.tool-page .grid.grid-cols-2 button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+/* --- 18. Icons ----------------------------------------------------------- */
+body[data-icons="inline"] .material-symbols-outlined {
+  font-size: 0;
+  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.material-symbols-outlined svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  flex: none;
+}
+
+.button .material-symbols-outlined svg {
+  width: 16px;
+  height: 16px;
+}
+
+.reel-success .material-symbols-outlined svg {
+  width: 14px;
+  height: 14px;
+}
+
+.privacy-strip > .material-symbols-outlined svg {
+  width: 20px;
+  height: 20px;
+}
+
+.header-feedback .material-symbols-outlined svg,
+.header-theme summary .material-symbols-outlined svg,
+.header-theme-link .material-symbols-outlined svg,
+.menu-toggle .material-symbols-outlined svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- 19. Pre-hydration / no-JS shell ------------------------------------
+   This element is the container itself (`main.site-container.reel-static`).
+   The base layer caps it at 75ch, which is narrower than the hydrated column;
+   left on, the whole page would snap sideways once React takes over. So the
+   cap goes and the container's own width — and its auto margins — decide. */
+.reel-static {
+  max-width: none;
+  padding-block: 88px 40px;
+}
+
+.reel-static > h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(38px, 4.7vw, 58px);
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  /* Same colour, family, size and axis as the hydrated headline, so the swap
+     after hydration does not move anything: only the italic on the second
+     line and the field below appear. */
+  color: var(--ink);
+  text-align: center;
+  /* One line now, so the wrap point no longer matters: the old 8.8em cap sat
+     between "Instagram Transcript" and the same line plus "from", and would
+     force the break straight back in. The block takes the full container and
+     the text centres inside it. */
+  max-width: none;
+  margin: 0 auto;
+  /* Same one line, same fallback break as the hydrated headline. */
+  text-wrap: balance;
+}
+
+.reel-static > p {
+  max-width: 54ch;
+  margin: 18px auto 0;
+  text-align: center;
+  text-wrap: balance;
+  font-size: 15.5px;
+  color: var(--muted);
+}
+
+.reel-static section {
+  margin-top: 64px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+}
+
+.reel-static h2 {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.reel-static ol {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  /* Same full measure as the hydrated specimen, so the frame does not reflow
+     across the row when the player mounts. */
+  max-width: none;
+}
+
+.reel-static li {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 26px;
+  padding: 12px 0;
+}
+
+.reel-static time {
+  padding-top: 4px;
+  font-size: 11.5px;
+  line-height: 1.9;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* "Interview excerpt" is a plain paragraph in the pre-hydration markup; it is
+   hidden with its hydrated twin, up in §9. */
+
+.reel-static li p {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.reel-static a {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.reel-static section > p:last-child {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* The no-JS notice is a direct child of <body>, outside every container. */
+body > noscript {
+  display: block;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 40px 40px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+body > noscript strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+/* --- 20. Responsive ------------------------------------------------------ */
+@media (max-width: 1100px) {
+  .site-container {
+    /* still capped: without the min() the column got wider as the viewport
+       got narrower past 1100 (880 at 1101, 960 at 1024). */
+    width: min(880px, calc(100% - 64px));
+  }
+
+  .header-inner {
+    /* Same gutter as .site-container below — 48px left the logo 8px proud of
+       the column on every page once the widths were brought together. */
+    width: min(880px, calc(100% - 64px));
+  }
+
+  .reel-tool {
+    padding-block: 72px 0;
+  }
+
+
+  .workflow {
+    padding-block: 96px 0;
+  }
+
+  .privacy-strip {
+    padding-block: 36px;
+    margin-top: 96px;
+  }
+}
+
+@media (max-width: 820px) {
+  .contact-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .workflow-subtitle {
+    margin-top: 40px;
+  }
+
+  .reel-example {
+    margin-top: 64px;
+  }
+}
+
+@media (max-width: 760px) {
+  .site-container,
+  .header-inner {
+    width: calc(100% - 40px);
+  }
+
+  .header-inner {
+    min-height: 62px;
+    gap: 12px;
+  }
+
+  /* The panel is absolutely positioned over the hero, so it needs to read as a
+     sheet: on --bg it was the same paper as the page and only the hairline at
+     the bottom said where it ended — the input field appeared to start in the
+     middle of the menu. --field is the plane the input already uses. */
+  .site-nav {
+    top: 62px;
+    padding: 16px 20px 20px;
+    background: var(--field);
+    border-bottom: 1px solid var(--line-2);
+    /* It overlays the hero — the field below is genuinely cut in half behind
+       it — so one soft shadow says "this plane is above that one". Only here:
+       nothing else on the page floats. */
+    box-shadow: 0 20px 24px -22px rgba(0, 0, 0, 0.5);
+  }
+
+  .site-nav a {
+    font-size: 14px;
+    padding: 10px 0;
+  }
+
+  .reel-tool {
+    padding-block: 52px 0;
+  }
+
+  /* A 23-character sentence cannot be one line on a phone without dropping to
+     ~23px, which is smaller than the body copy it is supposed to lead. So the
+     size stays where it reads, and the headline falls back to the two-line
+     break above (~590px and down). */
+  .reel-intro h1,
+  .reel-static > h1 {
+    font-size: clamp(30px, 8.2vw, 40px);
+  }
+
+  .reel-intro > p {
+    margin-top: 16px;
+    font-size: 14.5px;
+  }
+
+  .reel-form {
+    margin-top: 26px;
+  }
+
+  .reel-entry {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .reel-form input {
+    height: 54px;
+    font-size: 16px; /* keeps iOS from zooming the field on focus */
+    padding: 0 22px;
+  }
+
+  .reel-entry .button {
+    height: 54px;
+    width: 100%;
+  }
+
+  .reel-hint {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  .reel-example,
+  .reel-result {
+    margin-top: 56px;
+  }
+
+  .reel-example li,
+  .reel-cue-play,
+  .reel-static li {
+    grid-template-columns: 78px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .reel-example li p,
+  .reel-cue-play span,
+  .reel-static li p {
+    font-size: 17px;
+  }
+
+  .reel-result-actions {
+    width: 100%;
+  }
+
+  .reel-export {
+    flex: 1;
+  }
+
+  .reel-export select {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .workflow {
+    padding-block: 72px 0;
+  }
+
+  .privacy-strip {
+    grid-template-columns: 20px minmax(0, 1fr);
+    padding-block: 30px;
+    margin-top: 72px;
+    column-gap: 16px;
+    row-gap: 0;
+  }
+
+  .privacy-strip .text-link {
+    margin-top: 14px;
+  }
+
+  .faq-section {
+    padding-block: 64px 0;
+  }
+
+  .site-footer {
+    margin-top: 72px;
+    gap: 12px 18px;
+    padding-bottom: 64px;
+  }
+
+  .site-footer p {
+    flex-basis: 100%;
+    order: 3;
+  }
+
+  .page-heading {
+    padding-block: 52px 6px;
+  }
+
+  .page-heading h1 {
+    font-size: clamp(28px, 7.4vw, 36px);
+  }
+
+  .page-heading p {
+    font-size: 16px;
+  }
+
+  .help-content h2 {
+    margin-top: 42px;
+  }
+
+  .help-content section + section {
+    margin-top: 44px;
+    padding-top: 30px;
+  }
+
+  .help-page .reel-tool {
+    margin-top: 46px;
+    padding: 28px 0 30px;
+  }
+
+  .help-page .reel-tool + .help-content {
+    padding-top: 38px;
+  }
+
+  .related-pages {
+    margin-top: 52px;
+  }
+
+  .tool-page .max-w-2xl {
+    padding-top: 52px;
+  }
+}
+
+@media (max-width: 620px) {
+  .related-pages li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1px;
+  }
+
+  .reel-example li,
+  .reel-cue-play,
+  .reel-static li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+    padding: 14px 0;
+  }
+
+  .reel-example time,
+  .reel-cues time,
+  .reel-static time {
+    padding-top: 0;
+    font-size: 10.5px;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+  }
+
+  /* At this width the passage stacks and the 14px would come straight out of
+     the text measure. Colour alone carries the follow here: the timestamp of
+     the current line takes the accent, which is the same mark the margin rule
+     makes on the wide layout, in the only place there is room for it. */
+  .reel-cues.reel-playback-cues {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .reel-playback-cues li.is-active::before {
+    display: none;
+  }
+
+  .reel-playback-cues li.is-active time {
+    color: var(--accent);
+  }
+
+  /* The wide layout marks the current line with a rule in the margin. Here
+     there is no margin to give away, so the mark becomes a small rubric
+     square set before the timestamp — not a dash, which would read as part
+     of the time range. */
+  .reel-playback-cues li.is-active time::before {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-right: 8px;
+    vertical-align: 1px;
+    background: var(--accent);
+  }
+}
+
+@media (max-width: 420px) {
+  .help-content,
+  .help-content p,
+  .help-content li,
+  .page-heading p {
+    font-size: 17px;
+  }
+
+  .help-content p {
+    margin-bottom: 14px;
+  }
+
+  .reel-example li p,
+  .reel-cue-play span,
+  .reel-static li p {
+    font-size: 16.5px;
+  }
+
+  /* The heading no longer has a kicker to stack under it at this width. */
+
+  .reel-result-actions .button {
+    flex: 1;
+    padding: 0 14px;
+  }
+
+  .reel-export {
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

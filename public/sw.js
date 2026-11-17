@@ -1,4 +1,4 @@
-const CACHE_NAME = 'echolisten-website-v1';
+const CACHE_NAME = 'echolisten-website-v2';
 const SHELL = '/index.html';
 
 self.addEventListener('install', event => {

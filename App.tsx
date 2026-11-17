@@ -30,9 +30,9 @@ const DEFAULT_CONFIG: AIProviderConfig = {
   customEndpoint: '',
   customApiKey: '',
   customModelId: '',
-  deepgramApiKey: '', 
+  deepgramApiKey: '',
   deepgramLanguage: 'en',
-  theme: 'dark'
+  theme: 'light'
 };
 
 const AppContent: React.FC<{ 
@@ -118,7 +118,7 @@ const AppContent: React.FC<{
         </Routes>
       </main>
       {!isPlayerView && <footer className="site-footer site-container"><Brand /><p>Public Reels. Readable transcripts. Timed subtitles.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data & privacy</Link><Link to="/help">How it works</Link><Link to="/settings">Settings</Link><nav className="footer-content-links" aria-label="Transcript guides"><Link to="/instagram-reel-transcript">Instagram reel transcript</Link><Link to="/reels-transcript">Reels transcript</Link><Link to="/instagram-reel-transcript-generator">Instagram reel transcript generator</Link><Link to="/instagram-video-transcript">Instagram video transcript</Link></nav></footer>}
-      {!isPlayerView && !['/contact', '/account', '/login', '/auth/callback'].includes(location.pathname) && <Link to="/contact" className="feedback-fab" aria-label="Feedback and help"><span className="material-symbols-outlined" aria-hidden="true">chat_bubble_outline</span><span>Feedback</span></Link>}
+      {!isPlayerView && !['/contact', '/account', '/login', '/auth/callback'].includes(location.pathname) && <Link to="/contact" className="feedback-fab" aria-label="Feedback and help"><span className="material-symbols-outlined" aria-hidden="true">mail</span><span>Feedback</span></Link>}
     </div>
   );
 };

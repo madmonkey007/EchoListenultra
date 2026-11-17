@@ -15,7 +15,7 @@ export default function SiteHeader({ theme = 'dark', onThemeChange }: { theme?: 
       <nav id="site-navigation" className={open ? 'site-nav is-open' : 'site-nav'} aria-label="Main navigation">
         {links.map(([path, label]) => <NavLink key={path} to={path} end={path === '/'} onClick={() => setOpen(false)}>{label}</NavLink>)}
       </nav>
-      <Link to="/contact" className="header-feedback" aria-label="Contact and feedback" title="Contact and feedback"><span className="material-symbols-outlined" aria-hidden="true">help_outline</span></Link>
+      <Link to="/contact" className="header-feedback" aria-label="Contact and feedback" title="Contact and feedback"><span className="material-symbols-outlined" aria-hidden="true">mail</span></Link>
       {onThemeChange ? <details className="header-theme" ref={themeMenu} onKeyDown={event => { if (event.key === 'Escape') { themeMenu.current?.removeAttribute('open'); themeMenu.current?.querySelector('summary')?.focus(); } }}>
         <summary aria-label="Theme settings" title="Theme settings"><span className="material-symbols-outlined" aria-hidden="true">contrast</span><span className="header-theme-label">Theme</span></summary>
         <div className="theme-options" role="group" aria-label="Theme mode"><p>Theme mode</p>{(['light', 'dark'] as const).map(mode => <button type="button" key={mode} aria-pressed={theme === mode} onClick={() => { onThemeChange(mode); themeMenu.current?.removeAttribute('open'); }}><span className="material-symbols-outlined" aria-hidden="true">{mode === 'light' ? 'light_mode' : 'dark_mode'}</span>{mode === 'light' ? 'Light' : 'Dark'}{theme === mode && <span aria-hidden="true">✓</span>}</button>)}</div>

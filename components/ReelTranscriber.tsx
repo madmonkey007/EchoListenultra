@@ -20,10 +20,13 @@ export function TranscriptionWait({ elapsed, progress = INITIAL_REEL_PROGRESS }:
 }
 
 // Exact opening cues from the saved, real Turbo interview response (not generated demo copy).
+// Times are shown rounded to whole seconds (the same formatter the result list
+// uses), and these strings must stay identical to the <time> values in the
+// prerendered shell in index.html.
 const EXAMPLE = [
-  ['00:00.000 – 00:04.740', "What is your name? I'm Thomas Skipper. How old are you? 21 years old."],
-  ['00:05.220 – 00:09.580', "And where are you from? I'm from a small town in South Carolina called Marion."],
-  ['00:09.980 – 00:14.100', "It's near Myrtle Beach. What do you do in life? I'm also a college baseball player."],
+  ['00:00 – 00:05', "What is your name? I'm Thomas Skipper. How old are you? 21 years old."],
+  ['00:05 – 00:10', "And where are you from? I'm from a small town in South Carolina called Marion."],
+  ['00:10 – 00:14', "It's near Myrtle Beach. What do you do in life? I'm also a college baseball player."],
 ];
 // Content pages embed the same tool without its homepage heading and example panel.
 export default function ReelTranscriber({ showIntro = true, showExample = true }: { showIntro?: boolean; showExample?: boolean }) {
@@ -84,7 +87,7 @@ export default function ReelTranscriber({ showIntro = true, showExample = true }
   }
   return <section className="reel-tool site-container" aria-labelledby={showIntro ? 'reel-title' : undefined} aria-label={showIntro ? undefined : 'Instagram transcript tool'}>
     <div className="reel-intro">
-      {showIntro && <><h1 id="reel-title">Instagram Transcript<br /><em>from Any Reel</em></h1>
+      {showIntro && <><h1 id="reel-title">Instagram Transcript <br /><em>from Any Reel</em></h1>
       <p>Paste a public Reel link. Get a transcript you can copy and timed subtitles you can download.</p></>}
       <form onSubmit={submit} className="reel-form" aria-busy={pending}>
         <label htmlFor="reel-url">Instagram Reel URL</label>

@@ -24,10 +24,13 @@ test('public homepage offers Reel transcription, real example and explanatory he
   assert.match(html, /From a Reel/);
   assert.doesNotMatch(html, /YOUR REEL|class="principles/);
   assert.match(html, /<h3 class="workflow-subtitle">Keep the words/);
+  // The redesign replaced the four closed <details> with six always-readable
+  // h3+p pairs, so the h3 count grows by the FAQ and details drops to zero.
   assert.equal((html.match(/<h2\b/g) || []).length, 4);
-  assert.equal((html.match(/<h3\b/g) || []).length, 4);
-  assert.equal((html.match(/<details>/g) || []).length, 4);
-  assert.match(html, /How long can the Reel be\?<\/summary><p>Up to 3 minutes\./);
+  assert.equal((html.match(/<h3\b/g) || []).length, 10);
+  assert.equal((html.match(/<details>/g) || []).length, 0);
+  assert.match(html, /Frequently asked questions<\/h2>/);
+  assert.match(html, /<h3>How long can the Reel be\?<\/h3><p>Up to 3 minutes\./);
   assert.doesNotMatch(html, /class="closing site-container"|Your next Reel/);
 });
 test('help explains public Reel input and saving transient transcript results', () => {

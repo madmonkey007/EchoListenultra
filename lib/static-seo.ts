@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createServer, type Plugin } from 'vite';
 import siteConfig from './site-config.json';
+import { buildFaqJsonLd, buildFaqSectionHtml } from './home-faq.ts';
 
 export function renderSeoTemplate(source: string): string {
   return source.replaceAll('%SITE_ORIGIN%', siteConfig.origin);
@@ -37,10 +38,17 @@ export function staticSeo(): Plugin {
       });
       try {
         const { renderPublicHtml, prerenderPaths } = await renderer.ssrLoadModule('/lib/render-public-pages.tsx');
-        const home = fs.readFileSync(path.resolve(root, output, 'index.html'), 'utf8');
+        let home = fs.readFileSync(path.resolve(root, output, 'index.html'), 'utf8');
+        // The FAQ is rendered into the home shell from the same array the React
+        // section uses (lib/home-faq.ts), so crawlers and no-JS visitors see the
+        // answers. JSON-LD is added after the inner pages are derived from this
+        // string, so the FAQPage graph stays on the one page that displays it.
+        home = home.replace('</main>', '\n  ' + buildFaqSectionHtml() + '</main>');
         for (const pathname of prerenderPaths) {
           fs.writeFileSync(path.resolve(root, output, pathname.slice(1) + '.html'), renderPublicHtml(home, pathname));
         }
+        home = home.replace('</head>', buildFaqJsonLd() + '\n</head>');
+        fs.writeFileSync(path.resolve(root, output, 'index.html'), home);
       } finally { await renderer.close(); }
     },
   };
