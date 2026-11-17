@@ -1,5 +1,8 @@
 /// <reference types="vite/client" />
 
+import './website.css';
+import './tailwind.css';
+import './redesign.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';

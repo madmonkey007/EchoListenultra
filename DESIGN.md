@@ -57,10 +57,11 @@ re-renders. Rules:
 
 ## Infrastructure invariants
 
-- `redesign.css` lives at `/assets/redesign.css` (not `/redesign.css`) so the
-  service worker's `/assets/` precache rule picks it up; fonts live at
-  `/assets/fonts/`. Bump `CACHE_NAME` in `public/sw.js` when the shell's
-  cached references change.
+- The three stylesheets (website.css, tailwind.css, redesign.css) are
+  imported in that order from `index.tsx`, so Vite bundles them into one
+  cascade-correct `/assets/index-*.css` under the service worker's precache
+  rule; fonts live at `/assets/fonts/`. Bump `CACHE_NAME` in `public/sw.js`
+  when the shell's cached references change.
 - SEO pages remain prerendered per-route with their own titles/robots; the
   visual layer is global — there is no per-page theme split.
 

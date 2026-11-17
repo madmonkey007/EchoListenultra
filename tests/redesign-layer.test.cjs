@@ -47,16 +47,18 @@ test('the Material Symbols font is fully retired from the document',()=>{
  assert.ok(html.includes('data-icons="inline"'),'icon-layer body hook present');
 });
 
-test('redesign layer loads after the legacy stylesheets and only from local assets',()=>{
+test('the visual layer is bundled after the legacy stylesheets (vite import order)',()=>{
  const html=read('index.html');
- const tail=html.indexOf('/tailwind.css'),redesign=html.indexOf('/assets/redesign.css');
- assert.ok(tail>0&&redesign>tail,'redesign.css link exists after tailwind.css');
- assert.ok(!/href="\/redesign\.css"/.test(html),'redesign.css lives under /assets/ so the service worker can precache it');
+ assert.ok(!/href="\/(website|tailwind)\.css"/.test(html),'legacy sheets load through the bundle, not static links');
+ assert.ok(!/redesign\.css/.test(html),'redesign loads through the bundle, not a static link');
+ const boot=read('index.tsx');
+ const w=boot.indexOf("./website.css'"),t=boot.indexOf("./tailwind.css'"),r=boot.indexOf("./redesign.css'");
+ assert.ok(w>-1&&t>w&&r>t,'import order website -> tailwind -> redesign');
 });
 
 test('theme hexes agree between the boot script and the redesign tokens',()=>{
  const html=read('index.html');
- const css=read('public/assets/redesign.css');
+ const css=read('redesign.css');
  const lightBg=css.match(/--bg:\s*(#[0-9a-f]{6})\s*;/);
  const darkBlock=css.slice(css.indexOf('html.dark'));
  const darkBg=darkBlock.match(/--bg:\s*(#[0-9a-f]{6})\s*;/);
@@ -77,7 +79,7 @@ test('shell specimen times match the client-side example exactly',()=>{
 });
 
 test('self-hosted fonts referenced by the redesign layer all exist',()=>{
- const css=read('public/assets/redesign.css');
+ const css=read('redesign.css');
  const refs=[...css.matchAll(/url\("?(\/assets\/fonts\/[^")]+)"?\)/g)].map(m=>m[1]);
  assert.ok(refs.length>=4,'font refs found: '+refs.length);
  for(const ref of new Set(refs)){

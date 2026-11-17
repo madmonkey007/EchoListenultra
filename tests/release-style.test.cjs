@@ -3,7 +3,9 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 test('compiled reset retains the original production cascade and theme tokens',async()=>{
  const html=fs.readFileSync('index.html','utf8');
- assert.ok(html.indexOf('/website.css')<html.indexOf('/tailwind.css'));
+ // The cascade moved from index.html links to index.tsx imports (vite bundles them in order).
+ const boot=fs.readFileSync('index.tsx','utf8');
+ assert.ok(boot.indexOf('./website.css')>-1&&boot.indexOf('./website.css')<boot.indexOf('./tailwind.css')&&boot.indexOf('./tailwind.css')<boot.indexOf('./redesign.css'));
  assert.doesNotMatch(html,/<script[^>]+src="https:\/\/cdn\./);
  const config=(await import('../tailwind.config.js')).default;
  assert.equal(config.darkMode,'class');
