@@ -92,3 +92,30 @@
 部署执行注：本机 Clash TUN 对 vercel 上传持续瞬断（`fetch failed`），重试后
 部署成功并晋升；CLI 因网络抖动未能返回 dpl_ ID，以上线内容与本地构建
 bundle 同哈希作为部署确认（这是比部署 ID 更强的逐字节证据）。
+
+## 三轮修正（2026-11-18）：级联顺序 bug + 线上文件清理（提交 a4b2167）
+
+**用户报告"线上样式根本没变"——根因是我的一级部署缺陷**：vite 把根目录
+website.css/tailwind.css 的 <link> 编译成 hash bundle（index-D4CTsMpg.css）
+并注入在 redesign.css 链接**之后**——旧深色样式最后加载，把新视觉层整层
+盖掉。curl 验收只查了 200 没查级联顺序，属于验收盲区（已补：产物内
+字节位置断言）。
+
+修正：三个样式表改由 `index.tsx` 按序 import（website → tailwind →
+redesign），vite 合并为单一级联正确的 `/assets/index-lpVMlu_g.css`
+（dist 内 navy pos 29 < paper pos 57916）；SW CACHE_NAME v2→v3 作废旧缓存。
+
+同轮清理线上文件：
+- `/logo-512.png` 恢复 200（本地误删被上轮部署带走，目录提交链接曾 404）
+- `/reels transcript-logo-512.png` 与 `…_副本.png` 两个带空格文件从
+  public/ 移出（存档到 vercelignored 的 docs/brand-submissions/，未提交），
+  线上 404
+- 旧 `/assets/redesign.css` 404（已并入 bundle，属预期）
+
+复验（2026-11-18 线上）：上表全部绿灯；首页 faq-item=6、class="light"、
+线上 css 与本地同哈希、级联顺序正确。
+
+**部署位置确认（回应"部署在哪里"）**：生产 = Vercel 项目
+`ponymads-projects/echo-listenultra-ebre`（CLI 账号 dihou008-7465），域名
+reelstranscript.com 以 A 记录 216.198.79.1（Vercel anycast）指向该项目。
+归属证据 = 线上 bundle/css 与本地构建逐字节同哈希（两次部署均验证）。
