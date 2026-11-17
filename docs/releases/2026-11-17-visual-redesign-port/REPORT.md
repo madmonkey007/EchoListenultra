@@ -1,7 +1,7 @@
 # 视觉改版（paper and ink）源码移植记录
 
 日期：2026-11-17。正式站：https://reelstranscript.com/
-**状态：已移植到源码并本地验证，未部署。** 设计交付仓库
+**状态：已上线（2026-11-17 生产部署）。** 移植提交 `bccd7ba`，随后随批准追加 `77732a6`（删 TikTok 占位页 + md 导出改真 markdown）一并部署。 设计交付仓库
 `madmonkey007/instagram-reel-transcript`（私有，main，HEAD `54e77c7`），
 设计侧最后回复（缺口 1/2/3 + 四项确认）已全部落实到本次移植。
 
@@ -65,3 +65,30 @@
 
 未部署。按本仓惯例部署是独立步骤，等待用户明确指令后执行
 `vercel --prod --yes` 并回填 dpl_ ID 与线上验收。
+
+## 二轮改动（2026-11-17 用户批准）
+
+- **删 `/tiktok-transcript`**：noindex "coming soon" 占位页（唯一按钮回主页），
+  从路由/预渲染集/site-meta/vercel.json 全部移除，`/tiktok-transcript` 与
+  `/tiktok-transcript/` 均 301 → `/`（即占位页自己送用户去的终点）。
+  `video-url.ts` 的 TikTok 链接解析是视频导入功能，与本页无关，保留。
+- **md 导出改真 markdown**：`# Reel transcript` 标题 + 每段时间码段
+  （`**[mm:ss]** 文本`，与页面同款整秒格式化器 `formatTimestamp`，现由
+  `lib/reel-result.ts` 导出共享）；SRT 毫秒不动、txt 不变。
+
+## 上线验收（2026-11-17，正式站 curl 实测）
+
+| 检查 | 结果 |
+| --- | --- |
+| 既有 10 条斜杠变体 | **10/10 = 301**，Location 均为对应无斜杠路径 |
+| `/tiktok-transcript` 与 `/tiktok-transcript/` | 均 **301 → `https://reelstranscript.com/`** |
+| 10 个裸路径 + 根 | 全部 200 |
+| `/assets/redesign.css`、字体 woff2 | 200 |
+| 首页内容 | faq-item=**6**、FAQPage JSON-LD=**1**、Google Fonts 引用=**0**、主题引导脚本=**1**、`class="light"` |
+| FAQ 不外泄 | `/about` faq-item=0、FAQPage=0、自有 title |
+| `/settings` | 200 + `x-robots-tag: noindex, follow` |
+| 线上 bundle | `/assets/index-DO5KLz…js` 与本地构建**同哈希**（334,938B），含 `theme:"light"`、`# Reel transcript`（md 导出）、图标层 |
+
+部署执行注：本机 Clash TUN 对 vercel 上传持续瞬断（`fetch failed`），重试后
+部署成功并晋升；CLI 因网络抖动未能返回 dpl_ ID，以上线内容与本地构建
+bundle 同哈希作为部署确认（这是比部署 ID 更强的逐字节证据）。
