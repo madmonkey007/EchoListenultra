@@ -18,3 +18,9 @@ test('missing output fails without creating replacement SRT or timestamps',async
 test('initial HTML contains the real timestamped example without JavaScript',()=>{
  const html=fs.readFileSync('index.html','utf8');assert.match(html,/00:00 – 00:05/);assert.match(html,/Thomas Skipper/);assert.match(html,/DbQzbzrAJ-V/);
 });
+test('quota exhaustion is named honestly; unknown failures keep the generic apology',()=>{
+ const {reelErrorMessage}=require('../lib/reel-client.ts');
+ assert.equal(reelErrorMessage({error:'quota_exhausted',limit_seconds:180}),"Today's free transcription quota is used up.\nPlease try again tomorrow.");
+ assert.equal(reelErrorMessage({error:'fetch_failed',limit_seconds:180}),'There is a problem on our side, not with your link.\nPlease try again later.');
+ assert.match(reelErrorMessage({error:'invalid_url',limit_seconds:180}),/invalid or the Reel is not publicly accessible/);
+});

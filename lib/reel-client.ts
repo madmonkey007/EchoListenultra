@@ -10,6 +10,8 @@ export function reelErrorMessage(data: { error?: string; limit_seconds?: number;
     return (duration ? `This Reel is ${duration} long — longer than the ${limitMinutes(limit)}-minute limit.`
       : `This Reel is longer than our ${limitMinutes(limit)}-minute limit.`) + '\nTry a shorter Reel.';
   }
+  if (data.error === 'quota_exhausted')
+    return "Today's free transcription quota is used up.\nPlease try again tomorrow.";
   if (['invalid_url', 'private_or_unavailable', 'no_audio', 'fetch_blocked'].includes(data.error || ''))
     return 'This link is invalid or the Reel is not publicly accessible.\nTry a public Instagram Reel link.';
   return 'There is a problem on our side, not with your link.\nPlease try again later.';
