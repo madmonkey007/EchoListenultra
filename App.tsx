@@ -10,7 +10,6 @@ import SiteHeader, { Brand } from './components/SiteHeader.tsx';
 import LandingView from './views/LandingView.tsx';
 import HelpView from './views/HelpView.tsx';
 import ContactView from './views/ContactView.tsx';
-import TikTokTranscriptView from './views/TikTokTranscriptView.tsx';
 import AboutView from './views/AboutView.tsx';
 import PrivacyView from './views/PrivacyView.tsx';
 import InstagramReelTranscriptView from './views/InstagramReelTranscriptView.tsx';
@@ -107,7 +106,6 @@ const AppContent: React.FC<{
           <Route path="/settings" element={<SettingsView apiConfig={apiConfig} onConfigChange={setApiConfig} sessions={sessions} onDeleteCache={deleteSession} />} />
           <Route path="/help" element={<HelpView />} />
           <Route path="/contact" element={<ContactView />} />
-          <Route path="/tiktok-transcript" element={<TikTokTranscriptView />} />
           <Route path="/about" element={<AboutView />} />
           <Route path="/privacy" element={<PrivacyView />} />
           <Route path="/instagram-reel-transcript" element={<InstagramReelTranscriptView />} />

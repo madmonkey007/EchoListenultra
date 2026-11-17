@@ -26,7 +26,7 @@ test('titles are 50-60 chars and unique; descriptions 140-160 and unique; H1s un
  for(const d of descs)assert.ok(d.length>=140&&d.length<=160,`description ${d.length} chars: ${d}`);
  assert.equal(new Set(titles).size,4,'titles unique');assert.equal(new Set(descs).size,4,'descriptions unique');
  // No collision with the established public pages either.
- const oldTitles=['/about','/help','/privacy','/contact','/tiktok-transcript','/settings'].map(p=>renderPublicHtml(home,p).match(/<title>(.*?)<\/title>/)[1]);
+ const oldTitles=['/about','/help','/privacy','/contact','/settings'].map(p=>renderPublicHtml(home,p).match(/<title>(.*?)<\/title>/)[1]);
  for(const t of titles)assert.ok(!oldTitles.includes(t));
  const allH1=h1s(NEW[0]).concat(...NEW.map(p=>h1s(p)));
  assert.equal(new Set(NEW.map(p=>h1s(p)[0])).size,4,'H1s unique among the four');

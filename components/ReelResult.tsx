@@ -1,16 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { ReelTranscript } from '../lib/reel-client.ts';
-import { resultSegments, resultAudioBlob, transcriptExport, type TranscriptFormat } from '../lib/reel-result.ts';
+import { resultSegments, resultAudioBlob, transcriptExport, formatTimestamp, type TranscriptFormat } from '../lib/reel-result.ts';
 import { getSynchronizedWords, getActiveSegmentIndex, getActiveWordIndex, scrollActiveCaptionIntoView } from '../lib/subtitle-timing.ts';
-// Display times are whole seconds: nobody locates a moment in a Reel to a
-// thousandth of a second, and the millisecond tail filled the gutter. Ends
-// round rather than truncate, so consecutive passages meet (00:00 – 00:05,
-// 00:05 – 00:10) instead of showing a phantom gap. SRT export keeps the full
-// server-side milliseconds; this formatter is display-only.
-const timestamp = (seconds: number) => {
-  const total = Math.max(0, Math.round(seconds));
-  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
-};
+
 interface Props { result: ReelTranscript; notice: string; onCopy: () => void; headingRef?: React.Ref<HTMLHeadingElement> }
 export default function ReelResult({ result, notice, onCopy, headingRef }: Props) {
   const audio = useRef<HTMLAudioElement>(null);
@@ -65,7 +57,7 @@ export default function ReelResult({ result, notice, onCopy, headingRef }: Props
     {audioError && <p className="reel-copy-notice" role="status">{audioError}</p>}
     {!spoken ? <p>No spoken words were detected in this Reel. Try another video with clear speech.</p> : <>
       <p className="reel-reading-hint">{audioUrl ? "Click any line to play from there. Each word inks in as it's spoken, so you can check the wording against the voice." : 'Copy the text or choose a download format.'}</p>
-      <ol className="reel-cues reel-playback-cues" ref={list} aria-label="Transcript passages">{result.cues.map((cue, i) => <li key={i} data-seg-idx={i} className={active === i && audioUrl ? 'is-active' : undefined} aria-current={active === i && audioUrl ? 'true' : undefined}><button type="button" className="reel-cue-play" aria-label={`Play segment ${i + 1} at ${timestamp(cue.start)}`} disabled={!audioUrl} onClick={() => seek(cue.start)}><time>{timestamp(cue.start)} – {timestamp(cue.end)}</time><span>{timings[i] ? cue.text.split(/(\s+)/).map((token, tokenIndex, tokens) => {
+      <ol className="reel-cues reel-playback-cues" ref={list} aria-label="Transcript passages">{result.cues.map((cue, i) => <li key={i} data-seg-idx={i} className={active === i && audioUrl ? 'is-active' : undefined} aria-current={active === i && audioUrl ? 'true' : undefined}><button type="button" className="reel-cue-play" aria-label={`Play segment ${i + 1} at ${formatTimestamp(cue.start)}`} disabled={!audioUrl} onClick={() => seek(cue.start)}><time>{formatTimestamp(cue.start)} – {formatTimestamp(cue.end)}</time><span>{timings[i] ? cue.text.split(/(\s+)/).map((token, tokenIndex, tokens) => {
         if (/^\s+$/.test(token)) return token;
         const wordIndex = tokens.slice(0, tokenIndex).filter(value => value && !/^\s+$/.test(value)).length;
         const current = active === i && wordIndex === activeWord && !!audioUrl;

@@ -8,7 +8,6 @@ import PrivacyView from '../views/PrivacyView';
 import ContactView from '../views/ContactView';
 import SettingsView from '../views/SettingsView';
 import type { AIProviderConfig } from '../types';
-import TikTokTranscriptView from '../views/TikTokTranscriptView';
 import InstagramReelTranscriptView from '../views/InstagramReelTranscriptView';
 import ReelsTranscriptView from '../views/ReelsTranscriptView';
 import InstagramReelTranscriptGeneratorView from '../views/InstagramReelTranscriptGeneratorView';
@@ -19,7 +18,7 @@ const AppearancePage = () => <SettingsView apiConfig={{ theme: 'dark' } as AIPro
 
 const pages: Record<string, React.ComponentType> = {
   '/about': AboutView, '/help': HelpView, '/privacy': PrivacyView,
-  '/contact': ContactView, '/tiktok-transcript': TikTokTranscriptView, '/settings': AppearancePage,
+  '/contact': ContactView, '/settings': AppearancePage,
   '/instagram-reel-transcript': InstagramReelTranscriptView,
   '/reels-transcript': ReelsTranscriptView,
   '/instagram-reel-transcript-generator': InstagramReelTranscriptGeneratorView,

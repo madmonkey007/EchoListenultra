@@ -5,8 +5,18 @@ const data={status:'transcribed',text:'Hello world.\n\nKeep every word.',srt:'1\
 test('SRT export preserves the provider cue engine output and existing filename',()=>{
  const {transcriptExport}=require('../lib/reel-result.ts');assert.deepEqual(transcriptExport(data,'srt'),{filename:'reel-transcript.srt',mime:'application/x-subrip;charset=utf-8',content:data.srt});
 });
-test('Markdown and plain text exports have no generated timestamps and preserve transcript text',()=>{
- const {transcriptExport}=require('../lib/reel-result.ts');for(const format of ['md','txt']){const x=transcriptExport(data,format);assert.ok(x.content.includes(data.text));assert.doesNotMatch(x.content,/00:00:00,100|-->/);assert.equal(x.filename,'reel-transcript.'+format);}
+test('Markdown export is structured (heading + timestamped passages); plain text keeps the raw transcript',()=>{
+ const {transcriptExport}=require('../lib/reel-result.ts');
+ const md=transcriptExport(data,'md');
+ assert.equal(md.filename,'reel-transcript.md');assert.equal(md.mime,'text/markdown;charset=utf-8');
+ assert.match(md.content,/^# Reel transcript\n\n/);
+ assert.match(md.content,/\*\*\[00:00\]\*\* Hello world\./);
+ assert.match(md.content,/\*\*\[00:02\]\*\* Keep every word\./);
+ assert.doesNotMatch(md.content,/00:00:00,100|-->/);
+ const txt=transcriptExport(data,'txt');
+ assert.ok(txt.content.includes(data.text));
+ assert.doesNotMatch(txt.content,/00:00:00,100|-->/);
+ assert.equal(txt.filename,'reel-transcript.txt');
 });
 test('highlight uses existing cue times with gaps and boundaries unchanged',()=>{
  const {activeCueIndex}=require('../lib/reel-result.ts');for(const [time,index] of [[0,-1],[.1,0],[1.19,0],[1.2,-1],[1.8,-1],[2,1],[3,-1]])assert.equal(activeCueIndex(data.cues,time),index);

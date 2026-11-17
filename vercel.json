@@ -17,10 +17,6 @@
       "destination": "/contact.html"
     },
     {
-      "source": "/tiktok-transcript",
-      "destination": "/tiktok-transcript.html"
-    },
-    {
       "source": "/instagram-reel-transcript",
       "destination": "/instagram-reel-transcript.html"
     },
@@ -170,7 +166,12 @@
     },
     {
       "source": "/tiktok-transcript/",
-      "destination": "/tiktok-transcript",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tiktok-transcript",
+      "destination": "/",
       "statusCode": 301
     },
     {
