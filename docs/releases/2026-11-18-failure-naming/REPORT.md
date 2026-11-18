@@ -51,6 +51,18 @@ distinguish these cases):
 - Regressions after deploy: /og/home.png 200, homepage og:image ×5,
   /settings `noindex, follow`, /about zero card lines, sw.js/fonts 200.
 
+## Follow-up — wording (same day)
+
+Commits `c356bbf` + `27d138c`; production deploy
+`echo-listenultra-ebre-2y17xoii6`, live bundle `index-BvuQQ9nE.js`. The
+too_long messages now say "This video is …" instead of "This Reel is …"
+(and "Try a shorter video."), because feed-video /p/ posts can hit the
+3-minute cap and calling those a Reel made users think they had pasted
+the wrong link type. The /help troubleshooting sentence likewise reads
+"choose a shorter video". Live: /help carries the new sentence (old one
+0 hits), home head byte-identical, og/settings/sw regressions green,
+node 162/162.
+
 ## Open items
 
 - Row 5 closed live after rollout: the owner-supplied music-only reel
