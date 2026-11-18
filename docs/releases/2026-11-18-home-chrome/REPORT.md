@@ -58,6 +58,14 @@ Suite: node 162/162 (new baseline; +5 in `tests/home-chrome.test.cjs`, one
 pin in `tests/content-pages.test.cjs` updated to the merged footer shape),
 `tsc --noEmit` clean.
 
+## Follow-up — FAQ article fix (same day)
+
+Commit `8958c95`; production deploy `echo-listenultra-ebre-cfc9qwsu9`,
+live bundle `index-DqqUZSX2.js`. "a instagram.com/p/" → "an instagram.com/p/"
+in the first FAQ answer (single source `lib/home-faq.ts` → static `<p>` +
+FAQPage JSON-LD). Live: "an instagram.com" ×2 (one per output), "a
+instagram.com" 0, head fields byte-identical to the previous deploy.
+
 ## Notes
 
 - Deploy hit repeated `Error: fetch failed` from the Vercel CLI (Clash TUN
