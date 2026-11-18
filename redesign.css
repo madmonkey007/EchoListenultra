@@ -832,15 +832,158 @@ a {
   gap: 8px;
 }
 
+/* The format picker was the one control the browser still dressed itself.
+   The system arrow sat hard against the right edge, ignored the 14px padding
+   and drew at whatever size the OS felt like, so the label looked shoved left
+   in an over-wide pill; and the list that opened under it came up in the
+   platform's own white, square-cornered, with a blue highlight — three
+   conventions away from a page made of warm paper pills.
+
+   It stays a native <select>: keyboard, screen readers and the phone's own
+   picker behave exactly as before, and nothing in the markup moves. Only the
+   shell is redrawn here, plus the popup where the browser exposes it (below).
+   The arrow is a 13px stroke drawn inline as SVG, so it stays crisp at any
+   pixel ratio and costs no request; a data URI cannot read currentColor, so
+   the dark plane swaps in the cream copy — the same two inks as everything
+   else. Padding is set on the reading side and the arrow's side separately,
+   which is what the 20/38 split is: label at the same 20px the buttons beside
+   it use, then 7px of air, a 13px arrow, and 18px to the rim. */
 .reel-export select {
+  appearance: none;
+  -webkit-appearance: none;
   height: 46px;
-  padding: 0 14px;
+  padding: 0 38px 0 20px;
   border: 1px solid var(--line-2);
   border-radius: 999px;
-  background: transparent;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='8' viewBox='0 0 13 8'%3E%3Cpath d='M1.7 2.3 6.5 6.5l4.8-4.2' fill='none' stroke='%231b1712' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  background-size: 13px 8px;
   color: var(--ink);
   font-family: var(--font);
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  transition: border-color 0.16s ease;
+}
+
+.reel-export select:hover {
+  border-color: var(--ink);
+}
+
+html.dark .reel-export select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='8' viewBox='0 0 13 8'%3E%3Cpath d='M1.7 2.3 6.5 6.5l4.8-4.2' fill='none' stroke='%23f3eee2' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Where the browser hands the popup over (Chrome 135+, Safari 26+) the list is
+   redrawn as a slip of paper laid on the page: --surface rather than --bg, so
+   on the dark plane it sits one step above the page instead of dissolving into
+   it, and the row that is currently chosen is marked with --field — the one
+   filled surface the design already owns — while hover only tints with the
+   hairline. Option rows carry their own padding, so the panel's 8px reads as a
+   margin rather than a second inset. Rows stay at 14px because that is what
+   the trigger prints; a list set a half-step smaller makes the value jump
+   size the moment it is picked. Everything here is ignored by a browser
+   without base-select, which keeps the native list rather than a broken one. */
+@supports (appearance: base-select) {
+  .reel-export select,
+  .reel-export select::picker(select) {
+    appearance: base-select;
+  }
+
+  /* Handing the popup over also turns the control into a flex box, and its
+     default `align-items: normal` stretches the label's line box to the full
+     44px instead of centring it — the label rode about 4px high in the pill.
+     Centring the items is the fix; the 44px line height (46px pill minus the
+     two border pixels) is the belt to that brace, so the line sits on the
+     centre line whichever way the browser builds the inside. */
+  .reel-export select {
+    display: flex;
+    align-items: center;
+    line-height: 44px;
+  }
+
+  .reel-export select::picker-icon {
+    display: none;
+  }
+
+  /* The panel is as wide as its longest row, which is wider than the pill —
+     the pill only has room for the chosen one. It hangs from the pill's left
+     edge and overhangs 18px on the right, the way a list under a picker
+     normally does; forcing it centred would push it past the viewport once
+     the control sits against the right of a narrow window. min-width keeps it
+     from ever being narrower than the trigger it belongs to. */
+  .reel-export select::picker(select) {
+    min-width: anchor-size(width);
+    margin: 8px 0 0;
+    padding: 8px;
+    border: 1px solid var(--line-2);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow-pop);
+  }
+
+  /* 21px of line in 11px of padding on both sides: 43px a row, with the same
+     half-leading above and below the words. At the inherited 23.1px line
+     height the glyphs sat 12px from the top and 13.1px from the bottom. */
+  .reel-export select option {
+    /* The row is a block, not a flex box, however it may report itself: its
+       words are laid out as inline content, so text-align is what actually
+       left-aligns them, and the tick has to be taken out of the flow or every
+       row starts wherever its own length happens to begin. */
+    position: relative;
+    text-align: left;
+    padding: 11px 34px 11px 14px;
+    border-radius: 12px;
+    color: var(--ink-2);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+
+  .reel-export select option:hover,
+  .reel-export select option:focus-visible {
+    background: var(--line);
+    color: var(--ink);
+  }
+
+  .reel-export select option:checked {
+    background: var(--field);
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .reel-export select option::checkmark {
+    /* Pinned to the end of the row: in the flow it either pushed every row's
+       words 20px right (when it was first) or let each row centre itself
+       (once it was last), and neither lines the list up with the trigger. Out
+       of the flow, the words start at 14px — panel 8px + 14px against the
+       pill's 20px + border — so the three rows and the label sit on one
+       column, and the tick still marks the chosen row at the other end. */
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    translate: 0 -50%;
+    color: var(--ink);
+  }
+}
+
+/* Browsers that still paint the list themselves read at least these two
+   properties, which is enough to stop a white sheet appearing under a dark
+   page. Guarded by `not` rather than left to cascade order: unguarded, it also
+   applied to the popup above and painted every row in --bg, which is a visible
+   dark block per row on the dark plane and invisible only on the light one,
+   where --bg and --surface happen to be the same paper. */
+@supports not (appearance: base-select) {
+  .reel-export select option {
+    background: var(--bg);
+    color: var(--ink);
+  }
 }
 
 .reel-result-actions .button {
