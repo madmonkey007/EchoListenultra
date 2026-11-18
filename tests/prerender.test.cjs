@@ -15,6 +15,32 @@ test('settings raw HTML has only appearance controls, a self canonical and noind
  assert.match(html,/reelstranscript.com\/settings/);assert.match(html,/name="robots" content="noindex, follow"/);assert.equal([...html.matchAll(/<h1\b/g)].length,1);
  assert.match(html,/Theme mode/);assert.match(html,/>Light</);assert.match(html,/>Dark</);assert.doesNotMatch(html,/Gemini|Deepgram|Model Provider|API key|Target Language/i);
 });
+test('share cards on five routes carry one large-image card each; other pages keep the plain summary card',()=>{
+ const {renderPublicHtml}=require('../lib/render-public-pages.tsx');const {renderSeoTemplate}=require('../lib/static-seo.ts');const {shareImages,SITE_ORIGIN}=require('../lib/site-meta.ts');
+ const home=renderSeoTemplate(fs.readFileSync('index.html','utf8'));
+ const carded=['/','/instagram-reel-transcript','/reels-transcript','/instagram-reel-transcript-generator','/instagram-video-transcript'];
+ for(const path of carded){
+  const html=path==='/'?home:renderPublicHtml(home,path);assert.ok(html);
+  const image=SITE_ORIGIN+shareImages[path].image,alt=shareImages[path].alt;
+  assert.match(html,new RegExp(`<meta property="og:image" content="${image}" />`));
+  assert.match(html,/property="og:image:width" content="1200"/);assert.match(html,/property="og:image:height" content="630"/);
+  assert.match(html,/property="og:image:type" content="image\/png"/);
+  assert.match(html,new RegExp(`<meta property="og:image:alt" content="${alt}" />`));
+  assert.match(html,/name="twitter:card" content="summary_large_image"/);
+  assert.match(html,new RegExp(`<meta name="twitter:image" content="${image}" />`));
+  assert.match(html,new RegExp(`<meta name="twitter:image:alt" content="${alt}" />`));
+  assert.equal([...html.matchAll(/name="twitter:card"/g)].length,1);
+  assert.equal([...html.matchAll(/property="og:image/g)].length,5);
+  const h1=html.match(/<h1[^>]*>([^<]+)<\/h1>/)[1];
+  assert.equal(alt,h1);
+ }
+ for(const path of ['/about','/help','/contact','/privacy','/settings']){
+  const html=renderPublicHtml(home,path);assert.ok(html);
+  assert.doesNotMatch(html,/og:image|twitter:image/);
+  assert.match(html,/name="twitter:card" content="summary" \/>/);
+ }
+ assert.match(home,/rel="apple-touch-icon" href="\/logo-512.png"/);
+});
 test('public navigation includes only product pages and settings stays in the footer',()=>{
  const {renderPublicHtml}=require('../lib/render-public-pages.tsx');const {renderSeoTemplate}=require('../lib/static-seo.ts');
  const html=renderPublicHtml(renderSeoTemplate(fs.readFileSync('index.html','utf8')),'/about');

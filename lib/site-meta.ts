@@ -16,6 +16,16 @@ export const publicMetadata: Record<string, { title: string; description: string
   '/contact': { title: 'Contact and feedback — ReelTranscript', description: 'Contact the ReelTranscript maintainer with questions, transcription problems, subtitle issues or product feedback.' },
 };
 
+// Share-card image (1200×630 PNG served from /og/) per route. Routes missing
+// here render their head without a share card; alts mirror each page's H1.
+export const shareImages: Record<string, { image: string; alt: string }> = {
+  '/': { image: '/og/home.png', alt: 'Instagram Transcript from Any Reel' },
+  '/instagram-reel-transcript': { image: '/og/instagram-reel-transcript.png', alt: 'Instagram Reel Transcript' },
+  '/reels-transcript': { image: '/og/reels-transcript.png', alt: 'Reels Transcript' },
+  '/instagram-reel-transcript-generator': { image: '/og/instagram-reel-transcript-generator.png', alt: 'Instagram Reel Transcript Generator' },
+  '/instagram-video-transcript': { image: '/og/instagram-video-transcript.png', alt: 'Instagram Video Transcript' },
+};
+
 export function routeMetadata(pathname: string): { title: string; description: string; robots: string } {
   const page = publicMetadata[pathname];
   if (page) return { ...page, robots: pathname === '/settings' ? 'noindex, follow' : 'index, follow' };

@@ -12,7 +12,7 @@ import InstagramReelTranscriptView from '../views/InstagramReelTranscriptView';
 import ReelsTranscriptView from '../views/ReelsTranscriptView';
 import InstagramReelTranscriptGeneratorView from '../views/InstagramReelTranscriptGeneratorView';
 import InstagramVideoTranscriptView from '../views/InstagramVideoTranscriptView';
-import { routeMetadata, SITE_ORIGIN } from './site-meta';
+import { routeMetadata, shareImages, SITE_ORIGIN } from './site-meta';
 
 const AppearancePage = () => <SettingsView apiConfig={{ theme: 'dark' } as AIProviderConfig} onConfigChange={() => {}} />;
 
@@ -41,14 +41,34 @@ export function renderPublicHtml(homeHtml: string, pathname: string): string | n
       <footer className="site-footer site-container"><Brand /><p>Public Reels. Readable transcripts. Timed subtitles.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data &amp; privacy</Link><Link to="/help">How it works</Link><Link to="/settings">Settings</Link></footer>
     </div>
   </MemoryRouter>);
-  return homeHtml
+  let html = homeHtml
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(metadata.title)}</title>`)
     .replace(/(<meta name="description" content=")[^"]*("\s*\/>)/, `$1${escape(metadata.description)}$2`)
     .replace(/(<meta name="robots" content=")[^"]*("\s*\/>)/, `$1${metadata.robots}$2`)
     .replace(/(<link rel="canonical" href=")[^"]*("\s*\/>)/, `$1${canonical}$2`)
     .replace(/(<meta property="og:url" content=")[^"]*("\s*\/>)/, `$1${canonical}$2`)
     .replace(/(<meta property="og:title" content=")[^"]*("\s*\/>)/, `$1${escape(metadata.title)}$2`)
-    .replace(/(<meta property="og:description" content=")[^"]*("\s*\/>)/, `$1${escape(metadata.description)}$2`)
+    .replace(/(<meta property="og:description" content=")[^"]*("\s*\/>)/, `$1${escape(metadata.description)}$2`);
+  const share = shareImages[pathname];
+  if (share) {
+    // The home shell carries the card tags with home.png values; only the
+    // per-route values differ. twitter:card/width/height/type stay as-is.
+    const image = escape(SITE_ORIGIN + share.image);
+    const alt = escape(share.alt);
+    html = html
+      .replace(/(<meta property="og:image" content=")[^"]*(" \/>)/, `$1${image}$2`)
+      .replace(/(<meta property="og:image:alt" content=")[^"]*(" \/>)/, `$1${alt}$2`)
+      .replace(/(<meta name="twitter:image" content=")[^"]*(" \/>)/, `$1${image}$2`)
+      .replace(/(<meta name="twitter:image:alt" content=")[^"]*(" \/>)/, `$1${alt}$2`);
+  } else {
+    // Routes without a share card keep the previous head: strip the card
+    // tags the shell gained and restore the original summary card line.
+    html = html
+      .replace(/  <meta property="og:image(?::(?:width|height|type|alt))?" content="[^"]*" \/>\n/g, '')
+      .replace(/  <meta name="twitter:image(?::alt)?" content="[^"]*" \/>\n/g, '')
+      .replace('content="summary_large_image"', 'content="summary"');
+  }
+  return html
     .replace(/<div id="root">[\s\S]*?<\/div>(?=\s*<noscript>)/, `<div id="root">${body}</div>`)
     .replace(/<noscript>[\s\S]*?<\/noscript>/, '<noscript><p>Enable JavaScript to use interactive features.</p></noscript>');
 }
