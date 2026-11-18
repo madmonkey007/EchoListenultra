@@ -7,6 +7,7 @@ import AddSessionView from './views/AddSessionView.tsx';
 import SettingsView from './views/SettingsView.tsx';
 import VocabularyView from './views/VocabularyView.tsx';
 import SiteHeader, { Brand } from './components/SiteHeader.tsx';
+import IconGlyph from './components/IconGlyph.tsx';
 import LandingView from './views/LandingView.tsx';
 import HelpView from './views/HelpView.tsx';
 import ContactView from './views/ContactView.tsx';
@@ -116,7 +117,7 @@ const AppContent: React.FC<{
         </Routes>
       </main>
       {!isPlayerView && <footer className="site-footer site-container"><Brand /><p>Public Reels. Readable transcripts. Timed subtitles.</p><Link to="/about">About</Link><Link to="/contact">Contact</Link><Link to="/privacy">Data & privacy</Link><Link to="/help">How it works</Link><Link to="/settings">Settings</Link><nav className="footer-content-links" aria-label="Transcript guides"><Link to="/instagram-reel-transcript">Instagram reel transcript</Link><Link to="/reels-transcript">Reels transcript</Link><Link to="/instagram-reel-transcript-generator">Instagram reel transcript generator</Link><Link to="/instagram-video-transcript">Instagram video transcript</Link></nav></footer>}
-      {!isPlayerView && !['/contact', '/account', '/login', '/auth/callback'].includes(location.pathname) && <Link to="/contact" className="feedback-fab" aria-label="Feedback and help"><span className="material-symbols-outlined" aria-hidden="true">mail</span><span>Feedback</span></Link>}
+      {!isPlayerView && !['/contact', '/account', '/login', '/auth/callback'].includes(location.pathname) && <Link to="/contact" className="feedback-fab" aria-label="Feedback and help"><IconGlyph name="mail" /><span>Feedback</span></Link>}
     </div>
   );
 };

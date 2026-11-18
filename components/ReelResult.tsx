@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { ReelTranscript } from '../lib/reel-client.ts';
 import { resultSegments, resultAudioBlob, transcriptExport, formatTimestamp, type TranscriptFormat } from '../lib/reel-result.ts';
 import { getSynchronizedWords, getActiveSegmentIndex, getActiveWordIndex, scrollActiveCaptionIntoView } from '../lib/subtitle-timing.ts';
+import IconGlyph from './IconGlyph.tsx';
 
 interface Props { result: ReelTranscript; notice: string; onCopy: () => void; headingRef?: React.Ref<HTMLHeadingElement> }
 export default function ReelResult({ result, notice, onCopy, headingRef }: Props) {
@@ -48,7 +49,7 @@ export default function ReelResult({ result, notice, onCopy, headingRef }: Props
   }
   const spoken = result.status === 'transcribed';
   return <section className="reel-result" aria-labelledby="reel-result-title">
-    {spoken && <p className="reel-success" role="status"><span className="material-symbols-outlined" aria-hidden="true">check_circle</span>Transcription complete. 100%</p>}
+    {spoken && <p className="reel-success" role="status"><IconGlyph name="check_circle" />Transcription complete. 100%</p>}
     <div className="reel-result-top"><h2 id="reel-result-title" ref={headingRef} tabIndex={-1}>{spoken ? 'Your transcript' : 'No speech detected'}</h2>{spoken && <div className="reel-result-actions">
       <button className="button button-secondary" type="button" onClick={onCopy}>Copy text</button>
       <div className="reel-export"><label className="sr-only" htmlFor="reel-export-format">Export format</label><select id="reel-export-format" value={format} onChange={e => setFormat(e.target.value as TranscriptFormat)}><option value="srt">Subtitles (.srt)</option><option value="md">Markdown (.md)</option><option value="txt">Plain text (.txt)</option></select><button className="button" type="button" onClick={download} disabled={format === 'srt' && !result.srt}>{format === 'srt' ? 'Download SRT' : format === 'md' ? 'Download Markdown' : 'Download text'}</button></div>

@@ -11,7 +11,7 @@ export const FAQ_TITLE = 'Frequently asked questions';
 export const HOME_FAQ: ReadonlyArray<{ question: string; answer: string }> = [
   {
     question: 'Which links are supported?',
-    answer: 'A public Instagram Reel link, the kind with /reel/ in its address. Private posts, profile links, photo posts and other video platforms are not supported.',
+    answer: 'A public Instagram Reel or feed-video link: instagram.com/reel/…/, instagram.com/reels/…/, or a instagram.com/p/…/ post that actually contains video. Private accounts, Stories, profile links and photo-only posts cannot be processed.',
   },
   {
     question: 'Do I need an account?',

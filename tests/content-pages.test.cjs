@@ -64,8 +64,9 @@ test('homepage source gains only the footer link group and keeps its frozen head
  const html=home;
  assert.match(html,/Instagram Transcript &amp; SRT — ReelTranscript<\/title>/);
  for(const p of NEW)assert.ok(html.includes(`href="${p}"`),'homepage footer links to '+p);
- const foot=html.match(/<footer class="site-footer site-container"><nav class="footer-content-links"[\s\S]*?<\/footer>/);
- assert.ok(foot,'footer link group present');
+ const foot=html.match(/<footer class="site-footer site-container">[\s\S]*?<\/footer>/);
+ assert.ok(foot,'footer present');
+ assert.ok(foot[0].includes('<nav class="footer-content-links"'),'footer link group present');
  assert.ok(!foot[0].includes('Instagram Transcript<br'), 'footer block adds no headings');
 });
 test('routing and sitemap cover exactly the nine public URLs',()=>{

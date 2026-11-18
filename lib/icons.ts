@@ -55,10 +55,16 @@ export const ICONS: Record<string, string> = {
 };
 export const ALIAS: Record<string, string> = {"help_outline":"help","chat_bubble_outline":"chat_bubble","mail_outline":"mail"};
 
+/* Shared by the runtime layer (make below) and the static twin (components/IconGlyph.tsx). */
+export function glyphPath(name: string): string | null {
+  const mapped = ICONS[name] || (ALIAS[name] && ICONS[ALIAS[name]]);
+  return mapped || null;
+}
+
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 function make(name: string): SVGSVGElement | null {
-  const body = ICONS[name] || (ALIAS[name] && ICONS[ALIAS[name]]);
+  const body = glyphPath(name);
   if (!body) return null;
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', '0 -960 960 960');

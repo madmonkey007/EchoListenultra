@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { requestReelTranscript, ReelTranscript, reelErrorMessage, INITIAL_REEL_PROGRESS, type ReelProgress } from '../lib/reel-client.ts';
 
 import ReelResult from './ReelResult.tsx';
+import IconGlyph from './IconGlyph.tsx';
 import { MAX_AUDIO_SECONDS, limitMinutes } from '../lib/transcription-limit.ts';
 
 export function ReelErrorMessage({ message }: { message: string }) {
@@ -92,7 +93,7 @@ export default function ReelTranscriber({ showIntro = true, showExample = true }
       <form onSubmit={submit} className="reel-form" aria-busy={pending}>
         <label htmlFor="reel-url">Instagram Reel URL</label>
         <div className="reel-entry"><div className="reel-input-wrap"><input id="reel-url" type="url" inputMode="url" autoComplete="off" required placeholder="https://www.instagram.com/reel/…/" value={url} onChange={e => setUrl(e.target.value)} disabled={pending} aria-describedby="reel-hint" /></div>
-        <div className="reel-form-actions"><button className="button" type="submit" disabled={pending}>{pending ? 'Transcribing…' : 'Get transcript'}<span className="material-symbols-outlined" aria-hidden="true">{pending ? 'hourglass_top' : 'arrow_forward'}</span></button></div></div>{pending && <button className="text-link" type="button" onClick={() => request.current?.abort()}>Stop waiting</button>}
+        <div className="reel-form-actions"><button className="button" type="submit" disabled={pending}>{pending ? 'Transcribing…' : 'Get transcript'}{pending ? <IconGlyph name="hourglass_top" /> : <IconGlyph name="arrow_forward" />}</button></div></div>{pending && <button className="text-link" type="button" onClick={() => request.current?.abort()}>Stop waiting</button>}
         <p id="reel-hint" className="reel-hint">Public Reels up to {limitMinutes(limit)} minutes. No Instagram sign-in needed. Some Reels may be unavailable. Your link and audio are processed online. <a href="/privacy#reel-transcription">How your data is used</a></p>
         {notice && !result && <p role="status" className="reel-copy-notice">{notice}</p>}
       </form>
