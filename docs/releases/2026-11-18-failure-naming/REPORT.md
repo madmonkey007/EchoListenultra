@@ -53,13 +53,20 @@ distinguish these cases):
 
 ## Open items
 
-- Rows 4 (>3 min → `too_long` with measured duration) and 5 (music-only →
-  `no_speech`) could not be exercised live: no real >3-minute or
-  music-only Instagram URL could be sourced (four search engines, Telegram
-  previews and the profile API all yield nothing usable, and the local IP
-  is walled). Both paths are contract-tested offline and the too_long
-  branch is byte-identical to the pre-existing production behavior; pending
-  a real link from the owner for the final two rows.
+- Row 5 closed live after rollout: the owner-supplied music-only reel
+  (instagram.com/reel/C92zpvTufv5/) returned HTTP 422
+  `{"error": "no_speech", "limit_seconds": 180}` from production. An
+  initial report of the old "problem on our side" copy for this same
+  link came from a browser tab loaded before the deploy — the deployed
+  bundle cannot produce that string, and the service worker serves
+  navigations network-first, so a reload shows the new copy.
+- Row 4 (>3 min) is unreachable for Reels by design: Instagram caps
+  Reels at 3:00 — exactly MAX_AUDIO_SECONDS — so no /reel/ link can
+  exceed the limit (179/180 accepted, 181 rejected). The `too_long`
+  path fires only for long feed-video `/p/` posts, is byte-identical to
+  the pre-existing production behavior, and its measured-duration
+  message is contract-tested. A long /p/ feed-video link would close it
+  live if one is ever wanted.
 - A real private-account link (vs nonexistent) still maps through the same
   "empty media response"/wall family; verifying one live would close the
   last wording edge.
