@@ -27,7 +27,7 @@ test('home static footer carries the brand, tagline, five page links and the fou
 
 test('FAQ first answer names reel and feed-video links; the other five answers are untouched',()=>{
  assert.equal(HOME_FAQ.length,6);
- assert.equal(HOME_FAQ[0].answer,'A public Instagram Reel or feed-video link: instagram.com/reel/…/, instagram.com/reels/…/, or a instagram.com/p/…/ post that actually contains video. Private accounts, Stories, profile links and photo-only posts cannot be processed.');
+ assert.equal(HOME_FAQ[0].answer,'A public Instagram Reel or feed-video link: instagram.com/reel/…/, instagram.com/reels/…/, or an instagram.com/p/…/ post that actually contains video. Private accounts, Stories, profile links and photo-only posts cannot be processed.');
  const others=[
   'No. There is no sign-up and no Instagram login. A public Reel link is the only thing the tool needs.',
   'A transcript with timestamps you can copy as text, plus subtitle files you can download as SRT, Markdown or plain text.',
