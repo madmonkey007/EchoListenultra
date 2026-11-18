@@ -7,8 +7,8 @@ export function reelErrorMessage(data: { error?: string; limit_seconds?: number;
     const seconds = data.duration_seconds;
     const duration = typeof seconds === 'number' && Number.isFinite(seconds) && seconds > 0
       ? `${Math.floor(seconds / 60)}:${Math.floor(seconds % 60).toString().padStart(2, '0')}` : null;
-    return (duration ? `This Reel is ${duration} long — longer than the ${limitMinutes(limit)}-minute limit.`
-      : `This Reel is longer than our ${limitMinutes(limit)}-minute limit.`) + '\nTry a shorter Reel.';
+    return (duration ? `This video is ${duration} long — longer than the ${limitMinutes(limit)}-minute limit.`
+      : `This video is longer than our ${limitMinutes(limit)}-minute limit.`) + '\nTry a shorter video.';
   }
   if (data.error === 'quota_exhausted')
     return "Today's free transcription quota is used up.\nPlease try again tomorrow.";

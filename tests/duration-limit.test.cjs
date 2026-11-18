@@ -11,10 +11,10 @@ except ValueError as e: assert str(e).startswith('too_long:')
 else: raise AssertionError('181 must fail')`],{encoding:'utf8'});assert.equal(r.status,0,r.stderr);
 });
 for(const status of [422,502])test(`too_long ${status} includes duration in its own two-line message`,async()=>{
- await assert.rejects(fail({error:'too_long',limit_seconds:180,duration_seconds:194.2},status),e=>e.message==='This Reel is 3:14 long — longer than the 3-minute limit.\nTry a shorter Reel.');
+ await assert.rejects(fail({error:'too_long',limit_seconds:180,duration_seconds:194.2},status),e=>e.message==='This video is 3:14 long — longer than the 3-minute limit.\nTry a shorter video.');
 });
 test('too_long without duration uses the interface limit and remains actionable',async()=>{
- await assert.rejects(fail({error:'too_long',limit_seconds:240}),e=>e.message==='This Reel is longer than our 4-minute limit.\nTry a shorter Reel.');
+ await assert.rejects(fail({error:'too_long',limit_seconds:240}),e=>e.message==='This video is longer than our 4-minute limit.\nTry a shorter video.');
 });
 test('invalid and inaccessible links have link-specific messages',async()=>{
  await assert.rejects(fail({error:'invalid_url'}),/doesn't look like an Instagram post link/);
@@ -25,7 +25,7 @@ test('transient upstream failures offer a retry without blaming the link or the 
 });
 test('three error categories render separate lines and distinct copy',()=>{
  const {ReelErrorMessage}=require('../components/ReelTranscriber.tsx');
- for(const message of ['This Reel is longer than our 3-minute limit.\nTry a shorter Reel.','This post is private, deleted, or otherwise not publicly accessible.\nCheck that the link opens without logging in.','Transcription didn\'t go through this time.\nPlease try again in a moment — a retry usually succeeds.']){
+ for(const message of ['This video is longer than our 3-minute limit.\nTry a shorter video.','This post is private, deleted, or otherwise not publicly accessible.\nCheck that the link opens without logging in.','Transcription didn\'t go through this time.\nPlease try again in a moment — a retry usually succeeds.']){
  const html=render(React.createElement(ReelErrorMessage,{message}));assert.match(html,/role="alert"/);assert.ok(html.includes(message.split('\n')[0].replace(/'/g,'&#x27;')));if(message.includes('\n'))assert.match(html,/<br\/>/);
  }
 });
