@@ -22,7 +22,7 @@ test('streamed too_long preserves error details and never reaches 100%',async()=
 });
 test('truncated or malformed streams fail instead of displaying completion',async()=>{
  for(const text of [JSON.stringify(progress('fetching_audio',0))+'\n','not JSON\n',JSON.stringify({type:'result',status_code:200,data:{}})+'\n']){
- const updates=[];await assert.rejects(requestReelTranscript('url',undefined,async()=>streamResponse([text]),undefined,p=>updates.push(p)),/problem on our side/);assert.ok(!updates.some(p=>p.completed===3));
+ const updates=[];await assert.rejects(requestReelTranscript('url',undefined,async()=>streamResponse([text]),undefined,p=>updates.push(p)),/didn't go through this time/);assert.ok(!updates.some(p=>p.completed===3));
  }
 });
 test('progress bar uses real completed-step percentage and accessible values',()=>{

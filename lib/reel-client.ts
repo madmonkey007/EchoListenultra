@@ -12,9 +12,15 @@ export function reelErrorMessage(data: { error?: string; limit_seconds?: number;
   }
   if (data.error === 'quota_exhausted')
     return "Today's free transcription quota is used up.\nPlease try again tomorrow.";
-  if (['invalid_url', 'private_or_unavailable', 'no_audio', 'fetch_blocked'].includes(data.error || ''))
-    return 'This link is invalid or the Reel is not publicly accessible.\nTry a public Instagram Reel link.';
-  return 'There is a problem on our side, not with your link.\nPlease try again later.';
+  if (data.error === 'no_video')
+    return "This post doesn't contain a video — it's photos only.\nTry a Reel or another post that contains video.";
+  if (data.error === 'no_speech')
+    return "This video has no speech — it's music or ambient sound only.\nTry a Reel where someone is speaking.";
+  if (['private_or_unavailable', 'no_audio', 'fetch_blocked'].includes(data.error || ''))
+    return 'This post is private, deleted, or otherwise not publicly accessible.\nCheck that the link opens without logging in.';
+  if (data.error === 'invalid_url')
+    return "That doesn't look like an Instagram post link.\nPaste a link to a public Instagram Reel or video post.";
+  return "Transcription didn't go through this time.\nPlease try again in a moment — a retry usually succeeds.";
 }
 export interface ReelProgress {
   stage: 'fetching_audio' | 'transcribing' | 'formatting' | 'complete';

@@ -9,6 +9,7 @@ import time
 import yt_dlp
 import yt_dlp.version
 from turbo import MAX_AUDIO_SECONDS
+from probe_classify import classify_failure
 
 class Log:
     def __init__(self):self.lines=[]
@@ -69,6 +70,10 @@ try:
                 result['audio_base64']=base64.b64encode(audio).decode();result['status']='audio_downloaded'
                 if len(json.dumps(result).encode())>4400000:
                     del result['audio_base64'];result.update(status='blocked',error='response_payload_too_large_no_truncation')
-except Exception as error:result.update(status='failed',error=type(error).__name__+': '+str(error))
+except Exception as error:
+    # A stable prefix lets the transport name the failure precisely; the
+    # frozen chain just raises ValueError with this string as before.
+    detail=type(error).__name__+': '+str(error);code=classify_failure(detail)
+    result.update(status='failed',error=code+': '+detail if code else detail)
 result['seconds']=time.perf_counter()-started;result['extractor_log']=log.lines
 print(json.dumps(result,ensure_ascii=False))

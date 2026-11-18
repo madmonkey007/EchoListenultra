@@ -112,6 +112,10 @@ class handler(FrozenChain):
             self._quota_retry=True
             return
         if status==200:
+            if value.get('status')=='no_speech_detected':
+                # The frozen chain reports silent/music-only audio as a 200
+                # status; the client contract wants a named failure instead.
+                return self.send_client_json(422,{'error':'no_speech'})
             response={key:value[key] for key in ['status','text','srt','cues']}
             if 'audio' in value:response['audio']=value['audio']
             if 'words' in value:response['words']=value['words']
@@ -120,9 +124,10 @@ class handler(FrozenChain):
         code=('quota_exhausted' if self._quota_failure(status,value) else
               'payload_too_large' if 'payload_too_large' in detail else
               'too_long' if 'too_long' in detail or 'over_limit_seconds' in detail else
+              'no_video' if 'no_video:' in detail else
+              'private_or_unavailable' if 'private_or_unavailable:' in detail or re.search(r'content is not available|private (?:video|account|post|reel)|not found|login required|no audio',detail,re.I) else
               'timeout' if 'Timeout' in detail or 'timed out' in detail else
-              'invalid_url' if 'Invalid Reel URL' in detail else
-              'private_or_unavailable' if re.search(r'content is not available|private (?:video|account|post|reel)|not found|login required|no audio',detail,re.I) else 'fetch_failed')
+              'invalid_url' if 'Invalid Reel URL' in detail else 'fetch_failed')
         response={'error':code}
         if code=='too_long':
             metrics=value.get('metrics',{})

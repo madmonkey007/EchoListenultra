@@ -16,16 +16,17 @@ for(const status of [422,502])test(`too_long ${status} includes duration in its 
 test('too_long without duration uses the interface limit and remains actionable',async()=>{
  await assert.rejects(fail({error:'too_long',limit_seconds:240}),e=>e.message==='This Reel is longer than our 4-minute limit.\nTry a shorter Reel.');
 });
-test('invalid and inaccessible links have a link-specific message',async()=>{
- for(const error of ['invalid_url','private_or_unavailable','no_audio'])await assert.rejects(fail({error}),/public Instagram Reel link/);
+test('invalid and inaccessible links have link-specific messages',async()=>{
+ await assert.rejects(fail({error:'invalid_url'}),/doesn't look like an Instagram post link/);
+ for(const error of ['private_or_unavailable','no_audio'])await assert.rejects(fail({error}),/not publicly accessible/);
 });
-test('upstream failures explicitly identify our service rather than blaming the link',async()=>{
- for(const error of ['fetch_failed','timeout','unexpected'])await assert.rejects(fail({error},502),/problem on our side, not with your link/);
+test('transient upstream failures offer a retry without blaming the link or the service',async()=>{
+ for(const error of ['fetch_failed','timeout','unexpected'])await assert.rejects(fail({error},502),e=>{assert.match(e.message,/didn't go through this time/);assert.match(e.message,/try again in a moment/);assert.ok(!e.message.includes('our side'));return true;});
 });
 test('three error categories render separate lines and distinct copy',()=>{
  const {ReelErrorMessage}=require('../components/ReelTranscriber.tsx');
- for(const message of ['This Reel is longer than our 3-minute limit.\nTry a shorter Reel.','Use a public Instagram Reel link.','There is a problem on our side, not with your link.']){
- const html=render(React.createElement(ReelErrorMessage,{message}));assert.match(html,/role="alert"/);assert.ok(html.includes(message.split('\n')[0]));if(message.includes('\n'))assert.match(html,/<br\/>/);
+ for(const message of ['This Reel is longer than our 3-minute limit.\nTry a shorter Reel.','This post is private, deleted, or otherwise not publicly accessible.\nCheck that the link opens without logging in.','Transcription didn\'t go through this time.\nPlease try again in a moment — a retry usually succeeds.']){
+ const html=render(React.createElement(ReelErrorMessage,{message}));assert.match(html,/role="alert"/);assert.ok(html.includes(message.split('\n')[0].replace(/'/g,'&#x27;')));if(message.includes('\n'))assert.match(html,/<br\/>/);
  }
 });
 test('waiting text has elapsed time and an advisory after 90 seconds',()=>{
@@ -33,10 +34,10 @@ test('waiting text has elapsed time and an advisory after 90 seconds',()=>{
  const a=render(React.createElement(TranscriptionWait,{elapsed:45}));assert.match(a,/Transcribing… usually 10–30s/);assert.match(a,/45s elapsed/);assert.doesNotMatch(a,/still working/);
  const b=render(React.createElement(TranscriptionWait,{elapsed:91}));assert.match(b,/This one is taking longer than usual, still working…/);
 });
-test('transport exceptions use our service message',async()=>{
- await assert.rejects(require('../lib/reel-client.ts').requestReelTranscript('url',undefined,async()=>{throw new TypeError('Failed to fetch')}),/problem on our side, not with your link/);
+test('transport exceptions use the retryable transient message',async()=>{
+ await assert.rejects(require('../lib/reel-client.ts').requestReelTranscript('url',undefined,async()=>{throw new TypeError('Failed to fetch')}),/didn't go through this time/);
 });
-test('unreadable and incomplete upstream responses use our service message',async()=>{
+test('unreadable and incomplete upstream responses use the retryable transient message',async()=>{
  for(const response of [{ok:true,json:async()=>{throw new Error('bad json')}},{ok:true,json:async()=>({})},{ok:true,json:async()=>null}])
- await assert.rejects(require('../lib/reel-client.ts').requestReelTranscript('url',undefined,async()=>response),/problem on our side, not with your link/);
+ await assert.rejects(require('../lib/reel-client.ts').requestReelTranscript('url',undefined,async()=>response),/didn't go through this time/);
 });
