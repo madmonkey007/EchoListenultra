@@ -8,6 +8,7 @@ export default function InstagramVideoTranscriptView() {
     <div className="page-heading"><h1>Instagram Video Transcript</h1>
       <p>Transcribe any public video on Instagram — Reels and videos posted in the feed alike.</p></div>
     <div className="help-content">
+      <p>ReelTranscript turns a public Instagram video link into a plain-text transcript with timestamps. Paste an instagram.com/reel/…, instagram.com/reels/…, or an instagram.com/p/… post that contains video, and it returns the spoken words as copyable text and a downloadable SRT file. The finished transcript can be read while the Reel plays, and each line jumps to its moment in the video. Videos are limited to 3 minutes, and the transcript is produced only when the video contains speech. Photo posts, private accounts and Stories cannot be transcribed.</p>
       <section>
         <h2>Links that work</h2>
         <p>The tool accepts the address of any single public video on Instagram. In practice that means three link shapes:</p>
@@ -29,7 +30,7 @@ export default function InstagramVideoTranscriptView() {
       </section>
       <section>
         <h2>Video posts versus Reels: what differs</h2>
-        <p>Practically nothing in the output. Whether the link points at a Reel or at a feed video, the same pipeline applies: the audio is extracted, the speech is recognized, and the result is a transcript with per-line timestamps that you can copy or save as an SRT file. The differences are upstream of that — where the video lives on Instagram and how you grab its link. Feed videos live inside a post page, so you copy the post's <strong>/p/</strong> link; Reels have their dedicated <strong>/reel/</strong> page. The three-minute duration ceiling and the public-only rule apply equally to both, and a failed request produces the same plain-language error in either case.</p>
+        <p>Practically nothing in the output. Whether the link points at a Reel or at a feed video, the same pipeline applies: the audio is extracted, the speech is recognized, and the result is a transcript with per-line timestamps that you can copy or save as an SRT file. The differences are upstream of that — where the video lives on Instagram and how you grab its link. Feed videos live inside a post page, so you copy the post's <strong>/p/</strong> link; Reels have their dedicated <strong>/reel/</strong> page. The three-minute duration ceiling and the public-only rule apply equally to both, and a failed request produces the same plain-language error in either case. If the short vertical format is the one you are working with, the <Link to="/reels-transcript">Reels transcript</Link> page follows a Reel from link to text, and the <Link to="/instagram-reel-transcript">Instagram Reel transcript</Link> guide shows what the finished lines look like.</p>
       </section>
     </div>
     <ReelTranscriber showIntro={false} showExample={false} />

@@ -8,6 +8,7 @@ export default function InstagramReelTranscriptView() {
     <div className="page-heading"><h1>Instagram Reel Transcript</h1>
       <p>A transcript of a public Instagram Reel, with timestamps, that you can copy or save as subtitles.</p></div>
     <div className="help-content">
+      <p>An Instagram Reel transcript is the spoken content of a Reel written out as text, line by line, with the start and end time of each line. ReelTranscript produces one from a public Reel link: paste an instagram.com/reel/… address, wait a few seconds while the audio is processed, and read the finished transcript on the page. The text can be copied as plain text or downloaded as an SRT subtitle file whose numbered cues carry their own timing. Reels can run up to 3 minutes (180 seconds), and the transcript is produced only when the Reel contains speech. Private accounts, Stories and profile pages are outside what the tool can read.</p>
       <section>
         <h2>How to get a transcript from a Reel</h2>
         <p>You need one thing: the share link of a public Reel. In the Instagram app, tap the share icon and choose the option that copies the link. In a desktop browser, open the Reel and copy the address — it looks like <strong>instagram.com/reel/…/</strong>. The Reel must be viewable without logging in; anything hidden behind a private account cannot be read by the tool.</p>
@@ -21,7 +22,7 @@ export default function InstagramReelTranscriptView() {
       </section>
       <section>
         <h2>What the finished transcript looks like</h2>
-        <p>The result is the spoken content of the Reel, laid out as short lines with a start and end time for each line, so you can follow along with the video. From there you have two ways to save it. <strong>Copy text</strong> puts the plain transcript on your clipboard for notes, quotes or drafts. <strong>Download SRT</strong> saves a subtitle file in which every line is a numbered cue carrying its own time range — the format most video editors and caption tools accept directly.</p>
+        <p>The result is the spoken content of the Reel, laid out as short lines with a start and end time for each line, so you can follow along with the video. From there you have two ways to save it. <strong>Copy text</strong> puts the plain transcript on your clipboard for notes, quotes or drafts. <strong>Download SRT</strong> saves a subtitle file in which every line is a numbered cue carrying its own time range — the format most video editors and caption tools accept directly. The same output exists for the videos posted in the feed — the <Link to="/instagram-video-transcript">Instagram video transcript</Link> page describes that variant — and the <Link to="/instagram-reel-transcript-generator">Instagram reel transcript generator</Link> page explains the pipeline that produces both.</p>
       </section>
       <section>
         <h2>Limits, and why a Reel may produce nothing</h2>

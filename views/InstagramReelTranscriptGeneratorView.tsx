@@ -8,6 +8,7 @@ export default function InstagramReelTranscriptGeneratorView() {
     <div className="page-heading"><h1>Instagram Reel Transcript Generator</h1>
       <p>Paste a public Reel link and generate a timestamped transcript online — free, in seconds.</p></div>
     <div className="help-content">
+      <p>The Instagram reel transcript generator at ReelTranscript turns a public Reel link into a timestamped transcript online, free and without an account. Paste an instagram.com/reel/… address and press the button: the audio track is retrieved, a speech recognition model writes down what is said, and the output is cut into short cues stamped with their start and end times. A typical generation takes ten to twenty seconds. The finished transcript can be read on the page, copied as text, or downloaded as an SRT file. The Reel must be public and at most 3 minutes (180 seconds) long, and a clip without speech is reported instead of filled with invented dialogue.</p>
       <section>
         <h2>How the generator works</h2>
         <p>The generator runs a three-step pipeline on every link. First it retrieves the audio track of the public Reel. Then an automatic speech recognition model listens to that audio and writes down what is said — the same class of technology behind court-reporting software and podcast transcriptions. Finally the raw output is cut into short, readable cues, and each cue is stamped with the moment it starts and ends. No human reviews the middle step, which is why a generation pass takes seconds rather than hours.</p>
@@ -23,7 +24,7 @@ export default function InstagramReelTranscriptGeneratorView() {
       </section>
       <section>
         <h2>Cost, setup and limits</h2>
-        <p>Generating a transcript is <strong>free</strong> and needs nothing installed — a modern browser and an internet connection are the whole setup, on desktop or phone. The limits are the honest kind: the Reel must be public, it may run at most <strong>3 minutes (180 seconds)</strong>, and only Instagram links that point at a single video are accepted. Clips of pure music come back with a notice that no speech was found, because the generator refuses to invent dialogue. Automatic recognition also makes occasional mistakes with names and numbers, so give the result a quick read before you depend on it.</p>
+        <p>Generating a transcript is <strong>free</strong> and needs nothing installed — a modern browser and an internet connection are the whole setup, on desktop or phone. The limits are the honest kind: the Reel must be public, it may run at most <strong>3 minutes (180 seconds)</strong>, and only Instagram links that point at a single video are accepted. Clips of pure music come back with a notice that no speech was found, because the generator refuses to invent dialogue. Automatic recognition also makes occasional mistakes with names and numbers, so give the result a quick read before you depend on it. Once a generation does succeed, the <Link to="/instagram-reel-transcript">Instagram Reel transcript</Link> guide shows the shape of the finished text, and the <Link to="/reels-transcript">Reels transcript</Link> page walks through the words-to-text path step by step.</p>
       </section>
     </div>
     <ReelTranscriber showIntro={false} showExample={false} />

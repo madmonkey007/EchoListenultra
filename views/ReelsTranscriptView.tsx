@@ -8,6 +8,7 @@ export default function ReelsTranscriptView() {
     <div className="page-heading"><h1>Reels Transcript</h1>
       <p>Turn the words spoken in an Instagram Reel into text you can read, copy and keep.</p></div>
     <div className="help-content">
+      <p>A Reels transcript converts the words spoken in an Instagram Reel into readable text, in the order they were said, with the time each line begins and ends. ReelTranscript generates one from the link of a public Reel: paste the address, give it ten to twenty seconds for a typical one-minute clip, and the transcript appears on the page alongside the video. Every line can be read while the Reel plays, copied as plain text, or downloaded as an SRT subtitle file. Clips up to 3 minutes are accepted, and a Reel that contains only music comes back with a notice that no speech was found rather than invented lines.</p>
       <section>
         <h2>From spoken words to readable text</h2>
         <p>A Reel disappears into the scroll fast, and everything said in it disappears with it. A transcript fixes that. Paste the link of a public Reel below, and the speech in it is converted into written lines in the original order, each with its time in the video. You get the words of the creator — an interview answer, a tutorial step, a story — in a form you can skim, quote and save.</p>
@@ -20,7 +21,7 @@ export default function ReelsTranscriptView() {
       <section>
         <h2>Using the transcript for subtitles</h2>
         <p>Two outputs are yours to take. The plain text works as the base for captions you will style yourself: paste it into your notes or editor and adjust the wording to taste. The <strong>SRT file</strong> goes further — it is a standard subtitle file in which each phrase already carries its start and end time, so players, editors and caption tools can display the lines in sync with the video without you timing anything by hand.</p>
-        <p>Automatic recognition is fast but not flawless. Before publishing subtitles, play the Reel once against the transcript and fix the odd misheard name or number.</p>
+        <p>Automatic recognition is fast but not flawless. Before publishing subtitles, play the Reel once against the transcript and fix the odd misheard name or number. For the format itself, the <Link to="/instagram-reel-transcript">Instagram Reel transcript</Link> page lays out what a finished transcription contains, and the <Link to="/instagram-video-transcript">Instagram video transcript</Link> page covers the feed-post version of the same request.</p>
       </section>
     </div>
     <ReelTranscriber showIntro={false} showExample={false} />
