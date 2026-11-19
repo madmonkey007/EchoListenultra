@@ -26,8 +26,10 @@ Footer links untouched (home `footer-content-links` byte-pinned by
 
 `public/sitemap.xml` gained `<lastmod>` per URL; dates: the five pages this
 batch touches = 2026-11-19 (the batch itself is their newest actual change),
-about/privacy = 2026-11-08 (`75e5bb9`), help/contact = 2026-11-18 (`27d138c` /
-`5e11f6a`).
+about/privacy = 2026-11-18, help/contact = 2026-11-18. (about/privacy were
+first set to 2026-11-08, the date of their last content-only commit; corrected
+to 2026-11-18 because the sitewide 11-18 redesign — inline SVG icons, static
+header — also changed their rendered HTML.)
 
 ## 3. Definition paragraphs (5 pages)
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>%SITE_ORIGIN%/</loc><lastmod>2026-11-19</lastmod></url>
-  <url><loc>%SITE_ORIGIN%/about</loc><lastmod>2026-11-08</lastmod></url>
+  <url><loc>%SITE_ORIGIN%/about</loc><lastmod>2026-11-18</lastmod></url>
   <url><loc>%SITE_ORIGIN%/help</loc><lastmod>2026-11-18</lastmod></url>
-  <url><loc>%SITE_ORIGIN%/privacy</loc><lastmod>2026-11-08</lastmod></url>
+  <url><loc>%SITE_ORIGIN%/privacy</loc><lastmod>2026-11-18</lastmod></url>
   <url><loc>%SITE_ORIGIN%/contact</loc><lastmod>2026-11-18</lastmod></url>
   <url><loc>%SITE_ORIGIN%/instagram-reel-transcript</loc><lastmod>2026-11-19</lastmod></url>
   <url><loc>%SITE_ORIGIN%/reels-transcript</loc><lastmod>2026-11-19</lastmod></url>
