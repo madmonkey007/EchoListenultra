@@ -60,3 +60,6 @@ docs/releases/**/downloaded.*
 docs/releases/**/copied*.txt
 .vercel
 .env*
+
+# Internal brand submissions (local drafts, never published).
+docs/brand-submissions/
